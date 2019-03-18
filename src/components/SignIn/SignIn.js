@@ -73,7 +73,6 @@ class SignInFormBase extends Component {
         <Button 
           disabled={isInvalid} 
           type="submit"
-          color="primary"
           variant="contained" color="primary"
           >
           Sign In

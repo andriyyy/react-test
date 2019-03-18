@@ -10,6 +10,9 @@ const Navigation = () => (
       <li>
         <Link to={ROUTES.SIGN_IN}>Sign In</Link>
       </li>
+      <li>
+        <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
+      </li>
     </ul>
   </div>
 );

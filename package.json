@@ -5,11 +5,16 @@
   "dependencies": {
     "@material-ui/core": "^3.9.2",
     "firebase": "^5.9.0",
+    "moment": "^2.24.0",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
+    "react-moment": "^0.8.4",
+    "react-redux": "^6.0.1",
     "react-router-dom": "^4.4.0",
     "react-scripts": "2.1.8",
-    "recompose": "^0.30.0"
+    "react-timestamp": "^4.4.0",
+    "recompose": "^0.30.0",
+    "redux": "^4.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

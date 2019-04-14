@@ -16,8 +16,10 @@ const applySetUser = (state, action) => ({
 });
 
 function userReducer(state = INITIAL_STATE, action) {
+    
   switch (action.type) {
     case 'USERS_SET': {
+          console.log(action);
       return applySetUsers(state, action);
     }
     case 'USER_SET': {

@@ -4,10 +4,39 @@ import { compose } from 'recompose';
 
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
+
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import withStyles from '@material-ui/core/styles/withStyles';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+
+const styles = theme => (console.log(theme) || {
+  main: {
+    width: 'auto',
+    display: 'block', // Fix IE 11 issue.
+    marginLeft: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3,
+    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+      width: 400,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
+  },
+  paper: {
+    marginTop: theme.spacing.unit * 8,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+  },
+  submit: {
+    marginTop: theme.spacing.unit * 3,
+  },
+});
 
 const INITIAL_STATE = {
   email: '',
@@ -23,8 +52,8 @@ class SignInFormBase extends Component {
   }
 
   onSubmit = event => {
+    event.preventDefault();
     const { email, password } = this.state;
-
     this.props.firebase
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
@@ -34,8 +63,6 @@ class SignInFormBase extends Component {
       .catch(error => {
         this.setState({ error });
       });
-
-    event.preventDefault();
   };
 
   onChange = event => {
@@ -43,53 +70,62 @@ class SignInFormBase extends Component {
   };
 
   render() {
+    const { classes } = this.props;
     const { email, password, error } = this.state;
 
     const isInvalid = password === '' || email === '';
 
     return (
-
-      <form onSubmit={this.onSubmit}>
-        <FormControl margin="normal" required fullWidth>
-        <TextField
-          name="email"
-          value={email}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Email Address"
-        />
-        </FormControl>
-        <FormControl margin="normal" required fullWidth>
-        <TextField
-          name="password"
-          value={password}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Password"
-        />
-        </FormControl>
-        <Button 
-          disabled={isInvalid} 
-          type="submit"
-          variant="contained" color="primary"
-          >
-          Sign In
-        </Button>
-
-        {error && <p>{error.message}</p>}
-      </form>
+      <main className={classes.main}>
+        <Paper className={classes.paper}>
+          <Typography component="h1" variant="h5">
+            Sign in
+        </Typography>
+          <form onSubmit={this.onSubmit} className={classes.form}>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="email">Email Address</InputLabel>
+              <Input id="email"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                value={email}
+                onChange={this.onChange}
+              />
+            </FormControl>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="password">Password</InputLabel>
+              <Input id="password"
+                name="password"
+                autoComplete="password"
+                autoFocus
+                value={password}
+                onChange={this.onChange}
+                type="password"
+              />
+            </FormControl>
+            <Button
+              disabled={isInvalid}
+              type="submit"
+              variant="contained" color="primary"
+              className={classes.submit}
+            >
+              Sign In
+            </Button>
+            {error && <p>{error.message}</p>}
+          </form>
+        </Paper>
+      </main>
     );
   }
 }
 
-const SignInForm = compose(
+const SignInForm = withStyles(styles)(compose(
   withRouter,
   withFirebase,
-)(SignInFormBase);
+)(SignInFormBase));
 
 const SignInPage = () => (
   <div>
-    <h1>SignIn</h1>
     <SignInForm />
   </div>
 );

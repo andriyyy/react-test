@@ -16,6 +16,7 @@ const applySetItemsLimit = (state, action) => ({
 function itemReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case 'ITEMS_SET': {
+      console.log(action);
       return applySetItems(state, action);
     }
     case 'ITEMS_LIMIT_SET': {

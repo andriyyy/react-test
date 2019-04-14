@@ -10,32 +10,36 @@ import * as ROUTES from '../../constants/routes';
 import HomePage from '../Home';
 import DetailedItem from '../Items/DetailedItem';
 import { withAuthentication } from '../Session';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+
+
+const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
+});
+
 
 class App extends Component {
   render() {
     return (
-
-      <div className="App">
-        <header className="App-header">
-          <p>
-            My test App
-          </p>
-          <Router>
-            <div>
-                  <Navigation />
-                  <hr />
-                  <Switch>
+      <MuiThemeProvider theme={theme}>
+        <div className="App">
+          <header className="App-header">
+            <Router>
+              <div>
+                <Navigation />
+                <Switch>
                   <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
                   <Route path={ROUTES.SIGN_IN} component={SignInPage} />
                   <Route path={ROUTES.HOME} component={HomePage} />
                   <Route path={ROUTES.DETAILED_ITEM} component={DetailedItem} />
-                  </Switch>
-            </div>
-                                  
-          </Router>
-        </header>
-
-      </div>
+                </Switch>
+              </div>
+            </Router>
+          </header>
+        </div>
+      </MuiThemeProvider>
     );
   }
 }

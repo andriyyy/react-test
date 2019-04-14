@@ -67,16 +67,30 @@ class Firebase {
       }
     });
 
-    onSaveItems = (picture, saveItem) => {
+    onSaveItems = (picture, saveItem, updateState) => {
     app.storage()
       .ref().child( `/pictures/${new Date().getTime()}` ).put(picture)
       .then( snapshot => {
           snapshot.ref.getDownloadURL().then(function(downloadURL) { 
             console.log('File available at', downloadURL); 
           saveItem(downloadURL);
+          updateState();
           });
     });
     }
+
+    onRemoveItems = (uid, updateState ) =>{
+      
+        this.item(uid).remove().then( () => {
+          updateState();
+    });
+    }
+
+
+
+
+
+
 }
 
 export default Firebase;

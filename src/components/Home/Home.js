@@ -5,7 +5,7 @@ import { compose } from 'recompose';
 import { withAuthorization } from '../Session';
 import { withFirebase } from '../Firebase';
 import Items from '../Items';
-
+import { Typography } from '@material-ui/core';
 class HomePage extends Component {
   componentDidMount() {
     this.props.firebase.users().on('value', snapshot => {
@@ -20,10 +20,7 @@ class HomePage extends Component {
   render() {
     return (
       <div>
-        <h1>Home Page</h1>
-        <p>The Home Page is accessible by every signed in user.</p>
-
-        <Items  users={this.props.users} />
+        <Items users={this.props.users} />
       </div>
     );
   }

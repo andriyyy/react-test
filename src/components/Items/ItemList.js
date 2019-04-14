@@ -1,23 +1,21 @@
 import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import List from '@material-ui/core/List';
 
 import ItemItem from './ItemItem';
 
-const ItemList = ({
-  items,
-  onEditItem,
-  onRemoveItem,
-}) => (
-  <ul>
-
+const ItemList = (props) => {
+  const { items, onEditItem, onRemoveItem} = props;
+  return <List >
     {items.map(item => (
-      <ItemItem
-        key={item.uid}
-        item={item}
-        onEditItem={onEditItem}
-        onRemoveItem={onRemoveItem}
-      />
+        <ItemItem
+          key={item.uid}
+          item={item}
+          onEditItem={onEditItem}
+          onRemoveItem={onRemoveItem}
+        />
     ))}
-  </ul>
-);
+  </List>;
+};
 
 export default ItemList;

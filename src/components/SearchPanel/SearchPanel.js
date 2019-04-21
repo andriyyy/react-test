@@ -1,28 +1,26 @@
-import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+import React, { Component } from "react";
+import { withStyles } from "@material-ui/core/styles";
+import FormControl from "@material-ui/core/FormControl";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 
 const styles = theme => ({
-
   formControl: {
     margin: theme.spacing.unit,
-    minWidth: 120,
+    minWidth: 120
   },
   selectEmpty: {
-    marginTop: theme.spacing.unit * 2,
-  },
+    marginTop: theme.spacing.unit * 2
+  }
 });
 
 class SearchPanel extends Component {
-
   state = {
-    term: '',
-    sort: '',
-    event: '',
+    term: "",
+    sort: "",
+    event: ""
   };
 
   onSearchChange = event => {
@@ -49,17 +47,18 @@ class SearchPanel extends Component {
             value={this.state.event}
             onChange={this.onSortChange}
             inputProps={{
-              name: 'event',
-              id: 'event',
+              name: "event",
+              id: "event"
             }}
           >
-            <MenuItem value='1'>All events</MenuItem>
-            <MenuItem value='2'>My events</MenuItem>
+            <MenuItem value="1">All events</MenuItem>
+            <MenuItem value="2">My events</MenuItem>
           </Select>
         </FormControl>
         <FormControl className={classes.formControl}>
           <InputLabel htmlFor="term">Filter by: </InputLabel>
-          <Input id="term"
+          <Input
+            id="term"
             name="term"
             autoFocus
             value={term}
@@ -67,10 +66,8 @@ class SearchPanel extends Component {
           />
         </FormControl>
       </div>
-
     );
   }
 }
-
 
 export default withStyles(styles)(SearchPanel);

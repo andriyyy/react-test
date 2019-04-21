@@ -1,21 +1,19 @@
-import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
+import React, { Component } from "react";
 
-import ItemItem from './ItemItem';
+import ItemItem from "./ItemItem";
 
-const ItemList = (props) => {
-  const { items, onEditItem, onRemoveItem} = props;
-  return <List >
-    {items.map(item => (
-        <ItemItem
-          key={item.uid}
-          item={item}
-          onEditItem={onEditItem}
-          onRemoveItem={onRemoveItem}
-        />
-    ))}
-  </List>;
-};
+class ItemList extends Component {
+  render() {
+    const { items, onEditItem, onRemoveItem } = this.props;
+    return items.map(item => (
+      <ItemItem
+        key={item.uid}
+        item={item}
+        onEditItem={onEditItem}
+        onRemoveItem={onRemoveItem}
+      />
+    ));
+  }
+}
 
 export default ItemList;

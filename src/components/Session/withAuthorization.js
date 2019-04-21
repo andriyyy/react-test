@@ -1,10 +1,10 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { compose } from 'recompose';
+import React from "react";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { compose } from "recompose";
 
-import { withFirebase } from '../Firebase';
-import * as ROUTES from '../../constants/routes';
+import { withFirebase } from "../../services/Firebase";
+import * as ROUTES from "../../constants/routes";
 
 const withAuthorization = condition => Component => {
   class WithAuthorization extends React.Component {
@@ -15,12 +15,11 @@ const withAuthorization = condition => Component => {
             this.props.history.push(ROUTES.SIGN_IN);
           }
         },
-        () => this.props.history.push(ROUTES.SIGN_IN),
+        () => this.props.history.push(ROUTES.SIGN_IN)
       );
     }
 
     componentWillUnmount() {
-
       this.listener();
     }
 
@@ -32,14 +31,13 @@ const withAuthorization = condition => Component => {
   }
 
   const mapStateToProps = state => ({
-
-    authUser: state.sessionState.authUser,
+    authUser: state.sessionState.authUser
   });
 
   return compose(
     withRouter,
     withFirebase,
-    connect(mapStateToProps),
+    connect(mapStateToProps)
   )(WithAuthorization);
 };
 

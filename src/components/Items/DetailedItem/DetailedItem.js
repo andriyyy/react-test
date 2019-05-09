@@ -59,13 +59,25 @@ class DetailedItem extends Component {
     super(props);
     this.state = {
       item: "",
-      open: false
+      open: false,
+      attendeesIds: []
     };
   }
 
   componentDidMount() {
+
     this.setState({ open: false });
     let id = this.props.match.params.id;
+
+    this.props.firebase.items_enrolments(id).once("value")
+    .then(snapshot => {
+      let attendeesIds = [];
+      Object.keys(snapshot.val()).map(userId => {
+       return attendeesIds.push(userId);
+      })
+      this.setState({ attendeesIds: attendeesIds });
+    })
+
     this.props.items.forEach(
       function(element) {
         if (id === element.uid) {
@@ -92,6 +104,7 @@ class DetailedItem extends Component {
       createdAt,
       attendee
     } = this.state.item;
+
     const attendeeF = [];
     const { classes } = this.props;
     this.props.users.forEach(function(entry) {
@@ -133,16 +146,15 @@ class DetailedItem extends Component {
               <ListItem>
                 <b>Users:&nbsp;</b>
               </ListItem>
-              {typeof attendee !== "undefined" && (
+              {this.state.attendeesIds.length >0 && (
                 <div>
-                  {JSON.parse(attendee).map(atten => (
+                  {this.state.attendeesIds.map(attenId => (
                     <Link
-                      data-user-id={atten.i}
-                      onClick={() => this.onView(atten.i)}
-                      key={atten.i}
+                      data-user-id={attenId}
+                      onClick={() => this.onView(attenId)}
+                      key={attenId}
                     >
-                      {" "}
-                      {attendeeF[atten.i]}{" "}
+                      {" "}{attendeeF[attenId]}{" "}
                     </Link>
                   ))}
                 </div>

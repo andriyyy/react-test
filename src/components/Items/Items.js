@@ -11,6 +11,10 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const styles = theme => ({
   margin: {
@@ -53,6 +57,9 @@ const styles = theme => ({
   },
   table: {
     minWidth: 700
+  },
+  pop_up: {
+    minWidth: 300
   }
 });
 
@@ -69,7 +76,9 @@ class Items extends Component {
       sort: "",
       term: "",
       attendee: "",
-      user: []
+      user: [],
+      open: false,
+      removeId: ""
     };
   }
 
@@ -133,7 +142,8 @@ class Items extends Component {
   };
 
   onRemoveItem = uid => {
-    this.props.firebase.onRemoveItems(uid, this.saveItemsToState);
+    this.setState({ removeId: uid });
+    this.handleClickOpen();
   };
 
   onSearchChange = term => {
@@ -163,7 +173,17 @@ class Items extends Component {
         return items;
     }
   };
+  handleClickOpen = () => {
+    this.setState({ open: true });
+  };
 
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+  removeItem = () => {
+    this.props.firebase.onRemoveItems(this.state.removeId, this.saveItemsToState);
+    this.handleClose();
+  };
   render() {
     const { classes } = this.props;
     const { users, items } = this.props;
@@ -181,6 +201,22 @@ class Items extends Component {
           className={classes.root + " " + classes.padding + " " + classes.paper}
         >
           <div>
+          <Dialog
+          open={this.state.open}
+          onClose={this.handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle className={classes.pop_up} id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
+          <DialogActions>
+            <Button onClick={this.handleClose} color="primary">
+              Disagree
+            </Button>
+            <Button onClick={this.removeItem} color="primary" autoFocus>
+              Agree
+            </Button>
+          </DialogActions>
+        </Dialog>
             <Typography component="h1" variant="h5">
               Home Page
             </Typography>

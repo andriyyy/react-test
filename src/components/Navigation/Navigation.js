@@ -36,7 +36,7 @@ const Navigation = props => {
             noWrap
             className={classes.toolbarTitle}
           >
-            My test app
+            Event managment system
           </Typography>
           {authUser ? (
             <SignOutButton />

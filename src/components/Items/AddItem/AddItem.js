@@ -10,7 +10,6 @@ import { Select, Input, MenuItem, InputLabel } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 const styles = theme => ({
@@ -67,13 +66,21 @@ class AddItem extends Component {
     this.props.firebase.onSaveItems(
       this.state.picture,
       downloadURL => {
-        this.props.firebase.items().push({
+        const lastKey = this.props.firebase.items().push({
           userId: authUser.uid,
           title: this.state.title,
           description: this.state.description,
           pictureUrl: downloadURL,
           attendee: JSON.stringify(this.state.attendee),
           createdAt: this.props.firebase.serverValue.TIMESTAMP
+        }).key;
+
+        this.state.attendee.map(item => {
+          let updates = {
+            [`items_enrolments/${lastKey}/${item.i}`]: true,
+            [`users_enrolments/${item.i}/${lastKey}`]: true
+          }
+          this.props.firebase.update(updates);
         });
 
         this.setState({ title: "" });
@@ -135,7 +142,6 @@ class AddItem extends Component {
           >
             <DialogTitle id="form-dialog-title"> Add event</DialogTitle>
             <DialogContent>
-              <DialogContentText>
                 <FormControl margin="normal" required fullWidth>
                   <TextField
                     type="text"
@@ -170,7 +176,6 @@ class AddItem extends Component {
                     ))}
                   </Select>
                 </FormControl>
-              </DialogContentText>
             </DialogContent>
             <DialogActions>
               <Button type="submit" onClick={this.handleClose} color="primary">

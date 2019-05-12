@@ -19,9 +19,7 @@ class HomePage extends Component {
 
   render() {
     return (
-      <div>
         <Items users={this.props.users} />
-      </div>
     );
   }
 }

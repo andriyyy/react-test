@@ -23,10 +23,7 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider theme={theme}>
-        <div className="App">
-          <header className="App-header">
             <Router>
-              <div>
                 <Navigation authUser={this.props.authUser} />
                 <Switch>
                   <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
@@ -35,10 +32,7 @@ class App extends Component {
                   <Route path={ROUTES.DETAILED_ITEM} component={DetailedItem} />
                   <Route path={ROUTES.USER} component={User} />
                 </Switch>
-              </div>
             </Router>
-          </header>
-        </div>
       </MuiThemeProvider>
     );
   }

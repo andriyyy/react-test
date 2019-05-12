@@ -38,7 +38,7 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 8,
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
+    alignItems: "left",
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
       .spacing.unit * 3}px`
   },
@@ -48,7 +48,7 @@ const styles = theme => ({
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 120,
-    maxWidth: 300
+    maxWidth:0
   },
   root: {
     width: "100%",
@@ -56,7 +56,7 @@ const styles = theme => ({
     overflowX: "auto"
   },
   table: {
-    minWidth: 700
+    minWidth: 0
   },
   pop_up: {
     minWidth: 300
@@ -180,10 +180,12 @@ class Items extends Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+
   removeItem = () => {
     this.props.firebase.onRemoveItems(this.state.removeId, this.saveItemsToState);
     this.handleClose();
   };
+  
   render() {
     const { classes } = this.props;
     const { users, items } = this.props;
@@ -210,10 +212,10 @@ class Items extends Component {
           <DialogTitle className={classes.pop_up} id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
-              Disagree
+              No
             </Button>
             <Button onClick={this.removeItem} color="primary" autoFocus>
-              Agree
+              Yes
             </Button>
           </DialogActions>
         </Dialog>

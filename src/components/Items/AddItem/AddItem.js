@@ -80,7 +80,7 @@ class AddItem extends Component {
             [`items_enrolments/${lastKey}/${item.i}`]: true,
             [`users_enrolments/${item.i}/${lastKey}`]: true
           }
-          this.props.firebase.update(updates);
+          return this.props.firebase.update(updates);
         });
 
         this.setState({ title: "" });

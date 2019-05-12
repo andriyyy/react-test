@@ -42,6 +42,7 @@ class Firebase {
   update = updates => this.db.ref().update(updates);
   items_enrolments = iid => this.db.ref(`items_enrolments/${iid}`);
   users_enrolments = (uid, iid) => this.db.ref(`users_enrolments/${uid}/${iid}`);
+  users_enrolments_list = (uid) => this.db.ref(`users_enrolments/${uid}`);
 
   // *** Merge Auth and DB User API *** //
 
@@ -82,7 +83,6 @@ class Firebase {
   };
 
   onRemoveItems = (iid, updateState) => {
-
     this.item(iid).remove().then(()=>{
       this.items_enrolments(iid).once("value")
       .then(snapshot => {
@@ -90,12 +90,11 @@ class Firebase {
       }).then( usersId => {
         this.items_enrolments(iid).remove();
         Object.keys(usersId).map(userId => {
-          this.users_enrolments(userId, iid).remove();
+          return this.users_enrolments(userId, iid).remove();
         })
       }
       );
     });
-
     updateState();
   };
 

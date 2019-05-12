@@ -6,6 +6,7 @@ import { List, Paper, withStyles, ListItem, Typography } from '@material-ui/core
 import { withAuthorization } from '../../Session';
 import IconButton from '@material-ui/core/IconButton';
 import KeyboardBackspace from '@material-ui/icons/KeyboardBackspace';
+import Link from "@material-ui/core/Link";
 
 const styles = theme => ({
   margin: {
@@ -20,7 +21,8 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit * 3,
     marginRight: theme.spacing.unit * 3,
     [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-      width: 800,
+      minWidth: 120,
+      maxWidth: 450,
       marginLeft: 'auto',
       marginRight: 'auto',
     },
@@ -46,14 +48,23 @@ class User extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: ''
+      user: '',
+      itemsIds: ''
     };
   }
 
   componentDidMount() {
-    let id = this.props.match.params.id;
+    const id = this.props.getId();
+       this.props.firebase.users_enrolments_list(id).once("value")
+    .then(snapshot => {
+      let itemsIds = [];
+      Object.keys(snapshot.val()).map(itemId => {
+       return itemsIds.push(itemId);
+      })
+      this.setState({ itemsIds: itemsIds });
+    });
+
     this.props.users.forEach(function (element) {
-      console.log("element", element);
       if (id === element.uid) {
         this.setState({ user: element });
       }
@@ -65,12 +76,23 @@ class User extends Component {
     this.props.history.goBack()
   };
 
+  onView = id => {
+    this.props.history.push(`/detailed/${id}`);
+  };
+  
   render() {
     const { uid, username, email } = this.state.user;
-    const attendeeF = [];
+    const itemsF = [];
     const { classes } = this.props;
-    this.props.users.forEach(function (entry) {
-      attendeeF[entry.uid] = entry.username;
+    const itemsC = [];   
+
+    this.props.items.forEach(function (entry) {
+      itemsF[entry.uid] = entry.title;
+      if (uid === entry.userId) {
+        var key = entry.uid;
+        var value = entry.title;
+         itemsC.push({key , value});
+      }
     });
 
     return (
@@ -87,7 +109,38 @@ class User extends Component {
             <List >
               <ListItem ><b>User id: &nbsp;</b> {uid}</ListItem >
               <ListItem ><b>User name:&nbsp;</b> {username}</ListItem >
-              <ListItem ><b>E-mail:&nbsp;</b> {email}</ListItem >
+              <ListItem ><b>User e-mail:&nbsp;</b> {email}</ListItem >
+              <ListItem ><b>User assigned to events:&nbsp;</b>
+              
+              {this.state.itemsIds.length >0 && (
+                <div>
+                  {this.state.itemsIds.map(itemId => (
+                    <Link
+                      data-user-id={itemId}
+                      onClick={() => this.onView(itemId)}
+                      key={itemId}
+                    >
+                      {" "}{itemsF[itemId]}{" "}
+                    </Link>
+                  ))}
+                </div>
+              )}
+              </ListItem >
+              <ListItem ><b>User created events:&nbsp;</b>
+
+              <div>
+                  {itemsC.map(item => ( 
+                    <Link
+                      data-user-id={item.key}
+                      onClick={() => this.onView(item.key)}
+                      key={item.key}
+                    >
+                      {" "}{item.value}{" "}
+                    </Link>
+                  ))}
+                </div>
+
+              </ListItem >
             </List >
           </div>
         </Paper>
@@ -96,8 +149,15 @@ class User extends Component {
   }
 }
 
-const mapStateToProps = state => (
+const mapStateToProps = (state,ownProps) => (
   {
+    getId: () => {
+      return ownProps.match.params.id;
+    },
+    items: Object.keys(state.itemState.items || {}).map(key => ({
+      ...state.itemState.items[key],
+      uid: key
+    })),
     users: Object.keys(state.userState.users || {}).map(key => ({
       ...state.userState.users[key],
       uid: key,

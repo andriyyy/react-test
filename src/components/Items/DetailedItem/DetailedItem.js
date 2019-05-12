@@ -28,7 +28,8 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit * 3,
     marginRight: theme.spacing.unit * 3,
     [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-      width: 800,
+      minWidth: 120,
+      maxWidth: 450,
       marginLeft: "auto",
       marginRight: "auto"
     }
@@ -60,15 +61,14 @@ class DetailedItem extends Component {
     this.state = {
       item: "",
       open: false,
-      attendeesIds: []
+      attendeesIds: [],
+      user:""
     };
   }
 
   componentDidMount() {
-
     this.setState({ open: false });
-    let id = this.props.match.params.id;
-
+    const id = this.props.getId();
     this.props.firebase.items_enrolments(id).once("value")
     .then(snapshot => {
       let attendeesIds = [];
@@ -102,15 +102,15 @@ class DetailedItem extends Component {
       description,
       pictureUrl,
       createdAt,
-      attendee
+      userId
     } = this.state.item;
 
     const attendeeF = [];
     const { classes } = this.props;
     this.props.users.forEach(function(entry) {
       attendeeF[entry.uid] = entry.username;
-    });
 
+    });
     return (
       <main className={classes.main}>
         <Paper className={classes.padding + " " + classes.paper}>
@@ -120,17 +120,17 @@ class DetailedItem extends Component {
             </IconButton>
             <span>back</span>
             <Typography component="h1" variant="h5">
-              Detailed info:
+              Event detailed info:
             </Typography>
             <List>
               <ListItem>
-                <b>Title: &nbsp;</b> {title}
+                <b>Event title: &nbsp;</b> {title}
               </ListItem>
               <ListItem>
-                <b>Description:&nbsp;</b> {description}
+                <b>Event Description:&nbsp;</b> {description}
               </ListItem>
               <ListItem>
-                <b>Image:&nbsp;</b>
+                <b>Event Image:&nbsp;</b>
               </ListItem>
               <ListItem>
                 <img
@@ -140,11 +140,14 @@ class DetailedItem extends Component {
                 />
               </ListItem>
               <ListItem>
-                <b>Created at:&nbsp; </b>{" "}
+                <b>Event created at:&nbsp; </b>{" "}
                 <Moment format="YYYY/MM/DD HH:mm:ss">{createdAt}</Moment>
               </ListItem>
               <ListItem>
-                <b>Users:&nbsp;</b>
+                <b>Event created by:&nbsp; </b>{" "} {attendeeF[userId]}
+              </ListItem>
+              <ListItem>
+                <b>Users assigned to event:&nbsp;</b>
               </ListItem>
               {this.state.attendeesIds.length >0 && (
                 <div>
@@ -167,7 +170,10 @@ class DetailedItem extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
+  getId: () => {
+    return ownProps.match.params.id;
+  },
   items: Object.keys(state.itemState.items || {}).map(key => ({
     ...state.itemState.items[key],
     uid: key

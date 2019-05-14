@@ -149,19 +149,31 @@ class User extends Component {
   }
 }
 
+// Selectors
+function getId(ownProps) {
+  return ownProps.match.params.id;
+}
+
+function getItems(state) {
+  return Object.keys(state.itemState.items || {}).map(key => ({
+    ...state.itemState.items[key],
+    uid: key
+  }))
+}
+
+function getUsers(state) {
+  return Object.keys(state.userState.users || {}).map(key => ({
+    ...state.userState.users[key],
+    uid: key,
+  }))
+}
+
+
 const mapStateToProps = (state,ownProps) => (
   {
-    getId: () => {
-      return ownProps.match.params.id;
-    },
-    items: Object.keys(state.itemState.items || {}).map(key => ({
-      ...state.itemState.items[key],
-      uid: key
-    })),
-    users: Object.keys(state.userState.users || {}).map(key => ({
-      ...state.userState.users[key],
-      uid: key,
-    })),
+    getId: ()=>{ return getId(ownProps)},
+    items: getItems(state),
+    users: getUsers(state)
   });
 
 const condition = authUser => authUser;

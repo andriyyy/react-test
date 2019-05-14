@@ -38,8 +38,12 @@ class App extends Component {
   }
 }
 
+function getAuthUsers(state) {
+  return  state.sessionState.authUser;
+}
+
 const mapStateToProps = state => ({
-  authUser: state.sessionState.authUser
+  authUser: getAuthUsers(state)
 });
 
 export default compose(

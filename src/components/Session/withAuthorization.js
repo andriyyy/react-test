@@ -29,9 +29,11 @@ const withAuthorization = condition => Component => {
       ) : null;
     }
   }
-
+  function getAuthUsers(state) {
+    return  state.sessionState.authUser;
+  }
   const mapStateToProps = state => ({
-    authUser: state.sessionState.authUser
+    authUser: getAuthUsers(state) 
   });
 
   return compose(

@@ -263,17 +263,27 @@ class Items extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  authUser: state.sessionState.authUser,
-  items: Object.keys(state.itemState.items || {}).map(key => ({
+// Selectors
+function getAuthUser(state) {
+    return state.sessionState.authUser
+}
+function getItems(state) {
+  return Object.keys(state.itemState.items || {}).map(key => ( { 
     ...state.itemState.items[key],
     uid: key
-  })),
-  users: Object.keys(state.userState.users || {}).map(key => ({
+  }))
+}
+function getUsers(state) {
+  return Object.keys(state.userState.users || {}).map(key => ({
     ...state.userState.users[key],
     uid: key
-  })),
-  limit: state.itemState.limit
+  }))
+}
+
+const mapStateToProps = state => ({
+  authUser: getAuthUser(state),
+  items: getItems(state),
+  users: getUsers(state)
 });
 
 const mapDispatchToProps = dispatch => ({

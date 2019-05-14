@@ -83,10 +83,7 @@ class AddItem extends Component {
           return this.props.firebase.update(updates);
         });
 
-        this.setState({ title: "" });
-        this.setState({ description: "" });
-        this.setState({ pictureUrl: "" });
-        this.setState({ picture: "" });
+        this.setState({ title: "", description: "", pictureUrl: "", picture: ""  });
       },
       this.saveItemsToState
     );
@@ -192,12 +189,20 @@ class AddItem extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  authUser: state.sessionState.authUser,
-  users: Object.keys(state.userState.users || {}).map(key => ({
+// Selectors
+function getAuthUser(state) {
+  return state.sessionState.authUser
+}
+
+function getUsers(state) {
+  return Object.keys(state.userState.users || {}).map(key => ({
     ...state.userState.users[key],
     uid: key
   }))
+}
+const mapStateToProps = state => ({
+  authUser: getAuthUser(state),
+  users: getUsers(state)
 });
 
 const mapDispatchToProps = dispatch => ({

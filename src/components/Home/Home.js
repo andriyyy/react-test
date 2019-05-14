@@ -24,8 +24,13 @@ class HomePage extends Component {
   }
 }
 
+// Selectors
+function getUsers(state) {
+  return state.userState.users;
+}
+
 const mapStateToProps = state => ({
-  users: state.userState.users
+  users: getUsers(state)
 });
 
 const mapDispatchToProps = dispatch => ({

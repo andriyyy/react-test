@@ -5,6 +5,7 @@ import { compose } from "recompose";
 import { withAuthorization } from "../Session";
 import { withFirebase } from "../../services/Firebase";
 import Items from "../Items";
+import { getUsers } from "../../selectors/Selectors";
 
 class HomePage extends Component {
   componentDidMount() {
@@ -22,11 +23,6 @@ class HomePage extends Component {
         <Items users={this.props.users} />
     );
   }
-}
-
-// Selectors
-function getUsers(state) {
-  return state.userState.users;
 }
 
 const mapStateToProps = state => ({

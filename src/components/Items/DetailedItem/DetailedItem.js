@@ -14,6 +14,7 @@ import { withAuthorization } from "../../Session";
 import IconButton from "@material-ui/core/IconButton";
 import KeyboardBackspace from "@material-ui/icons/KeyboardBackspace";
 import Link from "@material-ui/core/Link";
+import { getId, getItems, getUsersKey } from "../../../selectors/Selectors";
 
 const styles = theme => ({
   margin: {
@@ -170,28 +171,10 @@ class DetailedItem extends Component {
   }
 }
 
-// Selectors
-function getId(ownProps) {
-  return ownProps.match.params.id;
-}
-
-function getItems(state) {
-  return Object.keys(state.itemState.items || {}).map(key => ({
-    ...state.itemState.items[key],
-    uid: key
-  }))
-}
-
-function getUsers(state) {
-  return Object.keys(state.userState.users || {}).map(key => ({
-    ...state.userState.users[key],
-    uid: key
-  }))
-}
 const mapStateToProps = (state, ownProps) => ({
   getId: ()=>{ return getId(ownProps)},
   items: getItems(state),
-  users: getUsers(state)
+  users: getUsersKey(state)
 });
 
 const condition = authUser => authUser;

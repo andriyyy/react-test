@@ -15,6 +15,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { getAuthUser, getItems, getUsersKey } from "../../selectors/Selectors";
 
 const styles = theme => ({
   margin: {
@@ -264,26 +265,11 @@ class Items extends Component {
 }
 
 // Selectors
-function getAuthUser(state) {
-    return state.sessionState.authUser
-}
-function getItems(state) {
-  return Object.keys(state.itemState.items || {}).map(key => ( { 
-    ...state.itemState.items[key],
-    uid: key
-  }))
-}
-function getUsers(state) {
-  return Object.keys(state.userState.users || {}).map(key => ({
-    ...state.userState.users[key],
-    uid: key
-  }))
-}
 
 const mapStateToProps = state => ({
   authUser: getAuthUser(state),
   items: getItems(state),
-  users: getUsers(state)
+  users: getUsersKey(state)
 });
 
 const mapDispatchToProps = dispatch => ({

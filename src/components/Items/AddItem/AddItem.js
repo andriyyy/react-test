@@ -11,6 +11,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import { getUsersKey, getAuthUser } from "../../../selectors/Selectors";
 
 const styles = theme => ({
   formControl: {
@@ -66,6 +67,7 @@ class AddItem extends Component {
     this.props.firebase.onSaveItems(
       this.state.picture,
       downloadURL => {
+        console.log("userrr",authUser.uid);
         const lastKey = this.props.firebase.items().push({
           userId: authUser.uid,
           title: this.state.title,
@@ -189,20 +191,9 @@ class AddItem extends Component {
   }
 }
 
-// Selectors
-function getAuthUser(state) {
-  return state.sessionState.authUser
-}
-
-function getUsers(state) {
-  return Object.keys(state.userState.users || {}).map(key => ({
-    ...state.userState.users[key],
-    uid: key
-  }))
-}
 const mapStateToProps = state => ({
   authUser: getAuthUser(state),
-  users: getUsers(state)
+  users: getUsersKey(state)
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
+import { connect } from "react-redux";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import { withFirebase } from "../../services/Firebase";
@@ -54,6 +55,17 @@ class SignInFormBase extends Component {
     const { email, password } = this.state;
     this.props.firebase
       .doSignInWithEmailAndPassword(email, password)
+      .then(()=>{
+        this.props.firebase.onAuthUserListener(
+          authUser => {
+            localStorage.setItem("authUser", JSON.stringify(authUser));
+            this.props.onSetAuthUser(authUser);
+          },
+          () => {
+            localStorage.removeItem("authUser");
+          }
+        );
+      })
       .then(() => {
         this.setState({ ...INITIAL_STATE });
         this.props.history.push(ROUTES.HOME);
@@ -120,10 +132,20 @@ class SignInFormBase extends Component {
   }
 }
 
+const mapDispatchToProps = dispatch => ({
+  onSetAuthUser: authUser => {
+    dispatch({ type: "AUTH_USER_SET", authUser });
+  }
+});
+
 const SignInForm = withStyles(styles)(
   compose(
     withRouter,
-    withFirebase
+    withFirebase,
+    connect(
+      null,
+      mapDispatchToProps
+    )
   )(SignInFormBase)
 );
 
@@ -132,6 +154,7 @@ const SignInPage = () => (
     <SignInForm />
   </div>
 );
+
 export default SignInPage;
 
 export { SignInForm };

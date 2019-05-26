@@ -8,6 +8,9 @@ import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import { connect } from "react-redux";
+import { compose } from "recompose";
+import { getAuthUser } from "../../selectors/Selectors";
 
 const styles = theme => ({
   "@global": {
@@ -23,8 +26,9 @@ const styles = theme => ({
   }
 });
 
+
 const Navigation = props => {
-  const { classes, authUser } = props;
+  const { classes, authUser} = props;
   return (
     <div>
       <CssBaseline />
@@ -61,4 +65,14 @@ const Navigation = props => {
   );
 };
 
-export default withStyles(styles)(Navigation);
+const mapStateToProps = state => ({
+  authUser: getAuthUser(state)
+});
+
+export default withStyles(styles)(
+  compose(
+    connect(
+      mapStateToProps,
+      null
+    )
+  )(Navigation));

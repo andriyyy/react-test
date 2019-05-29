@@ -9,6 +9,7 @@ import HomePage from "../Home";
 import DetailedItem from "../Items/DetailedItem";
 import User from "../Items/User";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+import withAuthentication from "../Session/withAuthentication";
 
 const theme = createMuiTheme({
   typography: {
@@ -35,4 +36,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withAuthentication(App);

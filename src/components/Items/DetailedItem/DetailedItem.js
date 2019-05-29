@@ -145,7 +145,14 @@ class DetailedItem extends Component {
                 <Moment format="YYYY/MM/DD HH:mm:ss">{createdAt}</Moment>
               </ListItem>
               <ListItem>
-                <b>Event created by:&nbsp; </b>{" "} {attendeeF[userId]}
+                <b>Event created by:&nbsp; </b>{" "} 
+                    <Link
+                      data-user-id={userId}
+                      onClick={() => this.onView(userId)}
+                      key={userId}
+                    >
+                      {" "}{attendeeF[userId]}{" "}
+                    </Link> 
               </ListItem>
               <ListItem>
                 <b>Users assigned to event:&nbsp;</b>

@@ -6,20 +6,14 @@ import { withFirebase } from "../../services/Firebase";
 
 const withAuthentication = Component => {
   class WithAuthentication extends React.Component {
-    constructor(props) {
-      super(props);
-      this.props.onSetAuthUser(JSON.parse(localStorage.getItem("authUser")));
-    }
 
     componentDidMount() {
       this.listener = this.props.firebase.onAuthUserListener(
         authUser => {
-          localStorage.setItem("authUser", JSON.stringify(authUser));
           console.log("autentification", authUser);
           this.props.onSetAuthUser(authUser);
         },
         () => {
-          localStorage.removeItem("authUser");
           this.props.onSetAuthUser(null);
         }
       );

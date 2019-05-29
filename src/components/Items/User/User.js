@@ -59,9 +59,12 @@ class User extends Component {
        this.props.firebase.users_enrolments_list(id).once("value")
     .then(snapshot => {
       let itemsIds = [];
+      console.log(snapshot.val());
+      if (snapshot.val() !== null ) { 
       Object.keys(snapshot.val()).map(itemId => {
        return itemsIds.push(itemId);
       })
+    }
       this.setState({ itemsIds: itemsIds });
     });
 

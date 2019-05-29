@@ -76,7 +76,6 @@ class AddItem extends Component {
           attendee: JSON.stringify(this.state.attendee),
           createdAt: this.props.firebase.serverValue.TIMESTAMP
         }).key;
-
         this.state.attendee.map(item => {
           let updates = {
             [`items_enrolments/${lastKey}/${item.i}`]: true,

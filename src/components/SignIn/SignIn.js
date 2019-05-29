@@ -58,7 +58,6 @@ class SignInFormBase extends Component {
       .then(()=>{
         this.props.firebase.onAuthUserListener(
           authUser => {
-            localStorage.setItem("authUser", JSON.stringify(authUser));
             this.props.onSetAuthUser(authUser);
           },
           () => {

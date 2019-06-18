@@ -14,7 +14,9 @@ const withAuthentication = Component => {
           this.props.onSetAuthUser(authUser);
         },
         () => {
+          console.log("bad_autentification");
           this.props.onSetAuthUser(null);
+          //localStorage.removeItem('authUser');
         }
       );
     }

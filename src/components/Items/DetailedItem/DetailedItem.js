@@ -193,6 +193,6 @@ export default withStyles(styles)(
       mapStateToProps,
       null
     ),
-    withAuthorization(condition)
+   withAuthorization(condition)
   )(DetailedItem)
 );

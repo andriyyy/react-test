@@ -54,18 +54,14 @@ class SignInFormBase extends Component {
     event.preventDefault();
     const { email, password } = this.state;
     this.props.firebase
-      .doSignInWithEmailAndPassword(email, password)
-      .then(()=>{
-        this.props.firebase.onAuthUserListener(
-          authUser => {
-            this.props.onSetAuthUser(authUser);
-          },
-          () => {
-            localStorage.removeItem("authUser");
-          }
-        );
-      })
+      .doSignInWithEmailAndPassword(
+        email, 
+        password, 
+        (authUser)=>{
+          this.props.onSetAuthUser(authUser);
+        })
       .then(() => {
+        //console.log("sign_in",user.user.uid);
         this.setState({ ...INITIAL_STATE });
         this.props.history.push(ROUTES.HOME);
       })

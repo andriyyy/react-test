@@ -12,6 +12,13 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { getUsersKey, getAuthUser } from "../../../selectors/Selectors";
+import { Field, reduxForm } from "redux-form";
+import renderTextField from './Field';
+import renderUploadField from './Upload';
+import renderSelectField from './Select';
+import renderSelectFieldNew from './SelectNew';
+import { validate } from "../../../validation/Validation";
+
 
 const styles = theme => ({
   formControl: {
@@ -31,7 +38,7 @@ class AddItem extends Component {
     this.state = {
       title: "",
       description: "",
-      picture: "",
+      picture: "uuu",
       pictureUrl: "",
       attendee: "",
       user: [],
@@ -44,7 +51,9 @@ class AddItem extends Component {
   }
 
   onChangeTitle = event => {
+    console.log("fff",event.target.value );
     this.setState({ title: event.target.value });
+    console.log("state", this.state.title );
   };
 
   onChangeDescription = event => {
@@ -52,6 +61,7 @@ class AddItem extends Component {
   };
 
   onChangePicture = event => {
+
     this.setState({
       picture: event.target.files[0]
     });
@@ -67,7 +77,6 @@ class AddItem extends Component {
     this.props.firebase.onSaveItems(
       this.state.picture,
       downloadURL => {
-        console.log("userrr",authUser.uid);
         const lastKey = this.props.firebase.items().push({
           userId: authUser.uid,
           title: this.state.title,
@@ -119,7 +128,8 @@ class AddItem extends Component {
 
   render() {
     const { classes } = this.props;
-    const { title, description } = this.state;
+    const { pristine, handleSubmit, submitting} = this.props;
+    
     return (
       <div>
         <Button
@@ -135,48 +145,85 @@ class AddItem extends Component {
           onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
         >
-          <form
-            onSubmit={event => this.onCreateItem(event, this.props.authUser)}
-          >
+          <form onSubmit={handleSubmit}>
             <DialogTitle id="form-dialog-title"> Add event</DialogTitle>
             <DialogContent>
                 <FormControl margin="normal" required fullWidth>
-                  <TextField
-                    type="text"
-                    value={title}
-                    onChange={this.onChangeTitle}
-                    placeholder="Title"
+                  <Field
+                    name="title"
+                    component={renderTextField}
+                    label="Title"
                   />
                 </FormControl>
                 <FormControl margin="normal" required fullWidth>
-                  <TextField
-                    type="text"
-                    value={description}
-                    onChange={this.onChangeDescription}
-                    placeholder="Description"
+                  <Field
+                    name="description"
+                    component={renderTextField}
+                    label="Description"
                   />
                 </FormControl>
                 <FormControl margin="normal" required fullWidth>
-                  <TextField type="file" onChange={this.onChangePicture} />
+                <Field
+                    name="image"
+                    component={renderUploadField}
+                    label="image"
+                    type="file"
+                  />
                 </FormControl>
-                <FormControl className={classes.formControl}>
-                  <InputLabel htmlFor="user">Users:</InputLabel>
-                  <Select
-                    multiple
-                    value={this.state.user}
+
+            <div>
+                <Field 
+                style={{ height: '100px' }} 
+                name="favoriteColor" 
+                component={renderSelectField}
+                type="select-multiple"
+                multiple>
+                  <option value="">Select a color...</option>
+                          {this.props.users.map(user => (
+                            <option key={user.uid} value={user.uid}>
+                              {user.username}
+                            </option>
+
+                  ))}
+                </Field>
+            </div>
+
+            <div>
+                <Field 
+                style={{ height: '100px' }} 
+                name="favoriteColor" 
+                component="select"
+                type="select-multiple"
+                 multiple>
+                        <option value="">Select a color...</option>
+                                {this.props.users.map(user => (
+                                  <option key={user.uid} value={user.uid}>
+                                    {user.username}
+                                  </option>
+                        ))}
+                      </Field>
+             </div>
+
+                  <Field
+                    name = "user"
+                    component = {renderSelectFieldNew}
+                    user={this.state.user}
                     onChange={this.onAttendeeChange}
-                    input={<Input id="user" />}
+                    classes = {classes}
                   >
                     {this.props.users.map(user => (
                       <MenuItem key={user.uid} value={user.uid}>
                         {user.username}
                       </MenuItem>
                     ))}
-                  </Select>
-                </FormControl>
+                    </Field>
+
+
+
+                
             </DialogContent>
             <DialogActions>
-              <Button type="submit" onClick={this.handleClose} color="primary">
+              <Button type="submit" disabled={pristine || submitting}  color="primary">
                 Send
               </Button>
               <Button onClick={this.handleClose} color="primary">
@@ -199,12 +246,21 @@ const mapDispatchToProps = dispatch => ({
   onSetItems: items => dispatch({ type: "ITEMS_SET", items })
 });
 
+const onSubmit = (values, dispatch) => {
+  dispatch(    alert("jjj")    );
+};
+
 export default withStyles(styles)(
   compose(
     withFirebase,
     connect(
       mapStateToProps,
       mapDispatchToProps
-    )
+    ),
+    reduxForm({
+      form: 'AddItem',
+      onSubmit, 
+      validate
+    })
   )(AddItem)
 );

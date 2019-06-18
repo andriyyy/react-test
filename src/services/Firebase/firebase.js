@@ -24,8 +24,22 @@ class Firebase {
     this.auth = app.auth();
     this.db = app.database();
   }
-  doSignInWithEmailAndPassword = (email, password) =>
-    this.auth.signInWithEmailAndPassword(email, password);
+  doSignInWithEmailAndPassword = (email, password, next) =>
+    this.auth.signInWithEmailAndPassword(email, password)
+    .then((authUser)=>{
+                  // merge auth and db user
+                  authUser = {
+                    uid: authUser.uid,
+                    email: authUser.email,
+                    emailVerified: authUser.emailVerified,
+                    providerData: authUser.providerData
+                  }
+                  return authUser;
+    })
+    .then((authUser)=>{
+        next(authUser);
+    })
+    ;
 
   doCreateUserWithEmailAndPassword = (email, password) =>
     this.auth.createUserWithEmailAndPassword(email, password);
@@ -47,7 +61,8 @@ class Firebase {
   // *** Merge Auth and DB User API *** //
 
   onAuthUserListener = (next, fallback) =>
-    this.auth.onAuthStateChanged(authUser => {
+  this.auth.onAuthStateChanged(authUser => {
+    console.log("authUser", authUser);
       if (authUser) {
         this.user(authUser.uid)
           .once("value")
@@ -61,12 +76,15 @@ class Firebase {
               providerData: authUser.providerData,
               ...dbUser
             };
+            return authUser;
+          }).then((authUser)=>{
             next(authUser);
           });
       } else {
         fallback();
       }
     });
+    
 
   onSaveItems = (picture, saveItem, updateState) => {
     app

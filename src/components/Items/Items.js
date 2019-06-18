@@ -16,6 +16,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { getAuthUser, getItems, getUsersKey } from "../../selectors/Selectors";
+import moment from "moment";
 
 const styles = theme => ({
   margin: {
@@ -79,7 +80,9 @@ class Items extends Component {
       attendee: "",
       user: [],
       open: false,
-      removeId: ""
+      removeId: "",
+     usersMarged : ""
+
     };
   }
 
@@ -160,7 +163,12 @@ class Items extends Component {
       return items;
     }
     return items.filter(item => {
-      return item.title.indexOf(term) > -1;
+      console.log( "marged" , this.state.usersMarged[item.userId].username);
+      return (item.title.indexOf(term) > -1 
+      || item.description.indexOf(term) > -1
+      || this.state.usersMarged[item.userId].username.indexOf(term) > -1
+      || moment(item.createdAt).format('YYYY/MM/DD HH:mm:ss').indexOf(term) > -1
+      );
     });
   };
 
@@ -195,6 +203,7 @@ class Items extends Component {
       var keyTemp = users[key];
       return (usersMarged[keyTemp.uid] = users[key]);
     });
+    this.state.usersMarged = usersMarged;
     const { loading, term, sort } = this.state;
     const visibleItems = this.sorting(this.search(items, term), sort);
 
@@ -263,8 +272,6 @@ class Items extends Component {
     );
   }
 }
-
-// Selectors
 
 const mapStateToProps = state => ({
   authUser: getAuthUser(state),

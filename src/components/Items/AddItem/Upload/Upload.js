@@ -1,5 +1,4 @@
 import React from 'react';
-import TextField from "@material-ui/core/TextField";
 
 const adaptFileEventToValue = delegate => e => delegate(e.target.files[0]);
 

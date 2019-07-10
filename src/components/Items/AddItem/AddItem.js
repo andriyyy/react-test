@@ -5,20 +5,18 @@ import { compose } from "recompose";
 import { withFirebase } from "../../../services/Firebase";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import { Select, Input, MenuItem, InputLabel } from "@material-ui/core";
+import { MenuItem } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { getUsersKey, getAuthUser } from "../../../selectors/Selectors";
+import { getUsersKey, getAuthUser,  getOpenPopUp } from "../../../selectors/Selectors";
 import { Field, reduxForm } from "redux-form";
 import renderTextField from './Field';
 import renderUploadField from './Upload';
-import renderSelectField from './Select';
 import renderSelectFieldNew from './SelectNew';
 import { validate } from "../../../validation/Validation";
-
+import { addItemFetchData, addOpenPopUp } from '../../../actions/forms';
 
 const styles = theme => ({
   formControl: {
@@ -32,104 +30,18 @@ const styles = theme => ({
 });
 
 class AddItem extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      title: "",
-      description: "",
-      picture: "uuu",
-      pictureUrl: "",
-      attendee: "",
-      user: [],
-      open: false
-    };
-  }
-
-  componentDidMount() {
-    this.setState({ open: false });
-  }
-
-  onChangeTitle = event => {
-    console.log("fff",event.target.value );
-    this.setState({ title: event.target.value });
-    console.log("state", this.state.title );
-  };
-
-  onChangeDescription = event => {
-    this.setState({ description: event.target.value });
-  };
-
-  onChangePicture = event => {
-
-    this.setState({
-      picture: event.target.files[0]
-    });
-  };
-
-  onCreateItem = (event, authUser) => {
-    event.preventDefault();
-    if (this.state.picture === "") {
-      event.preventDefault();
-      return false;
-    }
-
-    this.props.firebase.onSaveItems(
-      this.state.picture,
-      downloadURL => {
-        const lastKey = this.props.firebase.items().push({
-          userId: authUser.uid,
-          title: this.state.title,
-          description: this.state.description,
-          pictureUrl: downloadURL,
-          attendee: JSON.stringify(this.state.attendee),
-          createdAt: this.props.firebase.serverValue.TIMESTAMP
-        }).key;
-        this.state.attendee.map(item => {
-          let updates = {
-            [`items_enrolments/${lastKey}/${item.i}`]: true,
-            [`users_enrolments/${item.i}/${lastKey}`]: true
-          }
-          return this.props.firebase.update(updates);
-        });
-
-        this.setState({ title: "", description: "", pictureUrl: "", picture: ""  });
-      },
-      this.saveItemsToState
-    );
-  };
-
-  saveItemsToState = () => {
-    this.props.firebase
-      .items()
-      .once("value")
-      .then(snapshot => {
-        this.props.onSetItems(snapshot.val());
-        this.setState({ user: [] });
-      });
-  };
-
-  onAttendeeChange = event => {
-    this.setState({ user: event.target.value });
-    const attendee = [];
-    for (var i = 0, l = event.target.value.length; i < l; i++) {
-      attendee.push({ i: event.target.value[i] });
-    }
-    this.setState({ attendee });
-  };
 
   handleClickOpen = () => {
-    this.setState({ open: true });
+       this.props.onOpenPopUp(true);
   };
 
   handleClose = () => {
-    this.setState({ open: false });
+       this.props.onOpenPopUp(false);
   };
 
   render() {
-    const { classes } = this.props;
-    const { pristine, handleSubmit, submitting} = this.props;
-    
+    const { classes, pristine, handleSubmit, submitting, valid } = this.props;
+
     return (
       <div>
         <Button
@@ -141,11 +53,11 @@ class AddItem extends Component {
           Add event
         </Button>
         <Dialog
-          open={this.state.open}
+          open={this.props.openPopUp}
           onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
         >
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(submit)}  >
             <DialogTitle id="form-dialog-title"> Add event</DialogTitle>
             <DialogContent>
                 <FormControl margin="normal" required fullWidth>
@@ -170,45 +82,9 @@ class AddItem extends Component {
                     type="file"
                   />
                 </FormControl>
-
-            <div>
-                <Field 
-                style={{ height: '100px' }} 
-                name="favoriteColor" 
-                component={renderSelectField}
-                type="select-multiple"
-                multiple>
-                  <option value="">Select a color...</option>
-                          {this.props.users.map(user => (
-                            <option key={user.uid} value={user.uid}>
-                              {user.username}
-                            </option>
-
-                  ))}
-                </Field>
-            </div>
-
-            <div>
-                <Field 
-                style={{ height: '100px' }} 
-                name="favoriteColor" 
-                component="select"
-                type="select-multiple"
-                 multiple>
-                        <option value="">Select a color...</option>
-                                {this.props.users.map(user => (
-                                  <option key={user.uid} value={user.uid}>
-                                    {user.username}
-                                  </option>
-                        ))}
-                      </Field>
-             </div>
-
                   <Field
                     name = "user"
                     component = {renderSelectFieldNew}
-                    user={this.state.user}
-                    onChange={this.onAttendeeChange}
                     classes = {classes}
                   >
                     {this.props.users.map(user => (
@@ -217,13 +93,9 @@ class AddItem extends Component {
                       </MenuItem>
                     ))}
                     </Field>
-
-
-
-                
             </DialogContent>
             <DialogActions>
-              <Button type="submit" disabled={pristine || submitting}  color="primary">
+              <Button type="submit" disabled={pristine || submitting || !valid}  color="primary">
                 Send
               </Button>
               <Button onClick={this.handleClose} color="primary">
@@ -237,18 +109,22 @@ class AddItem extends Component {
   }
 }
 
+const submit = (values, dispatch, props) => {
+   props.onOpenPopUp(false);
+   props.onSubmitForm(values, props);
+};
+
 const mapStateToProps = state => ({
   authUser: getAuthUser(state),
-  users: getUsersKey(state)
+  users: getUsersKey(state),
+  openPopUp: getOpenPopUp(state)
 });
 
 const mapDispatchToProps = dispatch => ({
-  onSetItems: items => dispatch({ type: "ITEMS_SET", items })
+  onOpenPopUp: (bool) => dispatch(addOpenPopUp(bool)),
+  onSubmitForm: (values, props) => dispatch(addItemFetchData(values, props))
 });
 
-const onSubmit = (values, dispatch) => {
-  dispatch(    alert("jjj")    );
-};
 
 export default withStyles(styles)(
   compose(
@@ -259,7 +135,9 @@ export default withStyles(styles)(
     ),
     reduxForm({
       form: 'AddItem',
-      onSubmit, 
+       initialValues: {
+            user: []
+        },
       validate
     })
   )(AddItem)

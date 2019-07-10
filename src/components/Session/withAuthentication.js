@@ -6,17 +6,22 @@ import { withFirebase } from "../../services/Firebase";
 
 const withAuthentication = Component => {
   class WithAuthentication extends React.Component {
+    state = {
+      sessionRetrieved: true
+    };
 
     componentDidMount() {
       this.listener = this.props.firebase.onAuthUserListener(
         authUser => {
           console.log("autentification", authUser);
           this.props.onSetAuthUser(authUser);
+          this.setState({
+            sessionRetrieved: true
+          })
         },
         () => {
           console.log("bad_autentification");
           this.props.onSetAuthUser(null);
-          //localStorage.removeItem('authUser');
         }
       );
     }
@@ -26,7 +31,7 @@ const withAuthentication = Component => {
     }
 
     render() {
-      return <Component {...this.props} />;
+      return this.state.sessionRetrieved && <Component {...this.props} />;
     }
   }
 

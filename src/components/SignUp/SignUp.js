@@ -1,32 +1,18 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import {  withRouter } from "react-router-dom";
 import { compose } from "recompose";
-
+import { connect } from "react-redux";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
-
 import { withFirebase } from "../../services/Firebase";
-import * as ROUTES from "../../constants/routes";
-
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-
-const SignUpPage = () => (
-  <div>
-    <SignUpForm />
-  </div>
-);
-
-const INITIAL_STATE = {
-  username: "",
-  email: "",
-  passwordOne: "",
-  passwordTwo: "",
-  error: null
-};
+import { Field, reduxForm } from 'redux-form'
+import { validate } from "../../validation/signUpValidation";
+import renderTextField from '../Items/AddItem/Field';
+import { signUpFormBaseFetchData } from '../../actions/forms';
+import { getAuthUserHasErrored } from "../../selectors/Selectors";
 
 const styles = theme => ({
   main: {
@@ -54,108 +40,58 @@ const styles = theme => ({
 });
 
 class SignUpFormBase extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { ...INITIAL_STATE };
-  }
-  onSubmit = event => {
-    event.preventDefault();
-    const { username, email, passwordOne } = this.state;
-    this.props.firebase
-      .doCreateUserWithEmailAndPassword(email, passwordOne)
-      .then(authUser => {
-        // Create a user in your Firebase realtime database
-        return this.props.firebase.user(authUser.user.uid).set({
-          username,
-          email
-        });
-      })
-      .then(() => {
-        this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
-      })
-      .catch(error => {
-        this.setState({ error });
-      });
-  };
-
-  onChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-
   render() {
-    const { classes } = this.props;
-    const { username, email, passwordOne, passwordTwo, error } = this.state;
-
-    const isInvalid =
-      passwordOne !== passwordTwo ||
-      passwordOne === "" ||
-      email === "" ||
-      username === "";
-
+    const { classes,  pristine, handleSubmit, submitting  } = this.props;
     return (
       <main className={classes.main}>
         <Paper className={classes.paper}>
           <Typography component="h1" variant="h5">
             Sign Up
           </Typography>
-          <form onSubmit={this.onSubmit}>
+          <form onSubmit={handleSubmit(submit)} >
             <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="username">Full Name</InputLabel>
-              <Input
-                id="username"
+              <Field
                 name="username"
                 autoComplete="username"
-                autoFocus
-                value={username}
-                onChange={this.onChange}
+                component={renderTextField}
+                label="Full Name"
               />
             </FormControl>
             <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="email">Email Address</InputLabel>
-              <Input
-                id="email"
+              <Field
                 name="email"
                 autoComplete="email"
-                autoFocus
-                value={email}
-                onChange={this.onChange}
+                component={renderTextField}
+                label="Email Address"
               />
             </FormControl>
             <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="passwordOne">Password</InputLabel>
-              <Input
-                id="passwordOne"
+              <Field
                 name="passwordOne"
                 autoComplete="passwordOne"
-                autoFocus
-                value={passwordOne}
-                onChange={this.onChange}
                 type="password"
+                component={renderTextField}
+                label="Password"
               />
             </FormControl>
             <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="passwordTwo">Confirm Password</InputLabel>
-              <Input
-                id="passwordTwo"
+              <Field
                 name="passwordTwo"
                 autoComplete="passwordTwo"
-                autoFocus
-                value={passwordTwo}
-                onChange={this.onChange}
                 type="password"
+                component={renderTextField}
+                label="Confirm Password"
               />
             </FormControl>
             <Button
-              disabled={isInvalid}
               variant="contained"
               color="primary"
               className={classes.submit}
               type="submit"
+              disabled={ pristine || submitting }
             >
               Sign Up
             </Button>
-            {error && <p>{error.message}</p>}
           </form>
         </Paper>
       </main>
@@ -163,19 +99,28 @@ class SignUpFormBase extends Component {
   }
 }
 
-const SignUpLink = () => (
-  <p>
-    Don't have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
-  </p>
-);
+const submit = (values, dispatch, props) => {
+   dispatch(signUpFormBaseFetchData(values, props));
+};
 
-const SignUpForm = withStyles(styles)(
+const mapStateToProps = (state,ownProps) => (
+  {
+    isAuthUserErrored: getAuthUserHasErrored(state),
+  }
+ );
+
+
+export default withStyles(styles)(
   compose(
     withRouter,
-    withFirebase
+    connect(
+      mapStateToProps,
+      null,
+    ),
+    withFirebase,
+    reduxForm({
+      form: 'SignUpFormBase',
+      validate
+    })
   )(SignUpFormBase)
 );
-
-export default SignUpPage;
-
-export { SignUpForm, SignUpLink };

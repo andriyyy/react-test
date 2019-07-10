@@ -5,12 +5,14 @@ import { connect } from "react-redux";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import { withFirebase } from "../../services/Firebase";
-import * as ROUTES from "../../constants/routes";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
+import { Field, reduxForm } from 'redux-form'
+import { validate } from "../../validation/signInValidation";
+import renderTextField from '../Items/AddItem/Field';
+import { signInFormBaseFetchData } from '../../actions/forms';
+import { getAuthUserHasErrored } from "../../selectors/Selectors";
 
 const styles = theme =>
   console.log(theme) || {
@@ -38,88 +40,46 @@ const styles = theme =>
     }
   };
 
-const INITIAL_STATE = {
-  email: "",
-  password: "",
-  error: null
-};
-
 class SignInFormBase extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { ...INITIAL_STATE };
-  }
 
-  onSubmit = event => {
-    event.preventDefault();
-    const { email, password } = this.state;
-    this.props.firebase
-      .doSignInWithEmailAndPassword(
-        email, 
-        password, 
-        (authUser)=>{
-          this.props.onSetAuthUser(authUser);
-        })
-      .then(() => {
-        //console.log("sign_in",user.user.uid);
-        this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
-      })
-      .catch(error => {
-        this.setState({ error });
-      });
-  };
-
-  onChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-
-  render() {
-    const { classes } = this.props;
-    const { email, password, error } = this.state;
-
-    const isInvalid = password === "" || email === "";
-
+ render() {
+        if (this.props.isAuthUserErrored === true) {
+            return <p>Can not Sign In</p>
+        }
+    const { classes, pristine, handleSubmit, submitting } = this.props;
     return (
       <main className={classes.main}>
         <Paper className={classes.paper}>
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form onSubmit={this.onSubmit} className={classes.form}>
+          <form onSubmit={handleSubmit(submit)} className={classes.form}>
             <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="email">Email Address</InputLabel>
-              <Input
-                id="email"
-                name="email"
+              <Field
+                label="Email Address"
                 autoComplete="email"
-                autoFocus
-                value={email}
-                onChange={this.onChange}
+                component={renderTextField}
+                name="email"
               />
             </FormControl>
             <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="password">Password</InputLabel>
-              <Input
-                id="password"
+              <Field
+                label="Password"
                 name="password"
                 autoComplete="password"
-                autoFocus
-                value={password}
-                onChange={this.onChange}
                 type="password"
+                component={renderTextField}
               />
             </FormControl>
             <Button
-              disabled={isInvalid}
-              type="submit"
               variant="contained"
               color="primary"
               className={classes.submit}
+              type="submit" 
+              disabled={ pristine  || submitting}
             >
               Sign In
             </Button>
-            {error && <p>{error.message}</p>}
           </form>
         </Paper>
       </main>
@@ -127,29 +87,27 @@ class SignInFormBase extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  onSetAuthUser: authUser => {
-    dispatch({ type: "AUTH_USER_SET", authUser });
-  }
-});
+const submit = (values, dispatch, props) => {
+   dispatch(signInFormBaseFetchData(values, props));
+};
 
-const SignInForm = withStyles(styles)(
+const mapStateToProps = (state,ownProps) => (
+  {
+    isAuthUserErrored: getAuthUserHasErrored(state),
+  });
+
+
+export default withStyles(styles)(
   compose(
     withRouter,
+  connect(
+    mapStateToProps,
+    null,
+  ),
     withFirebase,
-    connect(
-      null,
-      mapDispatchToProps
-    )
+    reduxForm({
+      form: 'SignInFormBase',
+      validate
+    })
   )(SignInFormBase)
 );
-
-const SignInPage = () => (
-  <div>
-    <SignInForm />
-  </div>
-);
-
-export default SignInPage;
-
-export { SignInForm };

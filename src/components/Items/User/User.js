@@ -7,7 +7,9 @@ import { withAuthorization } from '../../Session';
 import IconButton from '@material-ui/core/IconButton';
 import KeyboardBackspace from '@material-ui/icons/KeyboardBackspace';
 import Link from "@material-ui/core/Link";
-import { getId, getItems, getUsersKey } from "../../../selectors/Selectors";
+import { getId, getItems, getUsersKey, getItemsIds, getItemsIdsHasErrored, getItemsIdsIsLoading, getUser,  getSortedItems } from "../../../selectors/Selectors";
+import { itemsIdsFetchData } from '../../../actions/items';
+import { withFirebase } from "../../../services/Firebase";
 
 const styles = theme => ({
   margin: {
@@ -46,33 +48,14 @@ const styles = theme => ({
 });
 
 class User extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: '',
-      itemsIds: ''
-    };
-  }
 
   componentDidMount() {
     const id = this.props.getId();
-       this.props.firebase.users_enrolments_list(id).once("value")
-    .then(snapshot => {
-      let itemsIds = [];
-      console.log(snapshot.val());
-      if (snapshot.val() !== null ) { 
-      Object.keys(snapshot.val()).map(itemId => {
-       return itemsIds.push(itemId);
-      })
-    }
-      this.setState({ itemsIds: itemsIds });
-    });
+    this.props.fetchItemsIds(this.props.firebase, id);
+  }
 
-    this.props.users.forEach(function (element) {
-      if (id === element.uid) {
-        this.setState({ user: element });
-      }
-    }.bind(this));
+  componentWillUnmount() {
+    this.props.firebase.items().off();
   }
 
   onRedirect = (event) => {
@@ -85,20 +68,16 @@ class User extends Component {
   };
   
   render() {
-    const { uid, username, email } = this.state.user;
-    const itemsF = [];
-    const { classes } = this.props;
-    const itemsC = [];   
-
-    this.props.items.forEach(function (entry) {
-      itemsF[entry.uid] = entry.title;
-      if (uid === entry.userId) {
-        var key = entry.uid;
-        var value = entry.title;
-         itemsC.push({key , value});
-      }
-    });
-
+        if (this.props.isItemsIdsLoading === true ) {
+          return <div>
+          <p style={{ display: 'block', margin: '0 auto' }} className="lds-dual-ring"></p>
+          </div>
+        }
+        if (this.props.isItemsIdsErrored === true) {
+            return <p>Can not load Items</p>
+        }
+    const { uid, username, email } = this.props.user;
+    const { classes, itemsIds, sortedItems} = this.props;
     return (
       <main className={classes.main}>
         <Paper className={classes.padding + ' ' + classes.paper}>
@@ -116,24 +95,23 @@ class User extends Component {
               <ListItem ><b>User e-mail:&nbsp;</b> {email}</ListItem >
               <ListItem ><b>User assigned to events:&nbsp;</b>
               
-              {this.state.itemsIds.length >0 && (
+              {itemsIds.length >0 && (
                 <div>
-                  {this.state.itemsIds.map(itemId => (
+                  {itemsIds.map(itemId => (
                     <Link
                       data-user-id={itemId}
                       onClick={() => this.onView(itemId)}
                       key={itemId}
                     >
-                      {" "}{itemsF[itemId]}{" "}
+                      {" "}{sortedItems.itemsTemporary[itemId]}{" "}
                     </Link>
                   ))}
                 </div>
               )}
               </ListItem >
               <ListItem ><b>User created events:&nbsp;</b>
-
               <div>
-                  {itemsC.map(item => ( 
+                  {sortedItems.itemsResult.map(item => ( 
                     <Link
                       data-user-id={item.key}
                       onClick={() => this.onView(item.key)}
@@ -143,7 +121,6 @@ class User extends Component {
                     </Link>
                   ))}
                 </div>
-
               </ListItem >
             </List >
           </div>
@@ -157,16 +134,26 @@ const mapStateToProps = (state,ownProps) => (
   {
     getId: ()=>{ return getId(ownProps)},
     items: getItems(state),
-    users: getUsersKey(state)
+    users: getUsersKey(state),
+    itemsIds: getItemsIds(state),
+    isItemsIdsErrored: getItemsIdsHasErrored(state),
+    isItemsIdsLoading: getItemsIdsIsLoading(state),
+    user: getUser(state, ownProps, getUsersKey(state)),
+    sortedItems: getSortedItems(state, getItems(state), getUser(state, ownProps, getUsersKey(state)))
   });
+
+const mapDispatchToProps = dispatch => ({
+  fetchItemsIds: (firebase, id) => dispatch(itemsIdsFetchData(firebase,id)),
+});
 
 const condition = authUser => authUser;
 
 export default withStyles(styles)(compose(
+  withFirebase,
   withRouter,
   connect(
     mapStateToProps,
-    null,
+    mapDispatchToProps,
   ),
   withAuthorization(condition)
 )(User));

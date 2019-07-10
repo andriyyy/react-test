@@ -18,9 +18,7 @@ class Firebase {
 
     this.serverValue = app.database.ServerValue;
     this.emailAuthProvider = app.auth.EmailAuthProvider;
-
     app.initializeApp(config);
-
     this.auth = app.auth();
     this.db = app.database();
   }
@@ -29,10 +27,10 @@ class Firebase {
     .then((authUser)=>{
                   // merge auth and db user
                   authUser = {
-                    uid: authUser.uid,
-                    email: authUser.email,
-                    emailVerified: authUser.emailVerified,
-                    providerData: authUser.providerData
+                    uid: authUser.user.uid,
+                    email: authUser.user.email,
+                    emailVerified: authUser.user.emailVerified,
+                    providerData: authUser.user.providerData
                   }
                   return authUser;
     })

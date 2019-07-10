@@ -24,15 +24,14 @@ const renderSelectField = ({
   children,
   ...custom
 }) => (
-console.log("error", error)||
+console.log("error", input)||
   <FormControl className={classes.formControl} error={touched && error}>
     <InputLabel htmlFor="user">Users:</InputLabel>
 
     <Select
-    onChange = {onChangeAction}
                     multiple
-                    value={user}
-                    input={<Input 
+                    {...input}
+                    input={<Input
                       type="text" name="user"  id="user" />}
     >
       {children}

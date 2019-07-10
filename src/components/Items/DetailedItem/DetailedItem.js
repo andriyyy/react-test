@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import Moment from "react-moment";
+import { withFirebase } from "../../../services/Firebase";
 import {
   List,
   Paper,
@@ -14,7 +15,8 @@ import { withAuthorization } from "../../Session";
 import IconButton from "@material-ui/core/IconButton";
 import KeyboardBackspace from "@material-ui/icons/KeyboardBackspace";
 import Link from "@material-ui/core/Link";
-import { getId, getItems, getUsersKey } from "../../../selectors/Selectors";
+import { getId, getAttendeesIds, getAttendeesHasErrored, getAttendeesIsLoading, getItem,getItems, getUsersKey, getAttendeeFormatted } from "../../../selectors/Selectors";
+import { attendeesIdsFetchData } from '../../../actions/users';
 
 const styles = theme => ({
   margin: {
@@ -57,37 +59,16 @@ const styles = theme => ({
 });
 
 class DetailedItem extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      item: "",
-      open: false,
-      attendeesIds: [],
-      user:""
-    };
-  }
 
   componentDidMount() {
-    this.setState({ open: false });
     const id = this.props.getId();
-    this.props.firebase.items_enrolments(id).once("value")
-    .then(snapshot => {
-      let attendeesIds = [];
-      Object.keys(snapshot.val()).map(userId => {
-       return attendeesIds.push(userId);
-      })
-      this.setState({ attendeesIds: attendeesIds });
-    })
-
-    this.props.items.forEach(
-      function(element) {
-        if (id === element.uid) {
-          this.setState({ item: element });
-        }
-      }.bind(this)
-    );
+    this.props.fetchAttendeesIds(this.props.firebase, id);
+ }
+  componentWillUnmount() {
+    this.props.firebase.items().off();
+    this.props.firebase.users().off();
+    this.props.firebase.users_enrolments_list().off();
   }
-
   onRedirect = event => {
     event.preventDefault();
     this.props.history.push(`/home`);
@@ -98,20 +79,24 @@ class DetailedItem extends Component {
   };
 
   render() {
+        if (this.props.isAttendeesLoading === true ) {
+          return <div>
+          <p style={{ display: 'block', margin: '0 auto' }} className="lds-dual-ring"></p>
+          </div>
+        }
+        if (this.props.isAttendeesErrored === true) {
+            return <p>Can not load Attendees</p>
+        }
+
     const {
       title,
       description,
       pictureUrl,
       createdAt,
       userId
-    } = this.state.item;
+    } = this.props.item;
 
-    const attendeeF = [];
-    const { classes } = this.props;
-    this.props.users.forEach(function(entry) {
-      attendeeF[entry.uid] = entry.username;
-
-    });
+    const { classes, attendeesIds} = this.props;
     return (
       <main className={classes.main}>
         <Paper className={classes.padding + " " + classes.paper}>
@@ -151,21 +136,21 @@ class DetailedItem extends Component {
                       onClick={() => this.onView(userId)}
                       key={userId}
                     >
-                      {" "}{attendeeF[userId]}{" "}
+                      {" "}{this.props.attendeeFormatted[userId]}{" "}
                     </Link> 
               </ListItem>
               <ListItem>
                 <b>Users assigned to event:&nbsp;</b>
               </ListItem>
-              {this.state.attendeesIds.length >0 && (
+              {attendeesIds.length > 0 && (
                 <div>
-                  {this.state.attendeesIds.map(attenId => (
+                  {attendeesIds.map(attenId => (
                     <Link
                       data-user-id={attenId}
                       onClick={() => this.onView(attenId)}
                       key={attenId}
                     >
-                      {" "}{attendeeF[attenId]}{" "}
+                      {" "}{this.props.attendeeFormatted[attenId]}{" "}
                     </Link>
                   ))}
                 </div>
@@ -180,18 +165,26 @@ class DetailedItem extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
   getId: ()=>{ return getId(ownProps)},
-  items: getItems(state),
-  users: getUsersKey(state)
+  item: getItem(state, ownProps, getItems(state)),
+  attendeeFormatted: getAttendeeFormatted(state, getUsersKey(state)),
+  attendeesIds: getAttendeesIds(state),
+  isAttendeesErrored: getAttendeesHasErrored(state),
+  isAttendeesLoading: getAttendeesIsLoading(state)
+});
+
+const mapDispatchToProps = dispatch => ({
+  fetchAttendeesIds: (firebase, id) => dispatch(attendeesIdsFetchData(firebase,id)),
 });
 
 const condition = authUser => authUser;
 
 export default withStyles(styles)(
   compose(
+    withFirebase,
     withRouter,
     connect(
       mapStateToProps,
-      null
+      mapDispatchToProps
     ),
    withAuthorization(condition)
   )(DetailedItem)

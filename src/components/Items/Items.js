@@ -81,6 +81,7 @@ class Items extends Component {
       term: "",
       attendee: "",
       user: [],
+      open: false,
       removeId: "",
      usersMarged : ""
 

@@ -40,7 +40,7 @@ class AddItem extends Component {
   };
 
   render() {
-    const { classes, pristine, handleSubmit, submitting, valid } = this.props;
+    const { classes, pristine, handleSubmit, submitting, valid, openPopUp } = this.props;
 
     return (
       <div>
@@ -53,7 +53,7 @@ class AddItem extends Component {
           Add event
         </Button>
         <Dialog
-          open={this.props.openPopUp}
+          open={ openPopUp }
           onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
         >
@@ -124,7 +124,6 @@ const mapDispatchToProps = dispatch => ({
   onOpenPopUp: (bool) => dispatch(addOpenPopUp(bool)),
   onSubmitForm: (values, props) => dispatch(addItemFetchData(values, props))
 });
-
 
 export default withStyles(styles)(
   compose(

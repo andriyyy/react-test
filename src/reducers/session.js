@@ -13,7 +13,7 @@ const applyAuthUserHasErrored = (state, action) => ({
   authUserGetErrored: action.hasErrored,
 });
 
-const applyOpenPopUp = (state, action) => ({
+const applyOpenPopUp = (state = INITIAL_STATE, action) => ({
   ...state,
   openPopUp: action.openPopUp,
 });

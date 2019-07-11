@@ -123,9 +123,11 @@ function getSortedItems(state, items, user) {
     });
 return {itemsTemporary, itemsResult};
 }
+
 function getAuthUserHasErrored(state) {
   return state.sessionState.authUserGetErrored;
 }
+
 function getOpenPopUp(state) {
   return state.sessionState.openPopUp;
 }

@@ -15,7 +15,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { getAuthUser, getItems, getUsersKey, getUsersHasErrored, getUsersIsLoading, getItemsHasErrored, getItemsIsLoading  } from "../../selectors/Selectors";
+import { getAuthUser, getItems, getUsersKey, getUsersHasErrored, getUsersIsLoading, getItemsHasErrored, getItemsIsLoading, getUsersMarged } from "../../selectors/Selectors";
 import moment from "moment";
 import { itemsFetchData } from '../../actions/items';
 import { usersFetchData } from '../../actions/users';
@@ -82,9 +82,7 @@ class Items extends Component {
       attendee: "",
       user: [],
       open: false,
-      removeId: "",
-     usersMarged : ""
-
+      removeId: ""
     };
   }
 
@@ -92,12 +90,13 @@ class Items extends Component {
     this.props.fetchUsers(this.props.firebase);
     this.props.fetchItems(this.props.firebase);
  }
+
   componentWillUnmount() {
     this.props.firebase.items().off();
     this.props.firebase.users().off();
   }
  saveItemsToStateCallback = () => {
-      this.props.fetchItems(this.props.firebase);
+    this.props.fetchItems(this.props.firebase);
   };
 
   onRemoveItem = uid => {
@@ -120,7 +119,7 @@ class Items extends Component {
     return items.filter(item => {
       return (item.title.indexOf(term) > -1 
       || item.description.indexOf(term) > -1
-      || this.state.usersMarged[item.userId].username.indexOf(term) > -1
+      || this.props.usersMarged[item.userId].username.indexOf(term) > -1
       || moment(item.createdAt).format('YYYY/MM/DD HH:mm:ss').indexOf(term) > -1
       );
     });
@@ -162,18 +161,9 @@ class Items extends Component {
             return <p>Can not load Events</p>
         }
 
-
-    const { classes } = this.props;
-    const { users, items } = this.props;
-    var usersMarged = {};
-    Object.keys(users).map(function(key) {
-      var keyTemp = users[key];
-      return (usersMarged[keyTemp.uid] = users[key]);
-    });
-
-    this.state.usersMarged = usersMarged;
-
+    const { classes, users, items, usersMarged } = this.props;
     const {  term, sort } = this.state;
+
     const visibleItems = this.sorting(this.search(items, term), sort);
     return (
       <main className={classes.main}>
@@ -243,6 +233,7 @@ const mapStateToProps = state => ({
   authUser: getAuthUser(state),
   items: getItems(state),
   users: getUsersKey(state),
+  usersMarged: getUsersMarged(state),
   isUsersLoading: getUsersIsLoading(state),
   isItemsLoading: getItemsIsLoading(state),
   isUsersErrored: getUsersHasErrored(state),

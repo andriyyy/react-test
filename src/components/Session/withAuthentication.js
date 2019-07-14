@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { compose } from "recompose";
 
 import { withFirebase } from "../../services/Firebase";
+import { getSignUpSubmitted } from "../../selectors/Selectors";
 
 const withAuthentication = Component => {
   class WithAuthentication extends React.Component {
@@ -14,7 +15,10 @@ const withAuthentication = Component => {
       this.listener = this.props.firebase.onAuthUserListener(
         authUser => {
           console.log("autentification", authUser);
-          this.props.onSetAuthUser(authUser);
+          if(this.props.signUpSubmitted === false){
+            this.props.onSetAuthUser(authUser);
+          }
+
           this.setState({
             sessionRetrieved: true
           })
@@ -40,11 +44,13 @@ const withAuthentication = Component => {
       dispatch({ type: "AUTH_USER_SET", authUser });
     }
   });
-
+  const mapStateToProps = state => ({
+    signUpSubmitted: getSignUpSubmitted(state),
+  });
   return compose(
     withFirebase,
     connect(
-      null,
+      mapStateToProps,
       mapDispatchToProps
     )
   )(WithAuthentication);

@@ -1,7 +1,8 @@
 const INITIAL_STATE = {
   items: null,
   itemsGetErrored: false,
-  itemsIsLoading: false
+  itemsIsLoading: false,
+  signUpSubmitted: false
 };
 
 const applySetItems = (state, action) => ({
@@ -34,6 +35,11 @@ const applyIdsItemsIsLoading = (state, action) => ({
   itemsIdsIsLoading: action.isLoading,
 });
 
+const applySignUpSubmitted = (state, action) => ({
+  ...state,
+  signUpSubmitted:action.signUpSubmitted,
+});
+
 
 function itemReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
@@ -56,6 +62,9 @@ function itemReducer(state = INITIAL_STATE, action) {
     }
     case 'ITEMS_IDS_IS_LOADING':{
       return applyIdsItemsIsLoading(state, action);      
+    }
+    case 'ON_SIGN_UP_SUBMITTED':{
+      return applySignUpSubmitted(state, action);      
     }
     default:
       return state;

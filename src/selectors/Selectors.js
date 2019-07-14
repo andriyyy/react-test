@@ -131,6 +131,21 @@ function getAuthUserHasErrored(state) {
 function getOpenPopUp(state) {
   return state.sessionState.openPopUp;
 }
+
+function getSignUpSubmitted(state) {
+  return state.itemState.signUpSubmitted;
+}
+
+function getUsersMarged(state) {
+    var usersMarged = {};
+    const users = state.userState.users;
+    Object.keys(users || {}).map(function(key) {
+      var keyTemp = users[key];
+      return (usersMarged[key] = users[key]);
+    });
+  return usersMarged;
+}
+
 export { 
   getUsers, 
   getAuthUser, 
@@ -152,5 +167,7 @@ export {
   getUser,
   getSortedItems,
   getAuthUserHasErrored,
-  getOpenPopUp
+  getOpenPopUp,
+  getSignUpSubmitted,
+  getUsersMarged
 };

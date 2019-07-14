@@ -67,14 +67,22 @@ export function itemsHasErrored(bool) {
     };
 }
 
+export function onSignUpSubmitted(bool) {
+    return {
+        type: 'ON_SIGN_UP_SUBMITTED',
+        signUpSubmitted: bool
+    };
+}
+
+
 export function signUpFormBaseFetchData(values, props) {
-  console.log("values", values);
     return (dispatch) => {
     props.firebase.doCreateUserWithEmailAndPassword(
         values.email, 
         values.passwordOne
        ).then(
          (authUser)=>{
+          dispatch(onSignUpSubmitted(true));
           props.firebase.user(authUser.user.uid).set({
           username:values.username,
           email:values.email

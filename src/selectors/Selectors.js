@@ -140,7 +140,6 @@ function getUsersMarged(state) {
     var usersMarged = {};
     const users = state.userState.users;
     Object.keys(users || {}).map(function(key) {
-      var keyTemp = users[key];
       return (usersMarged[key] = users[key]);
     });
   return usersMarged;

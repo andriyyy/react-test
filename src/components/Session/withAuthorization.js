@@ -2,10 +2,9 @@ import React from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "recompose";
-
 import { withFirebase } from "../../services/Firebase";
 import { getAuthUser } from "../../selectors/Selectors";
-import { Redirect } from 'react-router'
+import { Redirect } from 'react-router-dom'
 
 const withAuthorization = condition => Component => {
 

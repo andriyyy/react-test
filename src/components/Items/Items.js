@@ -161,7 +161,7 @@ class Items extends Component {
             return <p>Can not load Events</p>
         }
 
-    const { classes, users, items, usersMarged } = this.props;
+    const { classes, items, usersMarged } = this.props;
     const {  term, sort } = this.state;
 
     const visibleItems = this.sorting(this.search(items, term), sort);

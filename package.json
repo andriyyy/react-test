@@ -5,19 +5,22 @@
   "dependencies": {
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
-    "firebase": "^5.9.0",
+    "chai": "^4.2.0",
+    "firebase": "^5.11.1",
+    "material-ui-icons": "^1.0.0-beta.36",
     "moment": "^2.24.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-moment": "^0.8.4",
     "react-redux": "^6.0.1",
-    "react-router-dom": "^4.4.0",
-    "react-scripts": "2.1.8",
+    "react-router": "^5.0.1",
+    "react-router-dom": "^4.4.0-beta.8",
+    "react-scripts": "^2.1.8",
     "react-timestamp": "^4.4.0",
     "recompose": "^0.30.0",
-    "redux": "^4.0.1",
+    "redux": "^4.0.4",
     "redux-devtools-extension": "^2.13.8",
-    "redux-form": "^8.2.3",
+    "redux-form": "^8.2.4",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0"
   },
@@ -35,5 +38,11 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "eslint-plugin-react": "^7.14.2",
+    "jest-enzyme": "^7.0.2"
+  }
 }

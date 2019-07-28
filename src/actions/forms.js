@@ -74,7 +74,6 @@ export function onSignUpSubmitted(bool) {
     };
 }
 
-
 export function signUpFormBaseFetchData(values, props) {
     return (dispatch) => {
     props.firebase.doCreateUserWithEmailAndPassword(

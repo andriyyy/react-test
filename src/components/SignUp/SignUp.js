@@ -51,6 +51,7 @@ class SignUpFormBase extends Component {
           <form onSubmit={handleSubmit(submit)} >
             <FormControl margin="normal" required fullWidth>
               <Field
+                data-field-name={'username'}
                 name="username"
                 autoComplete="username"
                 component={renderTextField}
@@ -59,6 +60,7 @@ class SignUpFormBase extends Component {
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <Field
+                data-field-name={'email'}
                 name="email"
                 autoComplete="email"
                 component={renderTextField}
@@ -67,6 +69,7 @@ class SignUpFormBase extends Component {
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <Field
+                data-field-name={'passwordOne'}
                 name="passwordOne"
                 autoComplete="passwordOne"
                 type="password"
@@ -76,6 +79,7 @@ class SignUpFormBase extends Component {
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <Field
+                data-field-name={'passwordTwo'}
                 name="passwordTwo"
                 autoComplete="passwordTwo"
                 type="password"

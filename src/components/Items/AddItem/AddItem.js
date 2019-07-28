@@ -62,6 +62,7 @@ class AddItem extends Component {
             <DialogContent>
                 <FormControl margin="normal" required fullWidth>
                   <Field
+                    data-field-name={'title'}
                     name="title"
                     component={renderTextField}
                     label="Title"
@@ -69,6 +70,7 @@ class AddItem extends Component {
                 </FormControl>
                 <FormControl margin="normal" required fullWidth>
                   <Field
+                    data-field-name={'description'}
                     name="description"
                     component={renderTextField}
                     label="Description"
@@ -76,6 +78,7 @@ class AddItem extends Component {
                 </FormControl>
                 <FormControl margin="normal" required fullWidth>
                 <Field
+                    data-field-name={'image'}
                     name="image"
                     component={renderUploadField}
                     label="image"
@@ -83,11 +86,12 @@ class AddItem extends Component {
                   />
                 </FormControl>
                   <Field
+                    data-field-name={'user'}
                     name = "user"
                     component = {renderSelectFieldNew}
                     classes = {classes}
                   >
-                    {this.props.users.map(user => (
+                    {this.props.users.length > 0 && this.props.users.map(user => (
                       <MenuItem key={user.uid} value={user.uid}>
                         {user.username}
                       </MenuItem>

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import { connect } from "react-redux";
 import FormControl from "@material-ui/core/FormControl";
@@ -8,10 +7,10 @@ import { withFirebase } from "../../services/Firebase";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { Field, reduxForm } from 'redux-form'
+import { Field, reduxForm } from "redux-form";
 import { validate } from "../../validation/signInValidation";
-import renderTextField from '../Items/AddItem/Field';
-import { signInFormBaseFetchData } from '../../actions/forms';
+import renderTextField from "../Items/AddItem/Field";
+import { signInFormBaseFetchData } from "../../actions/forms";
 import { getAuthUserHasErrored } from "../../selectors/Selectors";
 
 const styles = theme =>
@@ -41,11 +40,10 @@ const styles = theme =>
   };
 
 class SignInFormBase extends Component {
-
- render() {
-        if (this.props.isAuthUserErrored === true) {
-            return <p>Can not Sign In</p>
-        }
+  render() {
+    if (this.props.isAuthUserErrored === true) {
+      return <p>Can not Sign In</p>;
+    }
     const { classes, pristine, handleSubmit, submitting } = this.props;
     return (
       <main className={classes.main}>
@@ -56,6 +54,7 @@ class SignInFormBase extends Component {
           <form onSubmit={handleSubmit(submit)} className={classes.form}>
             <FormControl margin="normal" required fullWidth>
               <Field
+                data-field-name={'email'}
                 label="Email Address"
                 autoComplete="email"
                 component={renderTextField}
@@ -64,6 +63,7 @@ class SignInFormBase extends Component {
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <Field
+                data-field-name={"password"}
                 label="Password"
                 name="password"
                 autoComplete="password"
@@ -75,8 +75,8 @@ class SignInFormBase extends Component {
               variant="contained"
               color="primary"
               className={classes.submit}
-              type="submit" 
-              disabled={ pristine  || submitting}
+              type="submit"
+              disabled={pristine || submitting}
             >
               Sign In
             </Button>
@@ -88,25 +88,22 @@ class SignInFormBase extends Component {
 }
 
 const submit = (values, dispatch, props) => {
-   dispatch(signInFormBaseFetchData(values, props));
+  dispatch(signInFormBaseFetchData(values, props));
 };
 
-const mapStateToProps = (state,ownProps) => (
-  {
-    isAuthUserErrored: getAuthUserHasErrored(state),
-  });
-
+const mapStateToProps = (state, ownProps) => ({
+  isAuthUserErrored: getAuthUserHasErrored(state)
+});
 
 export default withStyles(styles)(
   compose(
-    withRouter,
-  connect(
-    mapStateToProps,
-    null,
-  ),
+    connect(
+      mapStateToProps,
+      null
+    ),
     withFirebase,
     reduxForm({
-      form: 'SignInFormBase',
+      form: "SignInFormBase",
       validate
     })
   )(SignInFormBase)

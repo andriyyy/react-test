@@ -13,46 +13,41 @@ const applySetUser = (state, action) => ({
   ...state,
   users: {
     ...state.users,
-    [action.uid]: action.user,
-  },
+    [action.uid]: action.user
+  }
 });
 
-const applySetUserHasErrored = (state, action) =>
- ({
-    ...state,
-    usersGetErrored: action.hasErrored
-  });
+const applySetUserHasErrored = (state, action) => ({
+  ...state,
+  usersGetErrored: action.hasErrored
+});
 
-const applyUsersIsLoading = (state, action) =>
- ({
-    ...state,
-    usersIsLoading: action.isLoading
-  });
+const applyUsersIsLoading = (state, action) => ({
+  ...state,
+  usersIsLoading: action.isLoading
+});
 
-const applySetAttendee = (state, action) =>
- ({
-    ...state,
-    attendees: action.attendees
-  });
-  
-const applySetAttendeesHasErrored = (state, action) =>
- ({
-    ...state,
-    attendeesGetErrored: action.hasErrored
-  });
+const applySetAttendee = (state, action) => ({
+  ...state,
+  attendees: action.attendees
+});
 
-const applyAttendeesIsLoading = (state, action) =>
-({
-    ...state,
-    attendeesIsLoading: action.isLoading
-  });
+const applySetAttendeesHasErrored = (state, action) => ({
+  ...state,
+  attendeesGetErrored: action.hasErrored
+});
+
+const applyAttendeesIsLoading = (state, action) => ({
+  ...state,
+  attendeesIsLoading: action.isLoading
+});
 
 function userReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case "USERS_SET": {
       return applySetUsers(state, action);
     }
-    case 'USER_SET': {
+    case "USER_SET": {
       return applySetUser(state, action);
     }
     case "USERS_HAS_ERRORED": {

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-
 import Navigation from "../Navigation";
 import SignUpPage from "../SignUp";
 import SignInPage from "../SignIn";

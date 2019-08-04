@@ -5,28 +5,28 @@ const INITIAL_STATE = {
 
 const applySetAuthUser = (state, action) => ({
   ...state,
-  authUser: action.authUser,
+  authUser: action.authUser
 });
 
 const applyAuthUserHasErrored = (state, action) => ({
   ...state,
-  authUserGetErrored: action.hasErrored,
+  authUserGetErrored: action.hasErrored
 });
 
 const applyOpenPopUp = (state = INITIAL_STATE, action) => ({
   ...state,
-  openPopUp: action.openPopUp,
+  openPopUp: action.openPopUp
 });
 
 function sessionReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case 'AUTH_USER_SET': {
+    case "AUTH_USER_SET": {
       return applySetAuthUser(state, action);
     }
-    case 'AUTH_USER_HAS_ERRORED': {
+    case "AUTH_USER_HAS_ERRORED": {
       return applyAuthUserHasErrored(state, action);
     }
-    case 'OPEN_POP_UP': {
+    case "OPEN_POP_UP": {
       return applyOpenPopUp(state, action);
     }
 
@@ -34,6 +34,5 @@ function sessionReducer(state = INITIAL_STATE, action) {
       return state;
   }
 }
-
 
 export default sessionReducer;

@@ -1,27 +1,26 @@
-import React from 'react';
+import React from "react";
 
 const adaptFileEventToValue = delegate => e => delegate(e.target.files[0]);
 
-const renderUploadField = ({ 
+const renderUploadField = ({
   classes,
   meta,
-  input: { value: omitValue, onChange, onBlur, ...inputProps }, 
-  ...props 
+  input: { value: omitValue, onChange, onBlur, ...inputProps },
+  ...props
 }) => {
   return (
-  <div>
-    <input
-      onChange={adaptFileEventToValue(onChange)}
-      onBlur={adaptFileEventToValue(onBlur)}
-      type="file"
-      {...props.input}
-      {...props}
-    />
+    <div>
+      <input
+        onChange={adaptFileEventToValue(onChange)}
+        onBlur={adaptFileEventToValue(onBlur)}
+        type="file"
+        {...props.input}
+        {...props}
+      />
       {meta.touched && meta.invalid && meta.error && (
-           <p className = "error">{meta.error}</p>
-                   )}
-  </div>
-
+        <p className="error">{meta.error}</p>
+      )}
+    </div>
   );
 };
 

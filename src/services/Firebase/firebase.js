@@ -23,21 +23,21 @@ class Firebase {
     this.db = app.database();
   }
   doSignInWithEmailAndPassword = (email, password, next) =>
-    this.auth.signInWithEmailAndPassword(email, password)
-    .then((authUser)=>{
-                  // merge auth and db user
-                  authUser = {
-                    uid: authUser.user.uid,
-                    email: authUser.user.email,
-                    emailVerified: authUser.user.emailVerified,
-                    providerData: authUser.user.providerData
-                  }
-                  return authUser;
-    })
-    .then((authUser)=>{
+    this.auth
+      .signInWithEmailAndPassword(email, password)
+      .then(authUser => {
+        // merge auth and db user
+        authUser = {
+          uid: authUser.user.uid,
+          email: authUser.user.email,
+          emailVerified: authUser.user.emailVerified,
+          providerData: authUser.user.providerData
+        };
+        return authUser;
+      })
+      .then(authUser => {
         next(authUser);
-    })
-    ;
+      });
 
   doCreateUserWithEmailAndPassword = (email, password) =>
     this.auth.createUserWithEmailAndPassword(email, password);
@@ -53,14 +53,15 @@ class Firebase {
 
   update = updates => this.db.ref().update(updates);
   items_enrolments = iid => this.db.ref(`items_enrolments/${iid}`);
-  users_enrolments = (uid, iid) => this.db.ref(`users_enrolments/${uid}/${iid}`);
-  users_enrolments_list = (uid) => this.db.ref(`users_enrolments/${uid}`);
+  users_enrolments = (uid, iid) =>
+    this.db.ref(`users_enrolments/${uid}/${iid}`);
+  users_enrolments_list = uid => this.db.ref(`users_enrolments/${uid}`);
 
   // *** Merge Auth and DB User API *** //
 
   onAuthUserListener = (next, fallback) =>
-  this.auth.onAuthStateChanged(authUser => {
-    console.log("authUser", authUser);
+    this.auth.onAuthStateChanged(authUser => {
+      console.log("authUser", authUser);
       if (authUser) {
         this.user(authUser.uid)
           .once("value")
@@ -75,14 +76,14 @@ class Firebase {
               ...dbUser
             };
             return authUser;
-          }).then((authUser)=>{
+          })
+          .then(authUser => {
             next(authUser);
           });
       } else {
         fallback();
       }
     });
-    
 
   onSaveItems = (picture, saveItem, updateState) => {
     app
@@ -99,18 +100,21 @@ class Firebase {
   };
 
   onRemoveItems = (iid, updateState) => {
-    this.item(iid).remove().then(()=>{
-      this.items_enrolments(iid).once("value")
-      .then(snapshot => {
-        return snapshot.val();
-      }).then( usersId => {
-        this.items_enrolments(iid).remove();
-        Object.keys(usersId).map(userId => {
-          return this.users_enrolments(userId, iid).remove();
-        })
-      }
-      );
-    });
+    this.item(iid)
+      .remove()
+      .then(() => {
+        this.items_enrolments(iid)
+          .once("value")
+          .then(snapshot => {
+            return snapshot.val();
+          })
+          .then(usersId => {
+            this.items_enrolments(iid).remove();
+            Object.keys(usersId).map(userId => {
+              return this.users_enrolments(userId, iid).remove();
+            });
+          });
+      });
     updateState();
   };
 

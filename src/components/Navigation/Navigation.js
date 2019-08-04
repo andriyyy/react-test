@@ -26,9 +26,8 @@ const styles = theme => ({
   }
 });
 
-
 const Navigation = props => {
-  const { classes, authUser} = props;
+  const { classes, authUser } = props;
   return (
     <div>
       <CssBaseline />
@@ -75,4 +74,5 @@ export default withStyles(styles)(
       mapStateToProps,
       null
     )
-  )(Navigation));
+  )(Navigation)
+);

@@ -13,8 +13,8 @@ configure({ adapter: new Adapter() });
 describe("<SignUp />", () => {
   const wrapper = mount(
     <Provider store={store}>
-    <MemoryRouter>
-      <SignUp />
+      <MemoryRouter>
+        <SignUp />
       </MemoryRouter>
     </Provider>
   );
@@ -36,7 +36,9 @@ describe("<SignUp />", () => {
   });
 
   it("renders a passwordTwo input", () => {
-    expect(wrapper.find('[data-field-name="passwordTwo"] input')).toHaveLength(1);
+    expect(wrapper.find('[data-field-name="passwordTwo"] input')).toHaveLength(
+      1
+    );
   });
 
   it("should render 4 <label>s", () => {
@@ -62,13 +64,12 @@ describe("<SignUp />", () => {
     input.props().value = "hello";
     input.simulate("change");
     expect(input.props().value).toEqual("hello");
-  });  
+  });
 
   it("should capture password correctly onChange", function() {
     const input = wrapper.find('[data-field-name="passwordTwo"] input');
     input.props().value = "hello";
     input.simulate("change");
     expect(input.props().value).toEqual("hello");
-  });    
-
+  });
 });

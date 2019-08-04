@@ -11,14 +11,23 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { getAuthUser, getItems, getUsersKey, getUsersHasErrored, getUsersIsLoading, getItemsHasErrored, getItemsIsLoading, getUsersMarged } from "../../selectors/Selectors";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import {
+  getAuthUser,
+  getItems,
+  getUsersKey,
+  getUsersHasErrored,
+  getUsersIsLoading,
+  getItemsHasErrored,
+  getItemsIsLoading,
+  getUsersMarged
+} from "../../selectors/Selectors";
 import moment from "moment";
-import { itemsFetchData } from '../../actions/items';
-import { usersFetchData } from '../../actions/users';
+import { itemsFetchData } from "../../actions/items";
+import { usersFetchData } from "../../actions/users";
 
 const styles = theme => ({
   margin: {
@@ -52,7 +61,7 @@ const styles = theme => ({
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 120,
-    maxWidth:0
+    maxWidth: 0
   },
   root: {
     width: "100%",
@@ -89,13 +98,13 @@ class Items extends Component {
   componentDidMount() {
     this.props.fetchUsers(this.props.firebase);
     this.props.fetchItems(this.props.firebase);
- }
+  }
 
   componentWillUnmount() {
     this.props.firebase.items().off();
     this.props.firebase.users().off();
   }
- saveItemsToStateCallback = () => {
+  saveItemsToStateCallback = () => {
     this.props.fetchItems(this.props.firebase);
   };
 
@@ -117,10 +126,13 @@ class Items extends Component {
       return items;
     }
     return items.filter(item => {
-      return (item.title.indexOf(term) > -1 
-      || item.description.indexOf(term) > -1
-      || this.props.usersMarged[item.userId].username.indexOf(term) > -1
-      || moment(item.createdAt).format('YYYY/MM/DD HH:mm:ss').indexOf(term) > -1
+      return (
+        item.title.indexOf(term) > -1 ||
+        item.description.indexOf(term) > -1 ||
+        this.props.usersMarged[item.userId].username.indexOf(term) > -1 ||
+        moment(item.createdAt)
+          .format("YYYY/MM/DD HH:mm:ss")
+          .indexOf(term) > -1
       );
     });
   };
@@ -144,25 +156,36 @@ class Items extends Component {
   };
 
   removeItem = () => {
-    this.props.firebase.onRemoveItems(this.state.removeId, this.saveItemsToStateCallback);
+    this.props.firebase.onRemoveItems(
+      this.state.removeId,
+      this.saveItemsToStateCallback
+    );
     this.handleClose();
   };
-  
+
   render() {
-        if (this.props.isUsersLoading === true || this.props.isItemsLoading === true ) {
-          return <div>
-          <p style={{ display: 'block', margin: '0 auto' }} className="lds-dual-ring"></p>
-          </div>
-        }
-        if (this.props.isUsersErrored === true) {
-            return <p>Can not load Users</p>
-        }
-        if (this.props.isItemsErrored === true) {
-            return <p>Can not load Events</p>
-        }
+    if (
+      this.props.isUsersLoading === true ||
+      this.props.isItemsLoading === true
+    ) {
+      return (
+        <div>
+          <p
+            style={{ display: "block", margin: "0 auto" }}
+            className="lds-dual-ring"
+          />
+        </div>
+      );
+    }
+    if (this.props.isUsersErrored === true) {
+      return <p>Can not load Users</p>;
+    }
+    if (this.props.isItemsErrored === true) {
+      return <p>Can not load Events</p>;
+    }
 
     const { classes, items, usersMarged } = this.props;
-    const {  term, sort } = this.state;
+    const { term, sort } = this.state;
 
     const visibleItems = this.sorting(this.search(items, term), sort);
     return (
@@ -171,22 +194,24 @@ class Items extends Component {
           className={classes.root + " " + classes.padding + " " + classes.paper}
         >
           <div>
-          <Dialog
-          open={this.state.open}
-          onClose={this.handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle className={classes.pop_up} id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
-          <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
-              No
-            </Button>
-            <Button onClick={this.removeItem} color="primary" autoFocus>
-              Yes
-            </Button>
-          </DialogActions>
-        </Dialog>
+            <Dialog
+              open={this.state.open}
+              onClose={this.handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle className={classes.pop_up} id="alert-dialog-title">
+                {"Are you sure?"}
+              </DialogTitle>
+              <DialogActions>
+                <Button onClick={this.handleClose} color="primary">
+                  No
+                </Button>
+                <Button onClick={this.removeItem} color="primary" autoFocus>
+                  Yes
+                </Button>
+              </DialogActions>
+            </Dialog>
             <Typography component="h1" variant="h5">
               Home Page
             </Typography>
@@ -225,7 +250,7 @@ class Items extends Component {
           </div>
         </Paper>
       </main>
-);
+    );
   }
 }
 
@@ -241,8 +266,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchUsers: (firebase) => dispatch(usersFetchData(firebase)),
-  fetchItems: (firebase) => dispatch(itemsFetchData(firebase))
+  fetchUsers: firebase => dispatch(usersFetchData(firebase)),
+  fetchItems: firebase => dispatch(itemsFetchData(firebase))
 });
 
 export default withStyles(styles)(

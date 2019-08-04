@@ -10,9 +10,10 @@ const store = mockStore({});
 configure({ adapter: new Adapter() });
 
 describe("<AddItem />", () => {
-  const nextProps ={
+  const nextProps = {
     openPopUp: true
-  }
+  };
+
   const wrapper = mount(
     <Provider store={store}>
       <AddItem {...nextProps} />
@@ -22,16 +23,19 @@ describe("<AddItem />", () => {
   it("renders properly", () => {
     //expect(wrapper).toMatchSnapshot();
   });
-  it("renders form", () => {
 
+  it("renders form", () => {
     expect(wrapper.find("form")).toHaveLength(1);
   });
+
   it("renders an title input", () => {
     expect(wrapper.find('[data-field-name="title"] input')).toHaveLength(1);
   });
 
   it("renders a description input", () => {
-    expect(wrapper.find('[data-field-name="description"] input')).toHaveLength(1);
+    expect(wrapper.find('[data-field-name="description"] input')).toHaveLength(
+      1
+    );
   });
 
   it("renders a image input", () => {
@@ -62,6 +66,4 @@ describe("<AddItem />", () => {
     input.simulate("change");
     expect(input.props().value).toEqual("hello");
   });
-
-  
 });

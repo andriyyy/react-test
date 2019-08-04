@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {  withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import { connect } from "react-redux";
 import FormControl from "@material-ui/core/FormControl";
@@ -8,10 +8,10 @@ import { withFirebase } from "../../services/Firebase";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { Field, reduxForm } from 'redux-form'
+import { Field, reduxForm } from "redux-form";
 import { validate } from "../../validation/signUpValidation";
-import renderTextField from '../Items/AddItem/Field';
-import { signUpFormBaseFetchData } from '../../actions/forms';
+import renderTextField from "../Items/AddItem/Field";
+import { signUpFormBaseFetchData } from "../../actions/forms";
 import { getAuthUserHasErrored } from "../../selectors/Selectors";
 
 const styles = theme => ({
@@ -41,17 +41,17 @@ const styles = theme => ({
 
 class SignUpFormBase extends Component {
   render() {
-    const { classes,  pristine, handleSubmit, submitting  } = this.props;
+    const { classes, pristine, handleSubmit, submitting } = this.props;
     return (
       <main className={classes.main}>
         <Paper className={classes.paper}>
           <Typography component="h1" variant="h5">
             Sign Up
           </Typography>
-          <form onSubmit={handleSubmit(submit)} >
+          <form onSubmit={handleSubmit(submit)}>
             <FormControl margin="normal" required fullWidth>
               <Field
-                data-field-name={'username'}
+                data-field-name={"username"}
                 name="username"
                 autoComplete="username"
                 component={renderTextField}
@@ -60,7 +60,7 @@ class SignUpFormBase extends Component {
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <Field
-                data-field-name={'email'}
+                data-field-name={"email"}
                 name="email"
                 autoComplete="email"
                 component={renderTextField}
@@ -69,7 +69,7 @@ class SignUpFormBase extends Component {
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <Field
-                data-field-name={'passwordOne'}
+                data-field-name={"passwordOne"}
                 name="passwordOne"
                 autoComplete="passwordOne"
                 type="password"
@@ -79,7 +79,7 @@ class SignUpFormBase extends Component {
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <Field
-                data-field-name={'passwordTwo'}
+                data-field-name={"passwordTwo"}
                 name="passwordTwo"
                 autoComplete="passwordTwo"
                 type="password"
@@ -92,7 +92,7 @@ class SignUpFormBase extends Component {
               color="primary"
               className={classes.submit}
               type="submit"
-              disabled={ pristine || submitting }
+              disabled={pristine || submitting}
             >
               Sign Up
             </Button>
@@ -104,26 +104,23 @@ class SignUpFormBase extends Component {
 }
 
 const submit = (values, dispatch, props) => {
-   dispatch(signUpFormBaseFetchData(values, props));
+  dispatch(signUpFormBaseFetchData(values, props));
 };
 
-const mapStateToProps = (state,ownProps) => (
-  {
-    isAuthUserErrored: getAuthUserHasErrored(state),
-  }
- );
-
+const mapStateToProps = (state, ownProps) => ({
+  isAuthUserErrored: getAuthUserHasErrored(state)
+});
 
 export default withStyles(styles)(
   compose(
     withRouter,
     connect(
       mapStateToProps,
-      null,
+      null
     ),
     withFirebase,
     reduxForm({
-      form: 'SignUpFormBase',
+      form: "SignUpFormBase",
       validate
     })
   )(SignUpFormBase)

@@ -10,13 +10,17 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { getUsersKey, getAuthUser,  getOpenPopUp } from "../../../selectors/Selectors";
+import {
+  getUsersKey,
+  getAuthUser,
+  getOpenPopUp
+} from "../../../selectors/Selectors";
 import { Field, reduxForm } from "redux-form";
-import renderTextField from './Field';
-import renderUploadField from './Upload';
-import renderSelectFieldNew from './SelectNew';
+import renderTextField from "./Field";
+import renderUploadField from "./Upload";
+import renderSelectFieldNew from "./SelectNew";
 import { validate } from "../../../validation/Validation";
-import { addItemFetchData, addOpenPopUp } from '../../../actions/forms';
+import { addItemFetchData, addOpenPopUp } from "../../../actions/forms";
 
 const styles = theme => ({
   formControl: {
@@ -30,18 +34,23 @@ const styles = theme => ({
 });
 
 class AddItem extends Component {
-
   handleClickOpen = () => {
-       this.props.onOpenPopUp(true);
+    this.props.onOpenPopUp(true);
   };
 
   handleClose = () => {
-       this.props.onOpenPopUp(false);
+    this.props.onOpenPopUp(false);
   };
 
   render() {
-    const { classes, pristine, handleSubmit, submitting, valid, openPopUp } = this.props;
-
+    const {
+      classes,
+      pristine,
+      handleSubmit,
+      submitting,
+      valid,
+      openPopUp
+    } = this.props;
     return (
       <div>
         <Button
@@ -53,53 +62,58 @@ class AddItem extends Component {
           Add event
         </Button>
         <Dialog
-          open={ openPopUp }
+          open={openPopUp}
           onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
         >
-          <form onSubmit={handleSubmit(submit)}  >
+          <form onSubmit={handleSubmit(submit)}>
             <DialogTitle id="form-dialog-title"> Add event</DialogTitle>
             <DialogContent>
-                <FormControl margin="normal" required fullWidth>
-                  <Field
-                    data-field-name={'title'}
-                    name="title"
-                    component={renderTextField}
-                    label="Title"
-                  />
-                </FormControl>
-                <FormControl margin="normal" required fullWidth>
-                  <Field
-                    data-field-name={'description'}
-                    name="description"
-                    component={renderTextField}
-                    label="Description"
-                  />
-                </FormControl>
-                <FormControl margin="normal" required fullWidth>
+              <FormControl margin="normal" required fullWidth>
                 <Field
-                    data-field-name={'image'}
-                    name="image"
-                    component={renderUploadField}
-                    label="image"
-                    type="file"
-                  />
-                </FormControl>
-                  <Field
-                    data-field-name={'user'}
-                    name = "user"
-                    component = {renderSelectFieldNew}
-                    classes = {classes}
-                  >
-                    {this.props.users.length > 0 && this.props.users.map(user => (
-                      <MenuItem key={user.uid} value={user.uid}>
-                        {user.username}
-                      </MenuItem>
-                    ))}
-                    </Field>
+                  data-field-name={"title"}
+                  name="title"
+                  component={renderTextField}
+                  label="Title"
+                />
+              </FormControl>
+              <FormControl margin="normal" required fullWidth>
+                <Field
+                  data-field-name={"description"}
+                  name="description"
+                  component={renderTextField}
+                  label="Description"
+                />
+              </FormControl>
+              <FormControl margin="normal" required fullWidth>
+                <Field
+                  data-field-name={"image"}
+                  name="image"
+                  component={renderUploadField}
+                  label="image"
+                  type="file"
+                />
+              </FormControl>
+              <Field
+                data-field-name={"user"}
+                name="user"
+                component={renderSelectFieldNew}
+                classes={classes}
+              >
+                {this.props.users.length > 0 &&
+                  this.props.users.map(user => (
+                    <MenuItem key={user.uid} value={user.uid}>
+                      {user.username}
+                    </MenuItem>
+                  ))}
+              </Field>
             </DialogContent>
             <DialogActions>
-              <Button type="submit" disabled={pristine || submitting || !valid}  color="primary">
+              <Button
+                type="submit"
+                disabled={pristine || submitting || !valid}
+                color="primary"
+              >
                 Send
               </Button>
               <Button onClick={this.handleClose} color="primary">
@@ -114,8 +128,8 @@ class AddItem extends Component {
 }
 
 const submit = (values, dispatch, props) => {
-   props.onOpenPopUp(false);
-   props.onSubmitForm(values, props);
+  props.onOpenPopUp(false);
+  props.onSubmitForm(values, props);
 };
 
 const mapStateToProps = state => ({
@@ -125,7 +139,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onOpenPopUp: (bool) => dispatch(addOpenPopUp(bool)),
+  onOpenPopUp: bool => dispatch(addOpenPopUp(bool)),
   onSubmitForm: (values, props) => dispatch(addItemFetchData(values, props))
 });
 
@@ -137,10 +151,10 @@ export default withStyles(styles)(
       mapDispatchToProps
     ),
     reduxForm({
-      form: 'AddItem',
-       initialValues: {
-            user: []
-        },
+      form: "AddItem",
+      initialValues: {
+        user: []
+      },
       validate
     })
   )(AddItem)

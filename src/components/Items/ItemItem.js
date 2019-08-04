@@ -55,9 +55,9 @@ class ItemItem extends Component {
     const createdAt = (
       <Moment format="YYYY/MM/DD HH:mm:ss">{item.createdAt}</Moment>
     );
-    return  (
+    return (
       <TableRow key={item.uid}>
-        <TableCell component="th" scope="row">
+        <TableCell component="td" scope="row">
           <Avatar alt={item.user.username} src={item.pictureUrl} />
         </TableCell>
         <TableCell align="left">

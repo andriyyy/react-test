@@ -44,6 +44,5 @@ describe("<SignIn />", () => {
     input.props().value = "hello";
     input.simulate("change");
     expect(input.props().value).toEqual("hello");
-  });  
-  
+  });
 });

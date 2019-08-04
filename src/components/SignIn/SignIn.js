@@ -13,31 +13,30 @@ import renderTextField from "../Items/AddItem/Field";
 import { signInFormBaseFetchData } from "../../actions/forms";
 import { getAuthUserHasErrored } from "../../selectors/Selectors";
 
-const styles = theme =>
-  console.log(theme) || {
-    main: {
-      width: "auto",
-      display: "block", // Fix IE 11 issue.
-      marginLeft: theme.spacing.unit * 3,
-      marginRight: theme.spacing.unit * 3,
-      [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-        width: 400,
-        marginLeft: "auto",
-        marginRight: "auto"
-      }
-    },
-    paper: {
-      marginTop: theme.spacing.unit * 8,
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
-        .spacing.unit * 3}px`
-    },
-    submit: {
-      marginTop: theme.spacing.unit * 3
+const styles = theme => ({
+  main: {
+    width: "auto",
+    display: "block", // Fix IE 11 issue.
+    marginLeft: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3,
+    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+      width: 400,
+      marginLeft: "auto",
+      marginRight: "auto"
     }
-  };
+  },
+  paper: {
+    marginTop: theme.spacing.unit * 8,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
+      .spacing.unit * 3}px`
+  },
+  submit: {
+    marginTop: theme.spacing.unit * 3
+  }
+});
 
 class SignInFormBase extends Component {
   render() {
@@ -54,7 +53,7 @@ class SignInFormBase extends Component {
           <form onSubmit={handleSubmit(submit)} className={classes.form}>
             <FormControl margin="normal" required fullWidth>
               <Field
-                data-field-name={'email'}
+                data-field-name={"email"}
                 label="Email Address"
                 autoComplete="email"
                 component={renderTextField}

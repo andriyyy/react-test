@@ -15,13 +15,12 @@ const withAuthentication = Component => {
       this.listener = this.props.firebase.onAuthUserListener(
         authUser => {
           console.log("autentification", authUser);
-          if(this.props.signUpSubmitted === false){
+          if (this.props.signUpSubmitted === false) {
             this.props.onSetAuthUser(authUser);
           }
-
           this.setState({
             sessionRetrieved: true
-          })
+          });
         },
         () => {
           console.log("bad_autentification");
@@ -45,7 +44,7 @@ const withAuthentication = Component => {
     }
   });
   const mapStateToProps = state => ({
-    signUpSubmitted: getSignUpSubmitted(state),
+    signUpSubmitted: getSignUpSubmitted(state)
   });
   return compose(
     withFirebase,

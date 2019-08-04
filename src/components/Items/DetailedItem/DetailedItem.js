@@ -15,8 +15,17 @@ import { withAuthorization } from "../../Session";
 import IconButton from "@material-ui/core/IconButton";
 import KeyboardBackspace from "@material-ui/icons/KeyboardBackspace";
 import Link from "@material-ui/core/Link";
-import { getId, getAttendeesIds, getAttendeesHasErrored, getAttendeesIsLoading, getItem,getItems, getUsersKey, getAttendeeFormatted } from "../../../selectors/Selectors";
-import { attendeesIdsFetchData } from '../../../actions/users';
+import {
+  getId,
+  getAttendeesIds,
+  getAttendeesHasErrored,
+  getAttendeesIsLoading,
+  getItem,
+  getItems,
+  getUsersKey,
+  getAttendeeFormatted
+} from "../../../selectors/Selectors";
+import { attendeesIdsFetchData } from "../../../actions/users";
 
 const styles = theme => ({
   margin: {
@@ -59,11 +68,10 @@ const styles = theme => ({
 });
 
 class DetailedItem extends Component {
-
   componentDidMount() {
     const id = this.props.getId();
     this.props.fetchAttendeesIds(this.props.firebase, id);
- }
+  }
   componentWillUnmount() {
     this.props.firebase.items().off();
     this.props.firebase.users().off();
@@ -79,14 +87,19 @@ class DetailedItem extends Component {
   };
 
   render() {
-        if (this.props.isAttendeesLoading === true ) {
-          return <div>
-          <p style={{ display: 'block', margin: '0 auto' }} className="lds-dual-ring"></p>
-          </div>
-        }
-        if (this.props.isAttendeesErrored === true) {
-            return <p>Can not load Attendees</p>
-        }
+    if (this.props.isAttendeesLoading === true) {
+      return (
+        <div>
+          <p
+            style={{ display: "block", margin: "0 auto" }}
+            className="lds-dual-ring"
+          />
+        </div>
+      );
+    }
+    if (this.props.isAttendeesErrored === true) {
+      return <p>Can not load Attendees</p>;
+    }
 
     const {
       title,
@@ -96,7 +109,7 @@ class DetailedItem extends Component {
       userId
     } = this.props.item;
 
-    const { classes, attendeesIds} = this.props;
+    const { classes, attendeesIds } = this.props;
     return (
       <main className={classes.main}>
         <Paper className={classes.padding + " " + classes.paper}>
@@ -130,14 +143,15 @@ class DetailedItem extends Component {
                 <Moment format="YYYY/MM/DD HH:mm:ss">{createdAt}</Moment>
               </ListItem>
               <ListItem>
-                <b>Event created by:&nbsp; </b>{" "} 
-                    <Link
-                      data-user-id={userId}
-                      onClick={() => this.onView(userId)}
-                      key={userId}
-                    >
-                      {" "}{this.props.attendeeFormatted[userId]}{" "}
-                    </Link> 
+                <b>Event created by:&nbsp; </b>{" "}
+                <Link
+                  data-user-id={userId}
+                  onClick={() => this.onView(userId)}
+                  key={userId}
+                >
+                  {" "}
+                  {this.props.attendeeFormatted[userId]}{" "}
+                </Link>
               </ListItem>
               <ListItem>
                 <b>Users assigned to event:&nbsp;</b>
@@ -150,7 +164,8 @@ class DetailedItem extends Component {
                       onClick={() => this.onView(attenId)}
                       key={attenId}
                     >
-                      {" "}{this.props.attendeeFormatted[attenId]}{" "}
+                      {" "}
+                      {this.props.attendeeFormatted[attenId]}{" "}
                     </Link>
                   ))}
                 </div>
@@ -164,7 +179,9 @@ class DetailedItem extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  getId: ()=>{ return getId(ownProps)},
+  getId: () => {
+    return getId(ownProps);
+  },
   item: getItem(state, ownProps, getItems(state)),
   attendeeFormatted: getAttendeeFormatted(state, getUsersKey(state)),
   attendeesIds: getAttendeesIds(state),
@@ -173,7 +190,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchAttendeesIds: (firebase, id) => dispatch(attendeesIdsFetchData(firebase,id)),
+  fetchAttendeesIds: (firebase, id) =>
+    dispatch(attendeesIdsFetchData(firebase, id))
 });
 
 const condition = authUser => authUser;
@@ -186,6 +204,6 @@ export default withStyles(styles)(
       mapStateToProps,
       mapDispatchToProps
     ),
-   withAuthorization(condition)
+    withAuthorization(condition)
   )(DetailedItem)
 );

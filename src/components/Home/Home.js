@@ -3,17 +3,14 @@ import { withAuthorization } from "../Session";
 import Items from "../Items";
 
 class HomePage extends Component {
-
   render() {
     return (
       <div>
-          <Items />
+        <Items />
       </div>
     );
   }
 }
 
 const condition = authUser => authUser;
-export default (
-  withAuthorization(condition)
-)(HomePage);
+export default withAuthorization(condition)(HomePage);

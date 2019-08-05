@@ -43,10 +43,10 @@ export function signInFormBaseFetchData(values, props) {
   };
 }
 
-export function signUpFormBaseHasErrored(bool) {
+export function signUpFormBaseHasErrored(error) {
   return {
-    type: "SIGN_IN_AUTH_USER_HAS_ERRORED",
-    hasErrored: bool
+    type: "SIGN_UP_AUTH_USER_HAS_ERRORED",
+    hasErrored: error
   };
 }
 
@@ -87,7 +87,7 @@ export function signUpFormBaseFetchData(values, props) {
       })
       .catch(error => {
         console.log("error", error);
-        dispatch(signUpFormBaseHasErrored(true));
+        dispatch(signUpFormBaseHasErrored(error.message));
       });
   };
 }

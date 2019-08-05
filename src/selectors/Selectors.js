@@ -159,6 +159,14 @@ function getAuthUserHasErrored(state) {
   }
 }
 
+function getSignUpHasErrored(state) {
+  if (typeof state.sessionState !== "undefined") {
+    return state.sessionState.signUpHasErrored;
+  } else {
+    return false;
+  }
+}
+
 function getOpenPopUp(state) {
   if (typeof state.sessionState !== "undefined") {
     return state.sessionState.openPopUp;
@@ -203,5 +211,6 @@ export {
   getAuthUserHasErrored,
   getOpenPopUp,
   getSignUpSubmitted,
-  getUsersMarged
+  getUsersMarged,
+  getSignUpHasErrored
 };

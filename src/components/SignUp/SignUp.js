@@ -12,7 +12,7 @@ import { Field, reduxForm } from "redux-form";
 import { validate } from "../../validation/signUpValidation";
 import renderTextField from "../Items/AddItem/Field";
 import { signUpFormBaseFetchData } from "../../actions/forms";
-import { getAuthUserHasErrored } from "../../selectors/Selectors";
+import { getSignUpHasErrored } from "../../selectors/Selectors";
 
 const styles = theme => ({
   main: {
@@ -41,6 +41,9 @@ const styles = theme => ({
 
 class SignUpFormBase extends Component {
   render() {
+    if (this.props.isAuthUserErrored) {
+      return <p>{this.props.isAuthUserErrored}</p>;
+    }
     const { classes, pristine, handleSubmit, submitting } = this.props;
     return (
       <main className={classes.main}>
@@ -108,7 +111,7 @@ const submit = (values, dispatch, props) => {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  isAuthUserErrored: getAuthUserHasErrored(state)
+  isAuthUserErrored: getSignUpHasErrored(state)
 });
 
 export default withStyles(styles)(

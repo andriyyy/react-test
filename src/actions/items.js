@@ -49,7 +49,6 @@ export function itemsFetchData(firebase) {
        return snapshot.val();
       })
       .then(items => {
-        console.log("items",items);
        dispatch(itemsIsLoading(false));
        return items;
       })

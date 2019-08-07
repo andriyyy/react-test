@@ -41,10 +41,7 @@ const styles = theme => ({
 
 class SignUpFormBase extends Component {
   render() {
-    if (this.props.isAuthUserErrored) {
-      return <p>{this.props.isAuthUserErrored}</p>;
-    }
-    const { classes, pristine, handleSubmit, submitting } = this.props;
+    const { classes, pristine, handleSubmit, submitting, isAuthUserErrored } = this.props;
     return (
       <main className={classes.main}>
         <Paper className={classes.paper}>
@@ -90,6 +87,11 @@ class SignUpFormBase extends Component {
                 label="Confirm Password"
               />
             </FormControl>
+            {isAuthUserErrored && (
+              <div className="input-feedback">
+                <p>{isAuthUserErrored}</p>
+              </div>
+            )}
             <Button
               variant="contained"
               color="primary"

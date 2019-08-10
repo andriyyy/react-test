@@ -9,7 +9,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { connect } from "react-redux";
-import { compose } from "recompose";
 import { getAuthUser } from "../../selectors/Selectors";
 
 const styles = theme => ({
@@ -69,10 +68,8 @@ const mapStateToProps = state => ({
 });
 
 export default withStyles(styles)(
-  compose(
     connect(
       mapStateToProps,
       null
-    )
-  )(Navigation)
+    )(Navigation)
 );

@@ -52,7 +52,6 @@ class ItemItem extends Component {
 
   render() {
     const { item, onRemoveItem } = this.props;
-    console.log("!!!!!!!", item);
     const createdAt = (
       <Moment format="YYYY/MM/DD HH:mm:ss">{item.createdAt}</Moment>
     );

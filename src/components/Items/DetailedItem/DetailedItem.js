@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import Moment from "react-moment";
-import { withFirebase } from "../../../services/Firebase";
 import {
   List,
   Paper,
@@ -26,6 +25,11 @@ import {
   getAttendeeFormatted
 } from "../../../selectors/Selectors";
 import { attendeesIdsFetchData } from "../../../actions/users";
+import {
+  itemsOff,
+  usersOff,
+  usersEnrolmentsListOff
+} from "../../../actions/firebase";
 
 const styles = theme => ({
   margin: {
@@ -70,13 +74,15 @@ const styles = theme => ({
 class DetailedItem extends Component {
   componentDidMount() {
     const id = this.props.getId();
-    this.props.fetchAttendeesIds(this.props.firebase, id);
+    this.props.fetchAttendeesIds(id);
   }
+  
   componentWillUnmount() {
-    this.props.firebase.items().off();
-    this.props.firebase.users().off();
-    this.props.firebase.users_enrolments_list().off();
+    this.props.onItemsOff();
+    this.props.onUsersOff();
+    this.props.onUsersEnrolmentsListOff();
   }
+
   onRedirect = event => {
     event.preventDefault();
     this.props.history.push(`/home`);
@@ -190,15 +196,16 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchAttendeesIds: (firebase, id) =>
-    dispatch(attendeesIdsFetchData(firebase, id))
+  fetchAttendeesIds: id => dispatch(attendeesIdsFetchData(id)),
+  onItemsOff: () => dispatch(itemsOff()),
+  onUsersOff: () => dispatch(usersOff()),
+  onUsersEnrolmentsListOff: () => dispatch(usersEnrolmentsListOff())
 });
 
 const condition = authUser => authUser;
 
 export default withStyles(styles)(
   compose(
-    withFirebase,
     withRouter,
     connect(
       mapStateToProps,

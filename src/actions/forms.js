@@ -29,8 +29,8 @@ export function addOpenPopUp(bool) {
 }
 
 export function signInFormBaseFetchData(values, props) {
-  return dispatch => {
-    props.firebase
+  return (dispatch, getState, { firebase }) => {
+    firebase
       .doSignInWithEmailAndPassword(values.email, values.password, authUser => {
         dispatch(signInFormBaseFetchDataSuccess(authUser));
       })
@@ -72,12 +72,12 @@ export function onSignUpSubmitted(bool) {
 }
 
 export function signUpFormBaseFetchData(values, props) {
-  return dispatch => {
-    props.firebase
+  return (dispatch, getState, { firebase }) => {
+    firebase
       .doCreateUserWithEmailAndPassword(values.email, values.passwordOne)
       .then(authUser => {
         dispatch(onSignUpSubmitted(true));
-        props.firebase.user(authUser.user.uid).set({
+        firebase.user(authUser.user.uid).set({
           username: values.username,
           email: values.email
         });
@@ -93,28 +93,28 @@ export function signUpFormBaseFetchData(values, props) {
 }
 
 export function addItemFetchData(values, props) {
-  return dispatch => {
-    props.firebase.onSaveItems(
+  return (dispatch, getState, { firebase }) => {
+    firebase.onSaveItems(
       values.image,
       downloadURL => {
-        const lastKey = props.firebase.items().push({
+        const lastKey = firebase.items().push({
           userId: props.authUser.uid,
           title: values.title,
           description: values.description,
           pictureUrl: downloadURL,
           attendee: JSON.stringify(values.user),
-          createdAt: props.firebase.serverValue.TIMESTAMP
+          createdAt: firebase.serverValue.TIMESTAMP
         }).key;
         values.user.map(item => {
           let updates = {
             [`items_enrolments/${lastKey}/${item}`]: true,
             [`users_enrolments/${item}/${lastKey}`]: true
           };
-          return props.firebase.update(updates);
+          return firebase.update(updates);
         });
       },
       () => {
-        props.firebase
+        firebase
           .items()
           .once("value")
           .then(snapshot => {

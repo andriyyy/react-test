@@ -3,7 +3,6 @@ import { compose } from "recompose";
 import { connect } from "react-redux";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
-import { withFirebase } from "../../services/Firebase";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -40,7 +39,13 @@ const styles = theme => ({
 
 class SignInFormBase extends Component {
   render() {
-    const { classes, pristine, handleSubmit, submitting, isAuthUserErrored } = this.props;
+    const {
+      classes,
+      pristine,
+      handleSubmit,
+      submitting,
+      isAuthUserErrored
+    } = this.props;
     return (
       <main className={classes.main}>
         <Paper className={classes.paper}>
@@ -102,7 +107,6 @@ export default withStyles(styles)(
       mapStateToProps,
       null
     ),
-    withFirebase,
     reduxForm({
       form: "SignInFormBase",
       validate

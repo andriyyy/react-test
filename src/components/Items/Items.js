@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { compose } from "recompose";
-import { withFirebase } from "../../services/Firebase";
 import ItemList from "./ItemList";
 import SearchPanel from "../SearchPanel";
 import AddItem from "./AddItem";
@@ -28,6 +26,7 @@ import {
 import moment from "moment";
 import { itemsFetchData } from "../../actions/items";
 import { usersFetchData } from "../../actions/users";
+import { itemsOff, usersOff, removeItems } from "../../actions/firebase";
 
 const styles = theme => ({
   margin: {
@@ -96,16 +95,16 @@ class Items extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchUsers(this.props.firebase);
-    this.props.fetchItems(this.props.firebase);
+    this.props.fetchUsers();
+    this.props.fetchItems();
   }
 
   componentWillUnmount() {
-    this.props.firebase.items().off();
-    this.props.firebase.users().off();
+    this.props.onItemsOff();
+    this.props.onUsersOff();
   }
   saveItemsToStateCallback = () => {
-    this.props.fetchItems(this.props.firebase);
+    this.props.fetchItems();
   };
 
   onRemoveItem = uid => {
@@ -156,7 +155,7 @@ class Items extends Component {
   };
 
   removeItem = () => {
-    this.props.firebase.onRemoveItems(
+    this.props.onRemoveItems(
       this.state.removeId,
       this.saveItemsToStateCallback
     );
@@ -266,16 +265,17 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchUsers: firebase => dispatch(usersFetchData(firebase)),
-  fetchItems: firebase => dispatch(itemsFetchData(firebase))
+  fetchUsers: () => dispatch(usersFetchData()),
+  fetchItems: () => dispatch(itemsFetchData()),
+  onItemsOff: () => dispatch(itemsOff()),
+  onUsersOff: () => dispatch(usersOff()),
+  onRemoveItems: (removeId, saveItemsToStateCallback) =>
+    dispatch(removeItems(removeId, saveItemsToStateCallback))
 });
 
 export default withStyles(styles)(
-  compose(
-    withFirebase,
     connect(
       mapStateToProps,
       mapDispatchToProps
-    )
-  )(Items)
+    )(Items)
 );

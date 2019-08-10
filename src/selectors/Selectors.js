@@ -188,6 +188,10 @@ function getUsersMarged(state) {
   return usersMarged;
 }
 
+function getRetriaved(state) {
+  return state.sessionState.sessionRetrieved;
+}
+
 export {
   getUsers,
   getAuthUser,
@@ -212,5 +216,6 @@ export {
   getOpenPopUp,
   getSignUpSubmitted,
   getUsersMarged,
-  getSignUpHasErrored
+  getSignUpHasErrored,
+  getRetriaved
 };

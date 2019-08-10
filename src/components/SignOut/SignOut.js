@@ -1,13 +1,21 @@
-import React from "react";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { onDoSignOut } from "../../actions/firebase";
 
-import { withFirebase } from "../../services/Firebase";
 import Button from "@material-ui/core/Button";
 
+class SignOutButton extends Component {
+  render() {
+    return  <Button color="primary" onClick={this.props.doSignOut}>
+      Sign Out
+    </Button>;
+  }
+}
+const mapDispatchToProps = dispatch => ({
+  doSignOut: () => dispatch(onDoSignOut())
+});
 
-const SignOutButton = ({ firebase }) => (
-  <Button color="primary" onClick={firebase.doSignOut}>
-    Sign Out
-  </Button>
-);
-
-export default withFirebase(SignOutButton);
+export default connect(
+  null,
+  mapDispatchToProps
+)(SignOutButton);

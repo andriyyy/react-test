@@ -1,6 +1,7 @@
 const INITIAL_STATE = {
   authUser: null,
-  openPopUp: false
+  openPopUp: false,
+  sessionRetrieved: true
 };
 
 const applySetAuthUser = (state, action) => ({
@@ -23,6 +24,11 @@ const applySignUpHasErrored = (state, action) => ({
   signUpHasErrored: action.hasErrored
 });
 
+const applySessionRetrived = (state, action) => ({
+  ...state,
+  sessionRetrieved: action.sessionRetrieved
+});
+
 function sessionReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case "AUTH_USER_SET": {
@@ -37,7 +43,10 @@ function sessionReducer(state = INITIAL_STATE, action) {
     case "OPEN_POP_UP": {
       return applyOpenPopUp(state, action);
     }
-
+    case "SESSION_RETRIVED": {
+      return applySessionRetrived(state, action);
+    }
+    
     default:
       return state;
   }

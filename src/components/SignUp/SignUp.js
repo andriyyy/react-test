@@ -4,7 +4,6 @@ import { compose } from "recompose";
 import { connect } from "react-redux";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
-import { withFirebase } from "../../services/Firebase";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -123,7 +122,6 @@ export default withStyles(styles)(
       mapStateToProps,
       null
     ),
-    withFirebase,
     reduxForm({
       form: "SignUpFormBase",
       validate

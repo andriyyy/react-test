@@ -25,6 +25,7 @@ import {
 } from "../../../selectors/Selectors";
 import { itemsIdsFetchData } from "../../../actions/items";
 import { withFirebase } from "../../../services/Firebase";
+import { itemsOff } from "../../../actions/firebase";
 
 const styles = theme => ({
   margin: {
@@ -70,7 +71,7 @@ class User extends Component {
   }
 
   componentWillUnmount() {
-    this.props.firebase.items().off();
+    this.props.onItemsOff();
   }
 
   onRedirect = event => {
@@ -178,7 +179,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchItemsIds: (firebase, id) => dispatch(itemsIdsFetchData(firebase, id))
+  fetchItemsIds: id => dispatch(itemsIdsFetchData(id)),
+  onItemsOff: () => dispatch(itemsOff())
 });
 
 const condition = authUser => authUser;

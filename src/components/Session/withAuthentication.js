@@ -1,9 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { compose } from "recompose";
-
-import { withFirebase } from "../../services/Firebase";
-import { getSignUpSubmitted } from "../../selectors/Selectors";
+import { getSignUpSubmitted, getRetriaved } from "../../selectors/Selectors";
+import { onAuthUserListener } from "../../actions/firebase";
 
 const withAuthentication = Component => {
   class WithAuthentication extends React.Component {
@@ -12,21 +10,7 @@ const withAuthentication = Component => {
     };
 
     componentDidMount() {
-      this.listener = this.props.firebase.onAuthUserListener(
-        authUser => {
-          console.log("autentification", authUser);
-          if (this.props.signUpSubmitted === false) {
-            this.props.onSetAuthUser(authUser);
-          }
-          this.setState({
-            sessionRetrieved: true
-          });
-        },
-        () => {
-          console.log("bad_autentification");
-          this.props.onSetAuthUser(null);
-        }
-      );
+      this.listener = this.props.authUserListener();
     }
 
     componentWillUnmount() {
@@ -34,25 +18,29 @@ const withAuthentication = Component => {
     }
 
     render() {
-      return this.state.sessionRetrieved && <Component {...this.props} />;
+      return this.props.onGetRetriaved && <Component {...this.props} />;
     }
   }
 
   const mapDispatchToProps = dispatch => ({
     onSetAuthUser: authUser => {
       dispatch({ type: "AUTH_USER_SET", authUser });
-    }
+    },
+    authUserListener: () => dispatch(onAuthUserListener())
   });
+
   const mapStateToProps = state => ({
-    signUpSubmitted: getSignUpSubmitted(state)
+    signUpSubmitted: getSignUpSubmitted(state),
+    onGetRetriaved: getRetriaved(state)
   });
-  return compose(
-    withFirebase,
+
+  return (
     connect(
       mapStateToProps,
       mapDispatchToProps
     )
   )(WithAuthentication);
+
 };
 
 export default withAuthentication;

@@ -1,10 +1,8 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { compose } from "recompose";
-import { withFirebase } from "../../services/Firebase";
 import { getAuthUser } from "../../selectors/Selectors";
 import { Redirect } from "react-router-dom";
+import { onDoSignOut } from "../../actions/firebase";
 
 const withAuthorization = condition => Component => {
   class WithAuthorization extends React.Component {
@@ -13,7 +11,7 @@ const withAuthorization = condition => Component => {
       if (condition(this.props.authUser)) {
         return <Component {...this.props} />;
       } else {
-        this.props.firebase.doSignOut();
+        this.props.doSignOut();
         return <Redirect to="/signin" />;
       }
     }
@@ -23,13 +21,14 @@ const withAuthorization = condition => Component => {
     authUser: getAuthUser(state)
   });
 
-  return compose(
-    withFirebase,
-    withRouter,
-    withFirebase,
+  const mapDispatchToProps = dispatch => ({
+    doSignOut: () => dispatch(onDoSignOut())
+  });
+
+  return (
     connect(
       mapStateToProps,
-      null
+      mapDispatchToProps
     )
   )(WithAuthorization);
 };

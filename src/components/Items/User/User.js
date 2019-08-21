@@ -67,7 +67,7 @@ const styles = theme => ({
 class User extends Component {
   componentDidMount() {
     const id = this.props.getId();
-    this.props.fetchItemsIds(this.props.firebase, id);
+    this.props.fetchItemsIds(id);
   }
 
   componentWillUnmount() {

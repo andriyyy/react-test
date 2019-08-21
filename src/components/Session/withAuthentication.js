@@ -23,9 +23,6 @@ const withAuthentication = Component => {
   }
 
   const mapDispatchToProps = dispatch => ({
-    onSetAuthUser: authUser => {
-      dispatch({ type: "AUTH_USER_SET", authUser });
-    },
     authUserListener: () => dispatch(onAuthUserListener())
   });
 

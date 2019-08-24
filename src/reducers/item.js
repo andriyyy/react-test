@@ -40,6 +40,11 @@ const applySignUpSubmitted = (state, action) => ({
   signUpSubmitted: action.signUpSubmitted
 });
 
+const applyRemoveId = (state, items) => ({
+  ...state,
+  items
+});
+
 function itemReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case "ITEMS_SET": {
@@ -52,7 +57,6 @@ function itemReducer(state = INITIAL_STATE, action) {
       return applyItemsIsLoading(state, action);
     }
     case "ITEMS_IDS_SET": {
-      console.log("stateooo", state);
       return applyIdsSetItems(state, action);
     }
     case "ITEMS_IDS_HAS_ERRORED": {
@@ -63,6 +67,11 @@ function itemReducer(state = INITIAL_STATE, action) {
     }
     case "ON_SIGN_UP_SUBMITTED": {
       return applySignUpSubmitted(state, action);
+    }
+    case "REMOVE_ID": {
+      const newState = Object.assign({}, state);
+      delete newState.items[action.removeId];
+      return applyRemoveId(state, newState.items);
     }
     default:
       return state;

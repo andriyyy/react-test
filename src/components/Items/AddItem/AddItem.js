@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { compose } from "recompose";
-import { withFirebase } from "../../../services/Firebase";
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import { MenuItem } from "@material-ui/core";
@@ -15,7 +14,7 @@ import {
   getAuthUser,
   getOpenPopUp
 } from "../../../selectors/Selectors";
-import { Field, reduxForm } from "redux-form";
+import { reset, Field, reduxForm } from "redux-form";
 import renderTextField from "./Field";
 import renderUploadField from "./Upload";
 import renderSelectFieldNew from "./SelectNew";
@@ -143,15 +142,17 @@ const mapDispatchToProps = dispatch => ({
   onSubmitForm: (values, props) => dispatch(addItemFetchData(values, props))
 });
 
+const afterSubmit = (result, dispatch) => dispatch(reset("AddItem"));
+
 export default withStyles(styles)(
   compose(
-    withFirebase,
     connect(
       mapStateToProps,
       mapDispatchToProps
     ),
     reduxForm({
       form: "AddItem",
+      onSubmitSuccess: afterSubmit,
       initialValues: {
         user: []
       },

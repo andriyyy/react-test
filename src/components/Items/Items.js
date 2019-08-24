@@ -24,7 +24,7 @@ import {
   getUsersMarged
 } from "../../selectors/Selectors";
 import moment from "moment";
-import { itemsFetchData } from "../../actions/items";
+import { itemsFetchData, deleteItem } from "../../actions/items";
 import { usersFetchData } from "../../actions/users";
 import { itemsOff, usersOff, removeItems } from "../../actions/firebase";
 
@@ -103,8 +103,9 @@ class Items extends Component {
     this.props.onItemsOff();
     this.props.onUsersOff();
   }
-  saveItemsToStateCallback = () => {
-    this.props.fetchItems();
+
+  deleteItemFromStateCallback = () => {
+    this.props.onDeleteItem(this.state.removeId);
   };
 
   onRemoveItem = uid => {
@@ -157,7 +158,7 @@ class Items extends Component {
   removeItem = () => {
     this.props.onRemoveItems(
       this.state.removeId,
-      this.saveItemsToStateCallback
+      this.deleteItemFromStateCallback
     );
     this.handleClose();
   };
@@ -269,13 +270,14 @@ const mapDispatchToProps = dispatch => ({
   fetchItems: () => dispatch(itemsFetchData()),
   onItemsOff: () => dispatch(itemsOff()),
   onUsersOff: () => dispatch(usersOff()),
+  onDeleteItem: removeId => dispatch(deleteItem(removeId)),
   onRemoveItems: (removeId, saveItemsToStateCallback) =>
     dispatch(removeItems(removeId, saveItemsToStateCallback))
 });
 
 export default withStyles(styles)(
-    connect(
-      mapStateToProps,
-      mapDispatchToProps
-    )(Items)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Items)
 );

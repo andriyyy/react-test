@@ -24,7 +24,6 @@ import {
   getSortedItems
 } from "../../../selectors/Selectors";
 import { itemsIdsFetchData } from "../../../actions/items";
-import { withFirebase } from "../../../services/Firebase";
 import { itemsOff } from "../../../actions/firebase";
 
 const styles = theme => ({
@@ -187,7 +186,6 @@ const condition = authUser => authUser;
 
 export default withStyles(styles)(
   compose(
-    withFirebase,
     withRouter,
     connect(
       mapStateToProps,

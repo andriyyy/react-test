@@ -3,6 +3,7 @@ import "firebase/auth";
 import "firebase/database";
 import "firebase/storage";
 
+
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
@@ -18,7 +19,6 @@ class Firebase {
 
     this.serverValue = app.database.ServerValue;
     this.emailAuthProvider = app.auth.EmailAuthProvider;
-
     app.initializeApp(config);
 
     this.auth = app.auth();

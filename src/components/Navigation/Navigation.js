@@ -11,21 +11,21 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { connect } from "react-redux";
 import { getAuthUser } from "../../selectors/Selectors";
 
-const styles = theme => ({
+const styles = (theme) => ({
   "@global": {
     body: {
-      backgroundColor: theme.palette.common.white
-    }
+      backgroundColor: theme.palette.common.white,
+    },
   },
   appBar: {
-    position: "relative"
+    position: "relative",
   },
   toolbarTitle: {
-    flex: 1
-  }
+    flex: 1,
+  },
 });
 
-const Navigation = props => {
+const Navigation = (props) => {
   const { classes, authUser } = props;
   return (
     <div>
@@ -63,13 +63,8 @@ const Navigation = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  authUser: getAuthUser(state)
+const mapStateToProps = (state) => ({
+  authUser: getAuthUser(state),
 });
 
-export default withStyles(styles)(
-    connect(
-      mapStateToProps,
-      null
-    )(Navigation)
-);
+export default withStyles(styles)(connect(mapStateToProps, null)(Navigation));

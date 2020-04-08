@@ -3,41 +3,45 @@ import * as ROUTES from "../constants/routes";
 export function signInFormBaseHasErrored(bool) {
   return {
     type: "AUTH_USER_HAS_ERRORED",
-    hasErrored: bool
+    hasErrored: bool,
   };
 }
 
 export function signInFormBaseFetchDataSuccess(authUser) {
   return {
     type: "AUTH_USER_SET",
-    authUser
+    authUser,
   };
 }
 
 export function itemsFetchDataSuccess(items) {
   return {
     type: "ITEMS_SET",
-    items
+    items,
   };
 }
 
 export function addOpenPopUp(bool) {
   return {
     type: "OPEN_POP_UP",
-    openPopUp: bool
+    openPopUp: bool,
   };
 }
 
 export function signInFormBaseFetchData(values, props) {
   return (dispatch, getState, { firebase }) => {
     firebase
-      .doSignInWithEmailAndPassword(values.email, values.password, authUser => {
-        dispatch(signInFormBaseFetchDataSuccess(authUser));
-      })
+      .doSignInWithEmailAndPassword(
+        values.email,
+        values.password,
+        (authUser) => {
+          dispatch(signInFormBaseFetchDataSuccess(authUser));
+        }
+      )
       .then(() => {
         props.history.push(ROUTES.HOME);
       })
-      .catch(error => {
+      .catch((error) => {
         dispatch(signInFormBaseHasErrored(true));
       });
   };
@@ -46,28 +50,28 @@ export function signInFormBaseFetchData(values, props) {
 export function signUpFormBaseHasErrored(error) {
   return {
     type: "SIGN_UP_AUTH_USER_HAS_ERRORED",
-    hasErrored: error
+    hasErrored: error,
   };
 }
 
 export function itemsIdsHasErrored(bool) {
   return {
     type: "ITEMS_IDS_HAS_ERRORED",
-    hasErrored: bool
+    hasErrored: bool,
   };
 }
 
 export function itemsHasErrored(bool) {
   return {
     type: "ITEMS_HAS_ERRORED",
-    hasErrored: bool
+    hasErrored: bool,
   };
 }
 
 export function onSignUpSubmitted(bool) {
   return {
     type: "ON_SIGN_UP_SUBMITTED",
-    signUpSubmitted: bool
+    signUpSubmitted: bool,
   };
 }
 
@@ -75,17 +79,18 @@ export function signUpFormBaseFetchData(values, props) {
   return (dispatch, getState, { firebase }) => {
     firebase
       .doCreateUserWithEmailAndPassword(values.email, values.passwordOne)
-      .then(authUser => {
+      .then((authUser) => {
         dispatch(onSignUpSubmitted(true));
         firebase.user(authUser.user.uid).set({
           username: values.username,
-          email: values.email
+          email: values.email,
         });
       })
       .then(() => {
+        firebase.doSignOut();
         props.history.push(ROUTES.SIGN_IN);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("error", error);
         dispatch(signUpFormBaseHasErrored(error.message));
       });
@@ -96,19 +101,19 @@ export function addItemFetchData(values, props) {
   return (dispatch, getState, { firebase }) => {
     firebase.onSaveItems(
       values.image,
-      downloadURL => {
+      (downloadURL) => {
         const lastKey = firebase.items().push({
           userId: props.authUser.uid,
           title: values.title,
           description: values.description,
           pictureUrl: downloadURL,
           attendee: JSON.stringify(values.user),
-          createdAt: firebase.serverValue.TIMESTAMP
+          createdAt: firebase.serverValue.TIMESTAMP,
         }).key;
-        values.user.map(item => {
+        values.user.map((item) => {
           let updates = {
             [`items_enrolments/${lastKey}/${item}`]: true,
-            [`users_enrolments/${item}/${lastKey}`]: true
+            [`users_enrolments/${item}/${lastKey}`]: true,
           };
           return firebase.update(updates);
         });
@@ -117,7 +122,7 @@ export function addItemFetchData(values, props) {
         firebase
           .items()
           .once("value")
-          .then(snapshot => {
+          .then((snapshot) => {
             dispatch(itemsFetchDataSuccess(snapshot.val()));
           })
           .catch(() => dispatch(itemsHasErrored(true)));

@@ -3,10 +3,10 @@ import { connect } from "react-redux";
 import { getSignUpSubmitted, getRetriaved } from "../../selectors/Selectors";
 import { onAuthUserListener } from "../../actions/firebase";
 
-const withAuthentication = Component => {
+const withAuthentication = (Component) => {
   class WithAuthentication extends React.Component {
     state = {
-      sessionRetrieved: true
+      sessionRetrieved: true,
     };
 
     componentDidMount() {
@@ -18,26 +18,23 @@ const withAuthentication = Component => {
     }
 
     render() {
-      return this.props.onGetRetriaved && <Component {...this.props} />;
+      console.log("this.props.onGetRetriaved", this.props.onGetRetriaved);
+      return (
+        this.props.onGetRetriaved !== null && <Component {...this.props} />
+      );
     }
   }
 
-  const mapDispatchToProps = dispatch => ({
-    authUserListener: () => dispatch(onAuthUserListener())
+  const mapDispatchToProps = (dispatch) => ({
+    authUserListener: () => dispatch(onAuthUserListener()),
   });
 
-  const mapStateToProps = state => ({
+  const mapStateToProps = (state) => ({
     signUpSubmitted: getSignUpSubmitted(state),
-    onGetRetriaved: getRetriaved(state)
+    onGetRetriaved: getRetriaved(state),
   });
 
-  return (
-    connect(
-      mapStateToProps,
-      mapDispatchToProps
-    )
-  )(WithAuthentication);
-
+  return connect(mapStateToProps, mapDispatchToProps)(WithAuthentication);
 };
 
 export default withAuthentication;

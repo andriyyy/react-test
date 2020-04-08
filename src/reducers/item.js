@@ -2,47 +2,47 @@ const INITIAL_STATE = {
   items: null,
   itemsGetErrored: false,
   itemsIsLoading: false,
-  signUpSubmitted: false
+  signUpSubmitted: false,
 };
 
 const applySetItems = (state, action) => ({
   ...state,
-  items: action.items
+  items: action.items,
 });
 
 const applySetItemsHasErrored = (state, action) => ({
   ...state,
-  itemsGetErrored: action.hasErrored
+  itemsGetErrored: action.hasErrored,
 });
 
 const applyItemsIsLoading = (state, action) => ({
   ...state,
-  itemsIsLoading: action.isLoading
+  itemsIsLoading: action.isLoading,
 });
 
 const applyIdsSetItems = (state, action) => ({
   ...state,
-  itemsIds: action.itemsIds
+  itemsIds: action.itemsIds,
 });
 
 const applyIdsSetItemsHasErrored = (state, action) => ({
   ...state,
-  itemsIdsGetErrored: action.hasErrored
+  itemsIdsGetErrored: action.hasErrored,
 });
 
 const applyIdsItemsIsLoading = (state, action) => ({
   ...state,
-  itemsIdsIsLoading: action.isLoading
+  itemsIdsIsLoading: action.isLoading,
 });
 
 const applySignUpSubmitted = (state, action) => ({
   ...state,
-  signUpSubmitted: action.signUpSubmitted
+  signUpSubmitted: action.signUpSubmitted,
 });
 
 const applyRemoveId = (state, items) => ({
   ...state,
-  items
+  items,
 });
 
 function itemReducer(state = INITIAL_STATE, action) {

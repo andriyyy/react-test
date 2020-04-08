@@ -9,11 +9,12 @@ import DetailedItem from "../Items/DetailedItem";
 import User from "../Items/User";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import withAuthentication from "../Session/withAuthentication";
+import PrivateRoute from "../Session/PrivateRoute";
 
 const theme = createMuiTheme({
   typography: {
-    useNextVariants: true
-  }
+    useNextVariants: true,
+  },
 });
 
 class App extends Component {
@@ -25,9 +26,12 @@ class App extends Component {
           <Switch>
             <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
             <Route path={ROUTES.SIGN_IN} component={SignInPage} />
-            <Route path={ROUTES.HOME} component={HomePage} />
-            <Route path={ROUTES.DETAILED_ITEM} component={DetailedItem} />
-            <Route path={ROUTES.USER} component={User} />
+            <PrivateRoute path={ROUTES.HOME} component={HomePage} />
+            <PrivateRoute
+              path={ROUTES.DETAILED_ITEM}
+              component={DetailedItem}
+            />
+            <PrivateRoute path={ROUTES.USER} component={User} />
           </Switch>
         </BrowserRouter>
       </MuiThemeProvider>

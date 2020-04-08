@@ -1,45 +1,45 @@
 const INITIAL_STATE = {
   users: null,
   usersGetErrored: false,
-  usersIsLoading: false
+  usersIsLoading: false,
 };
 
 const applySetUsers = (state, action) => ({
   ...state,
-  users: action.users
+  users: action.users,
 });
 
 const applySetUser = (state, action) => ({
   ...state,
   users: {
     ...state.users,
-    [action.uid]: action.user
-  }
+    [action.uid]: action.user,
+  },
 });
 
 const applySetUserHasErrored = (state, action) => ({
   ...state,
-  usersGetErrored: action.hasErrored
+  usersGetErrored: action.hasErrored,
 });
 
 const applyUsersIsLoading = (state, action) => ({
   ...state,
-  usersIsLoading: action.isLoading
+  usersIsLoading: action.isLoading,
 });
 
 const applySetAttendee = (state, action) => ({
   ...state,
-  attendees: action.attendees
+  attendees: action.attendees,
 });
 
 const applySetAttendeesHasErrored = (state, action) => ({
   ...state,
-  attendeesGetErrored: action.hasErrored
+  attendeesGetErrored: action.hasErrored,
 });
 
 const applyAttendeesIsLoading = (state, action) => ({
   ...state,
-  attendeesIsLoading: action.isLoading
+  attendeesIsLoading: action.isLoading,
 });
 
 function userReducer(state = INITIAL_STATE, action) {

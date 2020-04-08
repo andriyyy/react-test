@@ -1,14 +1,14 @@
 export function onSetAuthUser(authUser) {
   return {
     type: "AUTH_USER_SET",
-    authUser
+    authUser,
   };
 }
 
 export function sessionRetrieved(bool) {
   return {
     type: "SESSION_RETRIVED",
-    sessionRetrieved: bool
+    sessionRetrieved: bool,
   };
 }
 
@@ -16,7 +16,7 @@ export function onAuthUserListener() {
   return (dispatch, getState, { firebase }) => {
     const signUpSubmitted = getState().itemState.signUpSubmitted;
     firebase.onAuthUserListener(
-      authUser => {
+      (authUser) => {
         console.log("autentification", authUser);
         if (signUpSubmitted === false) {
           dispatch(onSetAuthUser(authUser));
@@ -24,6 +24,7 @@ export function onAuthUserListener() {
         dispatch(sessionRetrieved(true));
       },
       () => {
+        dispatch(sessionRetrieved(false));
         console.log("bad_autentification");
         dispatch(onSetAuthUser(null));
       }

@@ -1,32 +1,32 @@
 const INITIAL_STATE = {
   authUser: null,
   openPopUp: false,
-  sessionRetrieved: true
+  sessionRetrieved: null,
 };
 
 const applySetAuthUser = (state, action) => ({
   ...state,
-  authUser: action.authUser
+  authUser: action.authUser,
 });
 
 const applyAuthUserHasErrored = (state, action) => ({
   ...state,
-  authUserGetErrored: action.hasErrored
+  authUserGetErrored: action.hasErrored,
 });
 
 const applyOpenPopUp = (state = INITIAL_STATE, action) => ({
   ...state,
-  openPopUp: action.openPopUp
+  openPopUp: action.openPopUp,
 });
 
 const applySignUpHasErrored = (state, action) => ({
   ...state,
-  signUpHasErrored: action.hasErrored
+  signUpHasErrored: action.hasErrored,
 });
 
 const applySessionRetrived = (state, action) => ({
   ...state,
-  sessionRetrieved: action.sessionRetrieved
+  sessionRetrieved: action.sessionRetrieved,
 });
 
 function sessionReducer(state = INITIAL_STATE, action) {
@@ -46,7 +46,6 @@ function sessionReducer(state = INITIAL_STATE, action) {
     case "SESSION_RETRIVED": {
       return applySessionRetrived(state, action);
     }
-    
     default:
       return state;
   }

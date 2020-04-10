@@ -56,3 +56,15 @@ export function removeItems(removeId, saveItemsToStateCallback) {
     firebase.onRemoveItems(removeId, saveItemsToStateCallback);
   };
 }
+
+export function reject(uid, iid, saveActiveToStateCallback) {
+  return (dispatch, getState, { firebase }) => {
+    firebase.onRejected(uid, iid, saveActiveToStateCallback);
+  };
+}
+
+export function notReject(uid, iid, saveNotActiveToStateCallback) {
+  return (dispatch, getState, { firebase }) => {
+    firebase.onNotRejected(uid, iid, saveNotActiveToStateCallback);
+  };
+}

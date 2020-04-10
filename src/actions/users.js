@@ -1,21 +1,21 @@
 export function usersHasErrored(bool) {
   return {
     type: "USERS_HAS_ERRORED",
-    hasErrored: bool
+    hasErrored: bool,
   };
 }
 
 export function usersIsLoading(bool) {
   return {
     type: "USERS_IS_LOADING",
-    isLoading: bool
+    isLoading: bool,
   };
 }
 
 export function usersFetchDataSuccess(users) {
   return {
     type: "USERS_SET",
-    users
+    users,
   };
 }
 
@@ -25,14 +25,14 @@ export function usersFetchData() {
     firebase
       .users()
       .once("value")
-      .then(snapshot => {
+      .then((snapshot) => {
         return snapshot.val();
       })
-      .then(users => {
+      .then((users) => {
         dispatch(usersIsLoading(false));
         return users;
       })
-      .then(users => dispatch(usersFetchDataSuccess(users)))
+      .then((users) => dispatch(usersFetchDataSuccess(users)))
       .catch(() => dispatch(usersHasErrored(true)));
   };
 }
@@ -40,21 +40,21 @@ export function usersFetchData() {
 export function attendeesHasErrored(bool) {
   return {
     type: "ATTENDEES_HAS_ERRORED",
-    hasErrored: bool
+    hasErrored: bool,
   };
 }
 
 export function attendeesIsLoading(bool) {
   return {
     type: "ATTENDEES_IS_LOADING",
-    isLoading: bool
+    isLoading: bool,
   };
 }
 
 export function attendeesFetchDataSuccess(attendees) {
   return {
     type: "ATTENDEES_SET",
-    attendees: attendees
+    attendees: attendees,
   };
 }
 
@@ -64,14 +64,14 @@ export function attendeesIdsFetchData(id) {
     firebase
       .items_enrolments(id)
       .once("value")
-      .then(snapshot => {
+      .then((snapshot) => {
         return snapshot.val();
       })
-      .then(attendees => {
+      .then((attendees) => {
         dispatch(attendeesIsLoading(false));
         return attendees;
       })
-      .then(attendees => dispatch(attendeesFetchDataSuccess(attendees)))
+      .then((attendees) => dispatch(attendeesFetchDataSuccess(attendees)))
       .catch(() => dispatch(attendeesHasErrored(true)));
   };
 }

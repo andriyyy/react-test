@@ -4,11 +4,11 @@ import { getAuthUser } from "../../selectors/Selectors";
 import { Redirect } from "react-router-dom";
 import { onDoSignOut } from "../../actions/firebase";
 
-const withAuthorization = condition => Component => {
+const withAuthorization = () => (Component) => {
   class WithAuthorization extends React.Component {
     render() {
       console.log("Autorization", this.props.authUser);
-      if (condition(this.props.authUser)) {
+      if (this.props.authUser) {
         return <Component {...this.props} />;
       } else {
         this.props.doSignOut();
@@ -17,20 +17,15 @@ const withAuthorization = condition => Component => {
     }
   }
 
-  const mapStateToProps = state => ({
-    authUser: getAuthUser(state)
+  const mapStateToProps = (state) => ({
+    authUser: getAuthUser(state),
   });
 
-  const mapDispatchToProps = dispatch => ({
-    doSignOut: () => dispatch(onDoSignOut())
+  const mapDispatchToProps = (dispatch) => ({
+    doSignOut: () => dispatch(onDoSignOut()),
   });
 
-  return (
-    connect(
-      mapStateToProps,
-      mapDispatchToProps
-    )
-  )(WithAuthorization);
+  return connect(mapStateToProps, mapDispatchToProps)(WithAuthorization);
 };
 
 export default withAuthorization;

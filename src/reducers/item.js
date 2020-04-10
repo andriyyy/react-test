@@ -1,5 +1,6 @@
 const INITIAL_STATE = {
   items: null,
+  items_enrolments: null,
   itemsGetErrored: false,
   itemsIsLoading: false,
   signUpSubmitted: false,
@@ -8,6 +9,10 @@ const INITIAL_STATE = {
 const applySetItems = (state, action) => ({
   ...state,
   items: action.items,
+});
+const applySetEnrolmentsItems = (state, action) => ({
+  ...state,
+  items_enrolments: action.items_enrolments,
 });
 
 const applySetItemsHasErrored = (state, action) => ({
@@ -49,6 +54,9 @@ function itemReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case "ITEMS_SET": {
       return applySetItems(state, action);
+    }
+    case "ITEMS_ENROLMENTS_SET": {
+      return applySetEnrolmentsItems(state, action);
     }
     case "ITEMS_HAS_ERRORED": {
       return applySetItemsHasErrored(state, action);

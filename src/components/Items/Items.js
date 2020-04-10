@@ -21,19 +21,19 @@ import {
   getUsersIsLoading,
   getItemsHasErrored,
   getItemsIsLoading,
-  getUsersMarged
+  getUsersMarged,
 } from "../../selectors/Selectors";
 import moment from "moment";
 import { itemsFetchData, deleteItem } from "../../actions/items";
 import { usersFetchData } from "../../actions/users";
 import { itemsOff, usersOff, removeItems } from "../../actions/firebase";
 
-const styles = theme => ({
+const styles = (theme) => ({
   margin: {
-    margin: theme.spacing.unit * 2
+    margin: theme.spacing.unit * 2,
   },
   padding: {
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing.unit * 2,
   },
   main: {
     width: "auto",
@@ -43,36 +43,37 @@ const styles = theme => ({
     [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
       width: 1000,
       marginLeft: "auto",
-      marginRight: "auto"
-    }
+      marginRight: "auto",
+    },
   },
   paper: {
     marginTop: theme.spacing.unit * 8,
     display: "flex",
     flexDirection: "column",
     alignItems: "left",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
-      .spacing.unit * 3}px`
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${
+      theme.spacing.unit * 3
+    }px`,
   },
   submit: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing.unit * 3,
   },
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 120,
-    maxWidth: 0
+    maxWidth: 0,
   },
   root: {
     width: "100%",
     marginTop: theme.spacing.unit * 3,
-    overflowX: "auto"
+    overflowX: "auto",
   },
   table: {
-    minWidth: 0
+    minWidth: 0,
   },
   pop_up: {
-    minWidth: 300
-  }
+    minWidth: 300,
+  },
 });
 
 class Items extends Component {
@@ -90,7 +91,7 @@ class Items extends Component {
       attendee: "",
       user: [],
       open: false,
-      removeId: ""
+      removeId: "",
     };
   }
 
@@ -108,16 +109,16 @@ class Items extends Component {
     this.props.onDeleteItem(this.state.removeId);
   };
 
-  onRemoveItem = uid => {
+  onRemoveItem = (uid) => {
     this.setState({ removeId: uid });
     this.handleClickOpen();
   };
 
-  onSearchChange = term => {
+  onSearchChange = (term) => {
     this.setState({ term });
   };
 
-  onSortChange = sort => {
+  onSortChange = (sort) => {
     this.setState({ sort });
   };
 
@@ -125,14 +126,12 @@ class Items extends Component {
     if (term.length === 0) {
       return items;
     }
-    return items.filter(item => {
+    return items.filter((item) => {
       return (
         item.title.indexOf(term) > -1 ||
         item.description.indexOf(term) > -1 ||
         this.props.usersMarged[item.userId].username.indexOf(term) > -1 ||
-        moment(item.createdAt)
-          .format("YYYY/MM/DD HH:mm:ss")
-          .indexOf(term) > -1
+        moment(item.createdAt).format("YYYY/MM/DD HH:mm:ss").indexOf(term) > -1
       );
     });
   };
@@ -142,7 +141,11 @@ class Items extends Component {
       case "1":
         return items;
       case "2":
-        return items.filter(item => item.userId === this.props.authUser.uid);
+        return items.filter((item) => item.userId === this.props.authUser.uid);
+      case "3":
+        return items.filter((item) =>
+          item.attendees.hasOwnProperty(this.props.authUser.uid)
+        );
       default:
         return items;
     }
@@ -234,11 +237,11 @@ class Items extends Component {
               <TableBody>
                 {items && (
                   <ItemList
-                    items={visibleItems.map(item => ({
+                    items={visibleItems.map((item) => ({
                       ...item,
                       user: usersMarged
                         ? usersMarged[item.userId]
-                        : { userId: item.userId }
+                        : { userId: item.userId },
                     }))}
                     onRemoveItem={this.onRemoveItem}
                   />
@@ -254,7 +257,7 @@ class Items extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   authUser: getAuthUser(state),
   items: getItems(state),
   users: getUsersKey(state),
@@ -262,22 +265,19 @@ const mapStateToProps = state => ({
   isUsersLoading: getUsersIsLoading(state),
   isItemsLoading: getItemsIsLoading(state),
   isUsersErrored: getUsersHasErrored(state),
-  isItemsErrored: getItemsHasErrored(state)
+  isItemsErrored: getItemsHasErrored(state),
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   fetchUsers: () => dispatch(usersFetchData()),
   fetchItems: () => dispatch(itemsFetchData()),
   onItemsOff: () => dispatch(itemsOff()),
   onUsersOff: () => dispatch(usersOff()),
-  onDeleteItem: removeId => dispatch(deleteItem(removeId)),
+  onDeleteItem: (removeId) => dispatch(deleteItem(removeId)),
   onRemoveItems: (removeId, saveItemsToStateCallback) =>
-    dispatch(removeItems(removeId, saveItemsToStateCallback))
+    dispatch(removeItems(removeId, saveItemsToStateCallback)),
 });
 
 export default withStyles(styles)(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Items)
+  connect(mapStateToProps, mapDispatchToProps)(Items)
 );

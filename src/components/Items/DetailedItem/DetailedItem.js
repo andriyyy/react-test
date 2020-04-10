@@ -8,9 +8,9 @@ import {
   Paper,
   withStyles,
   ListItem,
-  Typography
+  Typography,
+  Button,
 } from "@material-ui/core";
-import { withAuthorization } from "../../Session";
 import IconButton from "@material-ui/core/IconButton";
 import KeyboardBackspace from "@material-ui/icons/KeyboardBackspace";
 import Link from "@material-ui/core/Link";
@@ -22,21 +22,24 @@ import {
   getItem,
   getItems,
   getUsersKey,
-  getAttendeeFormatted
+  getAttendeeFormatted,
+  getAuthUser,
 } from "../../../selectors/Selectors";
 import { attendeesIdsFetchData } from "../../../actions/users";
 import {
   itemsOff,
   usersOff,
-  usersEnrolmentsListOff
+  usersEnrolmentsListOff,
+  reject,
+  notReject,
 } from "../../../actions/firebase";
 
-const styles = theme => ({
+const styles = (theme) => ({
   margin: {
-    margin: theme.spacing.unit * 2
+    margin: theme.spacing.unit * 2,
   },
   padding: {
-    padding: theme.spacing.unit
+    padding: theme.spacing.unit,
   },
   main: {
     width: "auto",
@@ -47,51 +50,75 @@ const styles = theme => ({
       minWidth: 120,
       maxWidth: 450,
       marginLeft: "auto",
-      marginRight: "auto"
-    }
+      marginRight: "auto",
+    },
   },
   paper: {
     marginTop: theme.spacing.unit * 8,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
-      .spacing.unit * 3}px`
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${
+      theme.spacing.unit * 3
+    }px`,
   },
   submit: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing.unit * 3,
   },
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 120,
-    maxWidth: 300
+    maxWidth: 300,
   },
   image: {
-    maxWidth: 250
-  }
+    maxWidth: 250,
+  },
+  button: {
+    marginRight: 8,
+  },
 });
 
 class DetailedItem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      active: false,
+    };
+  }
   componentDidMount() {
     const id = this.props.getId();
     this.props.fetchAttendeesIds(id);
   }
-  
+
   componentWillUnmount() {
     this.props.onItemsOff();
     this.props.onUsersOff();
     this.props.onUsersEnrolmentsListOff();
   }
 
-  onRedirect = event => {
+  onRedirect = (event) => {
     event.preventDefault();
     this.props.history.push(`/home`);
   };
 
-  onView = id => {
+  onView = (id) => {
     this.props.history.push(`/user/${id}`);
   };
 
+  onReject = (uid, iid) => {
+    this.props.onReject(uid, iid, this.addActiveToState);
+  };
+
+  addActiveToState = () => {
+    this.setState({ active: true });
+  };
+
+  onNotReject = (uid, iid) => {
+    this.props.onNotReject(uid, iid, this.addNotActiveToState);
+  };
+  addNotActiveToState = () => {
+    this.setState({ active: false });
+  };
   render() {
     if (this.props.isAttendeesLoading === true) {
       return (
@@ -106,16 +133,16 @@ class DetailedItem extends Component {
     if (this.props.isAttendeesErrored === true) {
       return <p>Can not load Attendees</p>;
     }
-
     const {
       title,
       description,
       pictureUrl,
       createdAt,
-      userId
+      userId,
     } = this.props.item;
 
     const { classes, attendeesIds } = this.props;
+    const id = this.props.getId();
     return (
       <main className={classes.main}>
         <Paper className={classes.padding + " " + classes.paper}>
@@ -162,19 +189,44 @@ class DetailedItem extends Component {
               <ListItem>
                 <b>Users assigned to event:&nbsp;</b>
               </ListItem>
-              {attendeesIds.length > 0 && (
-                <div>
-                  {attendeesIds.map(attenId => (
-                    <Link
-                      data-user-id={attenId}
-                      onClick={() => this.onView(attenId)}
-                      key={attenId}
-                    >
-                      {" "}
-                      {this.props.attendeeFormatted[attenId]}{" "}
-                    </Link>
-                  ))}
-                </div>
+              <ListItem>
+                {attendeesIds.length > 0 && (
+                  <div>
+                    {attendeesIds.map((attenId) => (
+                      <Link
+                        data-user-id={attenId}
+                        onClick={() => this.onView(attenId)}
+                        key={attenId}
+                      >
+                        {" "}
+                        {this.props.attendeeFormatted[attenId]}{" "}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </ListItem>
+              {attendeesIds.includes(this.props.authUser.uid) && (
+                <ListItem>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={() =>
+                      this.onNotReject(this.props.authUser.uid, id)
+                    }
+                    disabled={!this.state.active}
+                  >
+                    Accept
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => this.onReject(this.props.authUser.uid, id)}
+                    disabled={this.state.active}
+                  >
+                    Reject
+                  </Button>
+                </ListItem>
               )}
             </List>
           </div>
@@ -192,25 +244,24 @@ const mapStateToProps = (state, ownProps) => ({
   attendeeFormatted: getAttendeeFormatted(state, getUsersKey(state)),
   attendeesIds: getAttendeesIds(state),
   isAttendeesErrored: getAttendeesHasErrored(state),
-  isAttendeesLoading: getAttendeesIsLoading(state)
+  isAttendeesLoading: getAttendeesIsLoading(state),
+  authUser: getAuthUser(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  fetchAttendeesIds: id => dispatch(attendeesIdsFetchData(id)),
+const mapDispatchToProps = (dispatch) => ({
+  fetchAttendeesIds: (id) => dispatch(attendeesIdsFetchData(id)),
   onItemsOff: () => dispatch(itemsOff()),
   onUsersOff: () => dispatch(usersOff()),
-  onUsersEnrolmentsListOff: () => dispatch(usersEnrolmentsListOff())
+  onUsersEnrolmentsListOff: () => dispatch(usersEnrolmentsListOff()),
+  onReject: (uid, iid, saveActiveToStateCallback) =>
+    dispatch(reject(uid, iid, saveActiveToStateCallback)),
+  onNotReject: (uid, iid, saveNotActiveToStateCallback) =>
+    dispatch(notReject(uid, iid, saveNotActiveToStateCallback)),
 });
-
-const condition = authUser => authUser;
 
 export default withStyles(styles)(
   compose(
     withRouter,
-    connect(
-      mapStateToProps,
-      mapDispatchToProps
-    ),
-    withAuthorization(condition)
+    connect(mapStateToProps, mapDispatchToProps)
   )(DetailedItem)
 );

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import Navigation from "../Navigation";
 import SignUpPage from "../SignUp";
 import SignInPage from "../SignIn";
@@ -24,6 +24,11 @@ class App extends Component {
         <BrowserRouter>
           <Navigation />
           <Switch>
+            <Route
+              exact
+              path={ROUTES.LANDING}
+              render={() => <Redirect to={ROUTES.HOME} />}
+            />
             <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
             <Route path={ROUTES.SIGN_IN} component={SignInPage} />
             <PrivateRoute path={ROUTES.HOME} component={HomePage} />

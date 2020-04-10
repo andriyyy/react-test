@@ -13,9 +13,9 @@ function getAuthUser(state) {
 
 function getUsersKey(state) {
   if (typeof state.userState !== "undefined") {
-    return Object.keys(state.userState.users || {}).map(key => ({
+    return Object.keys(state.userState.users || {}).map((key) => ({
       ...state.userState.users[key],
-      uid: key
+      uid: key,
     }));
   } else {
     return {};
@@ -28,9 +28,12 @@ function getId(ownProps) {
 
 function getItems(state) {
   if (typeof state.itemState !== "undefined") {
-    return Object.keys(state.itemState.items || {}).map(key => ({
+    return Object.keys(state.itemState.items || {}).map((key) => ({
       ...state.itemState.items[key],
-      uid: key
+      uid: key,
+      attendees: state.itemState.items_enrolments
+        ? { ...state.itemState.items_enrolments[key] }
+        : {},
     }));
   } else {
     return false;
@@ -57,7 +60,7 @@ function getAttendeesIds(state) {
   let attendeesIds = [];
   if (typeof state.userState !== "undefined") {
     if (state.userState.attendees) {
-      Object.keys(state.userState.attendees).map(userId => {
+      Object.keys(state.userState.attendees).map((userId) => {
         return attendeesIds.push(userId);
       });
     }
@@ -86,7 +89,7 @@ function getAttendeesIsLoading(state) {
 function getItem(state, ownProps, items) {
   let elem = null;
   if (items) {
-    items.forEach(function(element) {
+    items.forEach(function (element) {
       if (ownProps.match.params.id === element.uid) {
         elem = element;
       }
@@ -100,7 +103,7 @@ function getItem(state, ownProps, items) {
 function getAttendeeFormatted(state, users) {
   const attendeeFormatted = [];
   if (users) {
-    users.forEach(function(entry) {
+    users.forEach(function (entry) {
       attendeeFormatted[entry.uid] = entry.username;
     });
     return attendeeFormatted;
@@ -112,7 +115,7 @@ function getAttendeeFormatted(state, users) {
 function getItemsIds(state) {
   let itemsIds = [];
   if (state.itemState.itemsIds) {
-    Object.keys(state.itemState.itemsIds).map(itemId => {
+    Object.keys(state.itemState.itemsIds).map((itemId) => {
       return itemsIds.push(itemId);
     });
   }
@@ -129,7 +132,7 @@ function getItemsIdsIsLoading(state) {
 
 function getUser(state, ownProps, users) {
   let elem = null;
-  users.forEach(function(element) {
+  users.forEach(function (element) {
     if (ownProps.match.params.id === element.uid) {
       elem = element;
     }
@@ -140,7 +143,7 @@ function getUser(state, ownProps, users) {
 function getSortedItems(state, items, user) {
   const itemsTemporary = [];
   const itemsResult = [];
-  items.forEach(function(entry) {
+  items.forEach(function (entry) {
     itemsTemporary[entry.uid] = entry.title;
     if (user.uid === entry.userId) {
       var key = entry.uid;
@@ -182,7 +185,7 @@ function getSignUpSubmitted(state) {
 function getUsersMarged(state) {
   var usersMarged = {};
   const users = state.userState.users;
-  Object.keys(users || {}).map(function(key) {
+  Object.keys(users || {}).map(function (key) {
     return (usersMarged[key] = users[key]);
   });
   return usersMarged;
@@ -217,5 +220,5 @@ export {
   getSignUpSubmitted,
   getUsersMarged,
   getSignUpHasErrored,
-  getRetriaved
+  getRetriaved,
 };

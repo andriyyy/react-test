@@ -7,9 +7,8 @@ import {
   Paper,
   withStyles,
   ListItem,
-  Typography
+  Typography,
 } from "@material-ui/core";
-import { withAuthorization } from "../../Session";
 import IconButton from "@material-ui/core/IconButton";
 import KeyboardBackspace from "@material-ui/icons/KeyboardBackspace";
 import Link from "@material-ui/core/Link";
@@ -21,17 +20,17 @@ import {
   getItemsIdsHasErrored,
   getItemsIdsIsLoading,
   getUser,
-  getSortedItems
+  getSortedItems,
 } from "../../../selectors/Selectors";
 import { itemsIdsFetchData } from "../../../actions/items";
 import { itemsOff } from "../../../actions/firebase";
 
-const styles = theme => ({
+const styles = (theme) => ({
   margin: {
-    margin: theme.spacing.unit * 2
+    margin: theme.spacing.unit * 2,
   },
   padding: {
-    padding: theme.spacing.unit
+    padding: theme.spacing.unit,
   },
   main: {
     width: "auto",
@@ -42,25 +41,26 @@ const styles = theme => ({
       minWidth: 120,
       maxWidth: 450,
       marginLeft: "auto",
-      marginRight: "auto"
-    }
+      marginRight: "auto",
+    },
   },
   paper: {
     marginTop: theme.spacing.unit * 8,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
-      .spacing.unit * 3}px`
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${
+      theme.spacing.unit * 3
+    }px`,
   },
   submit: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing.unit * 3,
   },
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 120,
-    maxWidth: 300
-  }
+    maxWidth: 300,
+  },
 });
 
 class User extends Component {
@@ -73,12 +73,12 @@ class User extends Component {
     this.props.onItemsOff();
   }
 
-  onRedirect = event => {
+  onRedirect = (event) => {
     event.preventDefault();
     this.props.history.goBack();
   };
 
-  onView = id => {
+  onView = (id) => {
     this.props.history.push(`/detailed/${id}`);
   };
 
@@ -124,7 +124,7 @@ class User extends Component {
 
                 {itemsIds.length > 0 && (
                   <div>
-                    {itemsIds.map(itemId => (
+                    {itemsIds.map((itemId) => (
                       <Link
                         data-user-id={itemId}
                         onClick={() => this.onView(itemId)}
@@ -140,7 +140,7 @@ class User extends Component {
               <ListItem>
                 <b>User created events:&nbsp;</b>
                 <div>
-                  {sortedItems.itemsResult.map(item => (
+                  {sortedItems.itemsResult.map((item) => (
                     <Link
                       data-user-id={item.key}
                       onClick={() => this.onView(item.key)}
@@ -174,23 +174,14 @@ const mapStateToProps = (state, ownProps) => ({
     state,
     getItems(state),
     getUser(state, ownProps, getUsersKey(state))
-  )
+  ),
 });
 
-const mapDispatchToProps = dispatch => ({
-  fetchItemsIds: id => dispatch(itemsIdsFetchData(id)),
-  onItemsOff: () => dispatch(itemsOff())
+const mapDispatchToProps = (dispatch) => ({
+  fetchItemsIds: (id) => dispatch(itemsIdsFetchData(id)),
+  onItemsOff: () => dispatch(itemsOff()),
 });
-
-const condition = authUser => authUser;
 
 export default withStyles(styles)(
-  compose(
-    withRouter,
-    connect(
-      mapStateToProps,
-      mapDispatchToProps
-    ),
-    withAuthorization(condition)
-  )(User)
+  compose(withRouter, connect(mapStateToProps, mapDispatchToProps))(User)
 );

@@ -1,16 +1,12 @@
-import React, { Component } from "react";
-import { withAuthorization } from "../Session";
+import React from "react";
 import Items from "../Items";
 
-class HomePage extends Component {
-  render() {
-    return (
-      <div>
-        <Items />
-      </div>
-    );
-  }
-}
+const HomePage = () => {
+  return (
+    <div>
+      <Items />
+    </div>
+  );
+};
 
-const condition = authUser => authUser;
-export default withAuthorization(condition)(HomePage);
+export default HomePage;

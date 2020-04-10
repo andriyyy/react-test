@@ -1,42 +1,49 @@
 export function itemsHasErrored(bool) {
   return {
     type: "ITEMS_HAS_ERRORED",
-    hasErrored: bool
+    hasErrored: bool,
   };
 }
 
 export function itemsIsLoading(bool) {
   return {
     type: "ITEMS_IS_LOADING",
-    isLoading: bool
+    isLoading: bool,
   };
 }
 
 export function itemsFetchDataSuccess(items) {
   return {
     type: "ITEMS_SET",
-    items
+    items,
+  };
+}
+
+export function itemsEnrolmentsFetchDataSuccess(items_enrolments) {
+  return {
+    type: "ITEMS_ENROLMENTS_SET",
+    items_enrolments,
   };
 }
 
 export function itemsIdsHasErrored(bool) {
   return {
     type: "ITEMS_IDS_HAS_ERRORED",
-    hasErrored: bool
+    hasErrored: bool,
   };
 }
 
 export function itemsIdsIsLoading(bool) {
   return {
     type: "ITEMS_IDS_IS_LOADING",
-    isLoading: bool
+    isLoading: bool,
   };
 }
 
 export function itemsIdsFetchDataSuccess(itemsIds) {
   return {
     type: "ITEMS_IDS_SET",
-    itemsIds
+    itemsIds,
   };
 }
 
@@ -47,14 +54,26 @@ export function itemsFetchData() {
       .items()
       .orderByChild("createdAt")
       .once("value")
-      .then(snapshot => {
+      .then((snapshot) => {
         return snapshot.val();
       })
-      .then(items => {
+      .then((items) => {
         dispatch(itemsIsLoading(false));
         return items;
       })
-      .then(items => dispatch(itemsFetchDataSuccess(items)))
+      .then((items) => {
+        firebase
+          .items_enrolments_all()
+          .once("value")
+          .then((snapshot) => {
+            return snapshot.val();
+          })
+          .then((items_enrolments) => {
+            dispatch(itemsFetchDataSuccess(items));
+            dispatch(itemsEnrolmentsFetchDataSuccess(items_enrolments));
+          });
+      })
+
       .catch(() => dispatch(itemsHasErrored(true)));
   };
 }
@@ -65,14 +84,14 @@ export function itemsIdsFetchData(id) {
     firebase
       .users_enrolments_list(id)
       .once("value")
-      .then(snapshot => {
+      .then((snapshot) => {
         return snapshot.val();
       })
-      .then(itemsIds => {
+      .then((itemsIds) => {
         dispatch(itemsIdsIsLoading(false));
         return itemsIds;
       })
-      .then(itemsIds => dispatch(itemsIdsFetchDataSuccess(itemsIds)))
+      .then((itemsIds) => dispatch(itemsIdsFetchDataSuccess(itemsIds)))
       .catch(() => dispatch(itemsIdsHasErrored(true)));
   };
 }
@@ -80,6 +99,6 @@ export function itemsIdsFetchData(id) {
 export function deleteItem(removeId) {
   return {
     type: "REMOVE_ID",
-    removeId
+    removeId,
   };
 }

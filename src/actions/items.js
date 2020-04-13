@@ -11,6 +11,12 @@ export function itemsIsLoading(bool) {
     isLoading: bool,
   };
 }
+export function itemsEnrolmentsAllIsLoading(bool) {
+  return {
+    type: "ITEMS_ENROLMENTS_ALL_IS_LOADING",
+    isLoading: bool,
+  };
+}
 
 export function itemsFetchDataSuccess(items) {
   return {
@@ -49,6 +55,7 @@ export function itemsIdsFetchDataSuccess(itemsIds) {
 
 export function itemsFetchData() {
   return (dispatch, getState, { firebase }) => {
+    console.log("baza");
     dispatch(itemsIsLoading(true));
     firebase
       .items()
@@ -58,10 +65,10 @@ export function itemsFetchData() {
         return snapshot.val();
       })
       .then((items) => {
-        dispatch(itemsIsLoading(false));
         return items;
       })
       .then((items) => {
+        dispatch(itemsEnrolmentsAllIsLoading(true));
         firebase
           .items_enrolments_all()
           .once("value")
@@ -71,9 +78,12 @@ export function itemsFetchData() {
           .then((items_enrolments) => {
             dispatch(itemsFetchDataSuccess(items));
             dispatch(itemsEnrolmentsFetchDataSuccess(items_enrolments));
+          })
+          .then(() => {
+            dispatch(itemsIsLoading(false));
+            dispatch(itemsEnrolmentsAllIsLoading(false));
           });
       })
-
       .catch(() => dispatch(itemsHasErrored(true)));
   };
 }

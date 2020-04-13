@@ -21,6 +21,8 @@ import {
   getItemsIdsIsLoading,
   getUser,
   getSortedItems,
+  getItemsIsLoading,
+  getItemsEnrolmentsAllIsLoading,
 } from "../../../selectors/Selectors";
 import { itemsIdsFetchData } from "../../../actions/items";
 import { itemsOff } from "../../../actions/firebase";
@@ -83,7 +85,10 @@ class User extends Component {
   };
 
   render() {
-    if (this.props.isItemsIdsLoading === true) {
+    if (
+      this.props.isItemsLoading === true ||
+      this.props.isItemsEnrolmentsAllLoading === true
+    ) {
       return (
         <div>
           <p
@@ -93,6 +98,7 @@ class User extends Component {
         </div>
       );
     }
+
     if (this.props.isItemsIdsErrored === true) {
       return <p>Can not load Items</p>;
     }
@@ -164,9 +170,9 @@ const mapStateToProps = (state, ownProps) => ({
   getId: () => {
     return getId(ownProps);
   },
-  items: getItems(state),
-  users: getUsersKey(state),
   itemsIds: getItemsIds(state),
+  isItemsLoading: getItemsIsLoading(state),
+  isItemsEnrolmentsAllLoading: getItemsEnrolmentsAllIsLoading(state),
   isItemsIdsErrored: getItemsIdsHasErrored(state),
   isItemsIdsLoading: getItemsIdsIsLoading(state),
   user: getUser(state, ownProps, getUsersKey(state)),

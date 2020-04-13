@@ -22,10 +22,10 @@ import {
   getItemsHasErrored,
   getItemsIsLoading,
   getUsersMarged,
+  getItemsEnrolmentsAllIsLoading,
 } from "../../selectors/Selectors";
 import moment from "moment";
-import { itemsFetchData, deleteItem } from "../../actions/items";
-import { usersFetchData } from "../../actions/users";
+import { deleteItem } from "../../actions/items";
 import { itemsOff, usersOff, removeItems } from "../../actions/firebase";
 
 const styles = (theme) => ({
@@ -96,8 +96,8 @@ class Items extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchUsers();
-    this.props.fetchItems();
+    // this.props.fetchUsers();
+    // this.props.fetchItems();
   }
 
   componentWillUnmount() {
@@ -169,7 +169,8 @@ class Items extends Component {
   render() {
     if (
       this.props.isUsersLoading === true ||
-      this.props.isItemsLoading === true
+      this.props.isItemsLoading === true ||
+      this.props.isItemsEnrolmentsAllLoading === true
     ) {
       return (
         <div>
@@ -264,13 +265,14 @@ const mapStateToProps = (state) => ({
   usersMarged: getUsersMarged(state),
   isUsersLoading: getUsersIsLoading(state),
   isItemsLoading: getItemsIsLoading(state),
+  isItemsEnrolmentsAllLoading: getItemsEnrolmentsAllIsLoading(state),
   isUsersErrored: getUsersHasErrored(state),
   isItemsErrored: getItemsHasErrored(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchUsers: () => dispatch(usersFetchData()),
-  fetchItems: () => dispatch(itemsFetchData()),
+  //fetchUsers: () => dispatch(usersFetchData()),
+  //fetchItems: () => dispatch(itemsFetchData()),
   onItemsOff: () => dispatch(itemsOff()),
   onUsersOff: () => dispatch(usersOff()),
   onDeleteItem: (removeId) => dispatch(deleteItem(removeId)),

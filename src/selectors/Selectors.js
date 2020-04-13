@@ -27,7 +27,7 @@ function getId(ownProps) {
 }
 
 function getItems(state) {
-  if (typeof state.itemState !== "undefined") {
+  if (state.itemState.items !== null) {
     return Object.keys(state.itemState.items || {}).map((key) => ({
       ...state.itemState.items[key],
       uid: key,
@@ -56,6 +56,10 @@ function getItemsIsLoading(state) {
   return state.itemState.itemsIsLoading;
 }
 
+function getItemsEnrolmentsAllIsLoading(state) {
+  return state.itemState.itemsEnrolmentsAllIsLoading;
+}
+
 function getAttendeesIds(state) {
   let attendeesIds = [];
   if (typeof state.userState !== "undefined") {
@@ -79,7 +83,7 @@ function getAttendeesHasErrored(state) {
 }
 
 function getAttendeesIsLoading(state) {
-  if (typeof state.userState !== "undefined") {
+  if (typeof state.userState.attendeesIsLoading !== "undefined") {
     return state.userState.attendeesIsLoading;
   } else {
     return false;
@@ -221,4 +225,5 @@ export {
   getUsersMarged,
   getSignUpHasErrored,
   getRetriaved,
+  getItemsEnrolmentsAllIsLoading,
 };

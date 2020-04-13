@@ -4,6 +4,7 @@ const INITIAL_STATE = {
   itemsGetErrored: false,
   itemsIsLoading: false,
   signUpSubmitted: false,
+  itemsEnrolmentsAllIsLoading: false,
 };
 
 const applySetItems = (state, action) => ({
@@ -23,6 +24,10 @@ const applySetItemsHasErrored = (state, action) => ({
 const applyItemsIsLoading = (state, action) => ({
   ...state,
   itemsIsLoading: action.isLoading,
+});
+const applyItemsEnrolmentsAllIsLoading = (state, action) => ({
+  ...state,
+  itemsEnrolmentsAllIsLoading: action.isLoading,
 });
 
 const applyIdsSetItems = (state, action) => ({
@@ -63,6 +68,9 @@ function itemReducer(state = INITIAL_STATE, action) {
     }
     case "ITEMS_IS_LOADING": {
       return applyItemsIsLoading(state, action);
+    }
+    case "ITEMS_ENROLMENTS_ALL_IS_LOADING": {
+      return applyItemsEnrolmentsAllIsLoading(state, action);
     }
     case "ITEMS_IDS_SET": {
       return applyIdsSetItems(state, action);

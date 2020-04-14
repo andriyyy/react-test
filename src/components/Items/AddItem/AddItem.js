@@ -20,6 +20,7 @@ import renderUploadField from "./Upload";
 import renderSelectFieldNew from "./SelectNew";
 import { validate } from "../../../validation/Validation";
 import { addItemFetchData, addOpenPopUp } from "../../../actions/forms";
+import { updateItemsInState } from "../../../actions/firebase";
 
 const styles = (theme) => ({
   formControl: {
@@ -128,7 +129,7 @@ class AddItem extends Component {
 
 const submit = (values, dispatch, props) => {
   props.onOpenPopUp(false);
-  props.onSubmitForm(values, props);
+  props.onSubmitForm(values, props, props.updateItemsCallBack);
 };
 
 const mapStateToProps = (state) => ({
@@ -138,8 +139,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  updateItemsCallBack: () => dispatch(updateItemsInState()),
   onOpenPopUp: (bool) => dispatch(addOpenPopUp(bool)),
-  onSubmitForm: (values, props) => dispatch(addItemFetchData(values, props)),
+  onSubmitForm: (values, props, updateItemsCallBack) =>
+    dispatch(addItemFetchData(values, props, updateItemsCallBack)),
 });
 
 const afterSubmit = (result, dispatch) => dispatch(reset("AddItem"));

@@ -25,8 +25,13 @@ import {
   getItemsEnrolmentsAllIsLoading,
 } from "../../selectors/Selectors";
 import moment from "moment";
-import { deleteItem } from "../../actions/items";
-import { itemsOff, usersOff, removeItems } from "../../actions/firebase";
+
+import {
+  itemsOff,
+  usersOff,
+  removeItems,
+  updateItemsInState,
+} from "../../actions/firebase";
 
 const styles = (theme) => ({
   margin: {
@@ -101,7 +106,6 @@ class Items extends Component {
   }
 
   deleteItemFromStateCallback = () => {
-    console.log("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
     this.props.onDeleteItem(this.state.removeId);
   };
 
@@ -269,7 +273,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   onItemsOff: () => dispatch(itemsOff()),
   onUsersOff: () => dispatch(usersOff()),
-  onDeleteItem: (removeId) => dispatch(deleteItem(removeId)),
+  onDeleteItem: () => dispatch(updateItemsInState()),
   onRemoveItems: (removeId, saveItemsToStateCallback) =>
     dispatch(removeItems(removeId, saveItemsToStateCallback)),
 });

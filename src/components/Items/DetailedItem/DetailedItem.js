@@ -32,8 +32,7 @@ import {
   usersEnrolmentsListOff,
   reject,
   notReject,
-  deleteAttendee,
-  addAttendee,
+  updateItemsInState,
 } from "../../../actions/firebase";
 
 const styles = (theme) => ({
@@ -113,7 +112,7 @@ class DetailedItem extends Component {
 
   addActiveToState = () => {
     this.setState({ active: true });
-    this.props.onDeleteAttendee(this.props.getId(), this.props.authUser.uid);
+    this.props.onDeleteAttendee();
   };
 
   onNotReject = (uid, iid) => {
@@ -122,7 +121,7 @@ class DetailedItem extends Component {
 
   addNotActiveToState = () => {
     this.setState({ active: false });
-    this.props.onAddAttendee(this.props.getId(), this.props.authUser.uid);
+    this.props.onAddAttendee();
   };
 
   render() {
@@ -263,9 +262,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(reject(uid, iid, saveActiveToStateCallback)),
   onNotReject: (uid, iid, saveNotActiveToStateCallback) =>
     dispatch(notReject(uid, iid, saveNotActiveToStateCallback)),
-  onDeleteAttendee: (removeId, userId) =>
-    dispatch(deleteAttendee(removeId, userId)),
-  onAddAttendee: (addId, userId) => dispatch(addAttendee(addId, userId)),
+  onDeleteAttendee: () => dispatch(updateItemsInState()),
+  onAddAttendee: () => dispatch(updateItemsInState()),
 });
 
 export default withStyles(styles)(

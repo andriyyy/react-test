@@ -11,7 +11,25 @@ export function sessionRetrieved(bool) {
     sessionRetrieved: bool,
   };
 }
+export function itemsFetchDataSuccess(items) {
+  return {
+    type: "ITEMS_SET",
+    items,
+  };
+}
 
+export function itemsEnrolmentsFetchDataSuccess(items_enrolments) {
+  return {
+    type: "ITEMS_ENROLMENTS_SET",
+    items_enrolments,
+  };
+}
+export function itemsHasErrored(bool) {
+  return {
+    type: "ITEMS_HAS_ERRORED",
+    hasErrored: bool,
+  };
+}
 export function onAuthUserListener() {
   return (dispatch, getState, { firebase }) => {
     const signUpSubmitted = getState().itemState.signUpSubmitted;
@@ -69,17 +87,25 @@ export function notReject(uid, iid, saveNotActiveToStateCallback) {
   };
 }
 
-export function deleteAttendee(removeId, userId) {
-  return {
-    type: "REMOVE_ATTENDEE",
-    removeId,
-    userId,
-  };
-}
-export function addAttendee(addId, userId) {
-  return {
-    type: "ADD_ATTENDEE",
-    addId,
-    userId,
+export function updateItemsInState() {
+  return (dispatch, getState, { firebase }) => {
+    firebase
+      .items()
+      .once("value")
+      .then((snapshot) => {
+        dispatch(itemsFetchDataSuccess(snapshot.val()));
+      })
+      .then((items) => {
+        firebase
+          .items_enrolments_all()
+          .once("value")
+          .then((snapshot) => {
+            return snapshot.val();
+          })
+          .then((items_enrolments) => {
+            dispatch(itemsEnrolmentsFetchDataSuccess(items_enrolments));
+          });
+      })
+      .catch(() => dispatch(itemsHasErrored(true)));
   };
 }

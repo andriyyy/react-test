@@ -104,7 +104,7 @@ export function signUpFormBaseFetchData(values, props) {
   };
 }
 
-export function addItemFetchData(values, props) {
+export function addItemFetchData(values, props, updateItemsCallBack) {
   return (dispatch, getState, { firebase }) => {
     firebase.onSaveItems(
       values.image,
@@ -125,27 +125,7 @@ export function addItemFetchData(values, props) {
           return firebase.update(updates);
         });
       },
-
-      () => {
-        firebase
-          .items()
-          .once("value")
-          .then((snapshot) => {
-            dispatch(itemsFetchDataSuccess(snapshot.val()));
-          })
-          .then((items) => {
-            firebase
-              .items_enrolments_all()
-              .once("value")
-              .then((snapshot) => {
-                return snapshot.val();
-              })
-              .then((items_enrolments) => {
-                dispatch(itemsEnrolmentsFetchDataSuccess(items_enrolments));
-              });
-          })
-          .catch(() => dispatch(itemsHasErrored(true)));
-      }
+      updateItemsCallBack
     );
   };
 }

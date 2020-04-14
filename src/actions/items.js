@@ -104,10 +104,3 @@ export function itemsIdsFetchData(id) {
       .catch(() => dispatch(itemsIdsHasErrored(true)));
   };
 }
-
-export function deleteItem(removeId) {
-  return {
-    type: "REMOVE_ID",
-    removeId,
-  };
-}

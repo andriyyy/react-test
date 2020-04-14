@@ -21,6 +21,13 @@ export function itemsFetchDataSuccess(items) {
   };
 }
 
+export function itemsEnrolmentsFetchDataSuccess(items_enrolments) {
+  return {
+    type: "ITEMS_ENROLMENTS_SET",
+    items_enrolments,
+  };
+}
+
 export function addOpenPopUp(bool) {
   return {
     type: "OPEN_POP_UP",
@@ -118,12 +125,24 @@ export function addItemFetchData(values, props) {
           return firebase.update(updates);
         });
       },
+
       () => {
         firebase
           .items()
           .once("value")
           .then((snapshot) => {
             dispatch(itemsFetchDataSuccess(snapshot.val()));
+          })
+          .then((items) => {
+            firebase
+              .items_enrolments_all()
+              .once("value")
+              .then((snapshot) => {
+                return snapshot.val();
+              })
+              .then((items_enrolments) => {
+                dispatch(itemsEnrolmentsFetchDataSuccess(items_enrolments));
+              });
           })
           .catch(() => dispatch(itemsHasErrored(true)));
       }

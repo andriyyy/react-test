@@ -12,7 +12,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import {
   getUsersKey,
   getAuthUser,
-  getOpenPopUp
+  getOpenPopUp,
 } from "../../../selectors/Selectors";
 import { reset, Field, reduxForm } from "redux-form";
 import renderTextField from "./Field";
@@ -21,15 +21,15 @@ import renderSelectFieldNew from "./SelectNew";
 import { validate } from "../../../validation/Validation";
 import { addItemFetchData, addOpenPopUp } from "../../../actions/forms";
 
-const styles = theme => ({
+const styles = (theme) => ({
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 120,
-    maxWidth: 300
+    maxWidth: 300,
   },
   submit: {
-    marginTop: theme.spacing.unit * 3
-  }
+    marginTop: theme.spacing.unit * 3,
+  },
 });
 
 class AddItem extends Component {
@@ -48,7 +48,7 @@ class AddItem extends Component {
       handleSubmit,
       submitting,
       valid,
-      openPopUp
+      openPopUp,
     } = this.props;
     return (
       <div>
@@ -66,7 +66,7 @@ class AddItem extends Component {
           aria-labelledby="form-dialog-title"
         >
           <form onSubmit={handleSubmit(submit)}>
-            <DialogTitle id="form-dialog-title"> Add event</DialogTitle>
+            <DialogTitle id="form-dialog-title"> </DialogTitle>
             <DialogContent>
               <FormControl margin="normal" required fullWidth>
                 <Field
@@ -100,7 +100,7 @@ class AddItem extends Component {
                 classes={classes}
               >
                 {this.props.users.length > 0 &&
-                  this.props.users.map(user => (
+                  this.props.users.map((user) => (
                     <MenuItem key={user.uid} value={user.uid}>
                       {user.username}
                     </MenuItem>
@@ -131,32 +131,29 @@ const submit = (values, dispatch, props) => {
   props.onSubmitForm(values, props);
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   authUser: getAuthUser(state),
   users: getUsersKey(state),
-  openPopUp: getOpenPopUp(state)
+  openPopUp: getOpenPopUp(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  onOpenPopUp: bool => dispatch(addOpenPopUp(bool)),
-  onSubmitForm: (values, props) => dispatch(addItemFetchData(values, props))
+const mapDispatchToProps = (dispatch) => ({
+  onOpenPopUp: (bool) => dispatch(addOpenPopUp(bool)),
+  onSubmitForm: (values, props) => dispatch(addItemFetchData(values, props)),
 });
 
 const afterSubmit = (result, dispatch) => dispatch(reset("AddItem"));
 
 export default withStyles(styles)(
   compose(
-    connect(
-      mapStateToProps,
-      mapDispatchToProps
-    ),
+    connect(mapStateToProps, mapDispatchToProps),
     reduxForm({
       form: "AddItem",
       onSubmitSuccess: afterSubmit,
       initialValues: {
-        user: []
+        user: [],
       },
-      validate
+      validate,
     })
   )(AddItem)
 );

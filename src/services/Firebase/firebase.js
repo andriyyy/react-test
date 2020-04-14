@@ -103,6 +103,7 @@ class Firebase {
   };
 
   onRemoveItems = (iid, updateState) => {
+    console.log("iid_delete", iid);
     this.item(iid)
       .remove()
       .then(() => {
@@ -112,10 +113,15 @@ class Firebase {
             return snapshot.val();
           })
           .then((usersId) => {
+            console.log("usersId_delete", usersId);
             this.items_enrolments(iid).remove();
-            Object.keys(usersId).map((userId) => {
-              return this.users_enrolments(userId, iid).remove();
-            });
+            if (usersId) {
+              Object.keys(usersId).map((userId) => {
+                return this.users_enrolments(userId, iid).remove();
+              });
+            } else {
+              return true;
+            }
           });
       });
     updateState();

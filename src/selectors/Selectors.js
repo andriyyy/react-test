@@ -28,6 +28,8 @@ function getId(ownProps) {
 
 function getItems(state) {
   if (state.itemState.items !== null) {
+    console.log("getItems", state.itemState.items_enrolments);
+
     return Object.keys(state.itemState.items || {}).map((key) => ({
       ...state.itemState.items[key],
       uid: key,

@@ -6,6 +6,8 @@ import SignOutButton from "../SignOut";
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
+import Chip from "@material-ui/core/Chip";
+
 import Typography from "@material-ui/core/Typography";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { connect } from "react-redux";
@@ -41,7 +43,10 @@ const Navigation = (props) => {
             Event managment system
           </Typography>
           {authUser ? (
-            <SignOutButton />
+            <div>
+              <Chip label={authUser.username} variant="outlined" />
+              <SignOutButton />
+            </div>
           ) : (
             <div>
               <Button

@@ -55,6 +55,14 @@ const applyRemoveId = (state, items) => ({
   items,
 });
 
+const applyRemoveAttendee = (state, items_enrolments) => ({
+  ...state,
+  items_enrolments,
+});
+const applyAddAttendee = (state, items_enrolments) => ({
+  ...state,
+  items_enrolments,
+});
 function itemReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case "ITEMS_SET": {
@@ -89,6 +97,17 @@ function itemReducer(state = INITIAL_STATE, action) {
       delete newState.items[action.removeId];
       return applyRemoveId(state, newState.items);
     }
+    case "REMOVE_ATTENDEE": {
+      const newState = Object.assign({}, state);
+      delete newState.items_enrolments[action.removeId][action.userId];
+      return applyRemoveAttendee(state, newState.items_enrolments);
+    }
+    case "ADD_ATTENDEE": {
+      const newState = Object.assign({}, state);
+      newState.items_enrolments[action.addId] = { [action.userId]: true };
+      return applyAddAttendee(state, newState.items_enrolments);
+    }
+
     default:
       return state;
   }

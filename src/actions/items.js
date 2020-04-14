@@ -55,7 +55,6 @@ export function itemsIdsFetchDataSuccess(itemsIds) {
 
 export function itemsFetchData() {
   return (dispatch, getState, { firebase }) => {
-    console.log("baza");
     dispatch(itemsIsLoading(true));
     firebase
       .items()

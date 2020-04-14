@@ -68,3 +68,18 @@ export function notReject(uid, iid, saveNotActiveToStateCallback) {
     firebase.onNotRejected(uid, iid, saveNotActiveToStateCallback);
   };
 }
+
+export function deleteAttendee(removeId, userId) {
+  return {
+    type: "REMOVE_ATTENDEE",
+    removeId,
+    userId,
+  };
+}
+export function addAttendee(addId, userId) {
+  return {
+    type: "ADD_ATTENDEE",
+    addId,
+    userId,
+  };
+}

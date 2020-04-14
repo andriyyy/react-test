@@ -32,6 +32,8 @@ import {
   usersEnrolmentsListOff,
   reject,
   notReject,
+  deleteAttendee,
+  addAttendee,
 } from "../../../actions/firebase";
 
 const styles = (theme) => ({
@@ -111,14 +113,18 @@ class DetailedItem extends Component {
 
   addActiveToState = () => {
     this.setState({ active: true });
+    this.props.onDeleteAttendee(this.props.getId(), this.props.authUser.uid);
   };
 
   onNotReject = (uid, iid) => {
     this.props.onNotReject(uid, iid, this.addNotActiveToState);
   };
+
   addNotActiveToState = () => {
     this.setState({ active: false });
+    this.props.onAddAttendee(this.props.getId(), this.props.authUser.uid);
   };
+
   render() {
     if (this.props.isAttendeesLoading === true) {
       return (
@@ -257,6 +263,9 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(reject(uid, iid, saveActiveToStateCallback)),
   onNotReject: (uid, iid, saveNotActiveToStateCallback) =>
     dispatch(notReject(uid, iid, saveNotActiveToStateCallback)),
+  onDeleteAttendee: (removeId, userId) =>
+    dispatch(deleteAttendee(removeId, userId)),
+  onAddAttendee: (addId, userId) => dispatch(addAttendee(addId, userId)),
 });
 
 export default withStyles(styles)(

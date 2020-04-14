@@ -95,17 +95,13 @@ class Items extends Component {
     };
   }
 
-  componentDidMount() {
-    // this.props.fetchUsers();
-    // this.props.fetchItems();
-  }
-
   componentWillUnmount() {
     this.props.onItemsOff();
     this.props.onUsersOff();
   }
 
   deleteItemFromStateCallback = () => {
+    console.log("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
     this.props.onDeleteItem(this.state.removeId);
   };
 
@@ -271,8 +267,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  //fetchUsers: () => dispatch(usersFetchData()),
-  //fetchItems: () => dispatch(itemsFetchData()),
   onItemsOff: () => dispatch(itemsOff()),
   onUsersOff: () => dispatch(usersOff()),
   onDeleteItem: (removeId) => dispatch(deleteItem(removeId)),

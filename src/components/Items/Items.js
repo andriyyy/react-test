@@ -217,7 +217,7 @@ class Items extends Component {
               </DialogActions>
             </Dialog>
             <Typography component="h1" variant="h5">
-              Home Page
+              Home Page 22
             </Typography>
             <p>The Home Page is accessible by every signed in user.</p>
             <SearchPanel

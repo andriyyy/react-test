@@ -2,16 +2,38 @@
   "name": "react-test",
   "version": "0.1.0",
   "private": true,
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "react-scripts eject",
+    "react": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test"
+  },
   "dependencies": {
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
+    "@react-native-community/masked-view": "0.1.6",
+    "@react-navigation/drawer": "^5.4.1",
+    "@react-navigation/native": "^5.1.5",
+    "@react-navigation/stack": "^5.2.10",
     "chai": "^4.2.0",
-    "firebase": "^7.13.2",
+    "expo": "^37.0.0",
+    "firebase": "7.9.0",
     "material-ui-icons": "^1.0.0-beta.36",
     "moment": "^2.24.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
+    "react": "16.9.0",
+    "react-dom": "16.9.0",
     "react-moment": "^0.8.4",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-37.0.0.tar.gz",
+    "react-native-gesture-handler": "~1.6.0",
+    "react-native-reanimated": "~1.7.0",
+    "react-native-safe-area-context": "0.7.3",
+    "react-native-screens": "~2.2.0",
+    "react-native-web": "^0.11.7",
     "react-redux": "^6.0.1",
     "react-router": "^5.0.1",
     "react-router-dom": "^4.4.0-beta.8",
@@ -24,11 +46,14 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+  "devDependencies": {
+    "babel-preset-expo": "^8.1.0",
+    "@babel/core": "^7.8.6",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "eslint-plugin-react": "^7.14.2",
+    "jest-enzyme": "^7.0.2",
+    "redux-mock-store": "^1.5.3"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -38,12 +63,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "devDependencies": {
-    "enzyme": "^3.10.0",
-    "enzyme-adapter-react-16": "^1.14.0",
-    "eslint-plugin-react": "^7.14.2",
-    "jest-enzyme": "^7.0.2",
-    "redux-mock-store": "^1.5.3"
-  }
+  ]
 }

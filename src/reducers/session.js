@@ -2,6 +2,7 @@ const INITIAL_STATE = {
   authUser: null,
   openPopUp: false,
   sessionRetrieved: null,
+  authUserGetErrored: false,
 };
 
 const applySetAuthUser = (state, action) => ({

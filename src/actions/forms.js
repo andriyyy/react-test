@@ -35,7 +35,11 @@ export function addOpenPopUp(bool) {
   };
 }
 
-export function signInFormBaseFetchData(values, props) {
+export function signInFormBaseFetchData(
+  values,
+  redirectCallBack,
+  setSubmittingCallBack = () => {}
+) {
   return (dispatch, getState, { firebase }) => {
     firebase
       .doSignInWithEmailAndPassword(
@@ -46,9 +50,10 @@ export function signInFormBaseFetchData(values, props) {
         }
       )
       .then(() => {
-        props.history.push(ROUTES.HOME);
+        redirectCallBack();
       })
       .catch((error) => {
+        setSubmittingCallBack();
         dispatch(signInFormBaseHasErrored(true));
       });
   };
@@ -82,7 +87,11 @@ export function onSignUpSubmitted(bool) {
   };
 }
 
-export function signUpFormBaseFetchData(values, props) {
+export function signUpFormBaseFetchData(
+  values,
+  redirectCallBack,
+  setSubmittingCallBack = () => {}
+) {
   return (dispatch, getState, { firebase }) => {
     firebase
       .doCreateUserWithEmailAndPassword(values.email, values.passwordOne)
@@ -95,10 +104,10 @@ export function signUpFormBaseFetchData(values, props) {
       })
       .then(() => {
         firebase.doSignOut();
-        props.history.push(ROUTES.SIGN_IN);
+        redirectCallBack();
       })
       .catch((error) => {
-        console.log("error", error);
+        setSubmittingCallBack();
         dispatch(signUpFormBaseHasErrored(error.message));
       });
   };

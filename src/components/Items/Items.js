@@ -190,8 +190,8 @@ class Items extends Component {
 
     const { classes, items, usersMarged } = this.props;
     const { term, sort } = this.state;
-
     const visibleItems = this.sorting(this.search(items, term), sort);
+
     return (
       <main className={classes.main}>
         <Paper
@@ -224,6 +224,7 @@ class Items extends Component {
               onSearchChange={this.onSearchChange}
               onSortChange={this.onSortChange}
             />
+
             <Table className={classes.table}>
               <TableHead>
                 <TableRow>
@@ -250,6 +251,7 @@ class Items extends Component {
               </TableBody>
             </Table>
             {!items && <div>There are no items ...</div>}
+
             <AddItem />
           </div>
         </Paper>

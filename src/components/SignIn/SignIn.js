@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import * as ROUTES from "../../constants/routes";
 import { compose } from "recompose";
 import { connect } from "react-redux";
 import FormControl from "@material-ui/core/FormControl";
@@ -12,7 +13,7 @@ import renderTextField from "../Items/AddItem/Field";
 import { signInFormBaseFetchData } from "../../actions/forms";
 import { getAuthUserHasErrored } from "../../selectors/Selectors";
 
-const styles = theme => ({
+const styles = (theme) => ({
   main: {
     width: "auto",
     display: "block", // Fix IE 11 issue.
@@ -21,20 +22,21 @@ const styles = theme => ({
     [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
       width: 400,
       marginLeft: "auto",
-      marginRight: "auto"
-    }
+      marginRight: "auto",
+    },
   },
   paper: {
     marginTop: theme.spacing.unit * 8,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
-      .spacing.unit * 3}px`
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${
+      theme.spacing.unit * 3
+    }px`,
   },
   submit: {
-    marginTop: theme.spacing.unit * 3
-  }
+    marginTop: theme.spacing.unit * 3,
+  },
 });
 
 class SignInFormBase extends Component {
@@ -44,7 +46,7 @@ class SignInFormBase extends Component {
       pristine,
       handleSubmit,
       submitting,
-      isAuthUserErrored
+      isAuthUserErrored,
     } = this.props;
     return (
       <main className={classes.main}>
@@ -94,22 +96,23 @@ class SignInFormBase extends Component {
 }
 
 const submit = (values, dispatch, props) => {
-  dispatch(signInFormBaseFetchData(values, props));
+  dispatch(
+    signInFormBaseFetchData(values, () => {
+      props.history.push(ROUTES.HOME);
+    })
+  );
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  isAuthUserErrored: getAuthUserHasErrored(state)
+  isAuthUserErrored: getAuthUserHasErrored(state),
 });
 
 export default withStyles(styles)(
   compose(
-    connect(
-      mapStateToProps,
-      null
-    ),
+    connect(mapStateToProps, null),
     reduxForm({
       form: "SignInFormBase",
-      validate
+      validate,
     })
   )(SignInFormBase)
 );

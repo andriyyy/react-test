@@ -13,7 +13,7 @@ const Navigation = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.welcome}>
-        Welcome to React Native Web universal app!
+        Welcome t o React Native Web universal app!
       </Text>
       <Text style={styles.instructions}>
         This component is shared between web and react environment. To see how

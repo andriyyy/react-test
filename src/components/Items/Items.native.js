@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { StyleSheet, View, ScrollView, Text } from "react-native";
 import ItemList from "./ItemList";
-
+import SearchPanel from "../SearchPanel";
+import moment from "moment";
 import {
   Button,
   Title,
@@ -12,6 +13,9 @@ import {
   Colors,
   Avatar,
   IconButton,
+  Dialog,
+  Portal,
+  Paragraph,
 } from "react-native-paper";
 import { getAuthUserHasErrored } from "../../selectors/Selectors";
 import renderTextField from "../Items/AddItem/Field";
@@ -72,6 +76,7 @@ class Items extends Component {
   };
 
   onRemoveItem = (uid) => {
+    console.log("ffffffffffffff", uid);
     this.setState({ removeId: uid });
     this.handleClickOpen();
   };
@@ -144,7 +149,7 @@ class Items extends Component {
       return <Text>Can not load Events</Text>;
     }
 
-    const { classes, items, usersMarged } = this.props;
+    const { items, usersMarged, navigation } = this.props;
 
     console.log("items", items);
 
@@ -152,36 +157,56 @@ class Items extends Component {
     const visibleItems = this.sorting(this.search(items, term), sort);
 
     return (
-      <View>
-        <ScrollView horizontal={true}>
-          <View>
-            <Table borderStyle={{ borderColor: "#C1C0B9" }}>
-              <Row
-                data={tableHead}
-                style={styles.header}
-                textStyle={styles.text}
-                widthArr={widthArr}
+      <View style={styles.container}>
+        <Portal>
+          <Dialog visible={this.state.open} onDismiss={this.handleClose}>
+            <Dialog.Title>Are you sure?</Dialog.Title>
+            <Dialog.Content>
+              <Paragraph>This is simple dialog</Paragraph>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={this.handleClose}>No</Button>
+              <Button onPress={this.removeItem}>Yes</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+        <View>
+          <ScrollView horizontal={true}>
+            <View>
+              <SearchPanel
+                onSearchChange={this.onSearchChange}
+                onSortChange={this.onSortChange}
               />
-            </Table>
-            <ScrollView style={styles.dataWrapper}>
               <Table borderStyle={{ borderColor: "#C1C0B9" }}>
-                {items ? (
-                  <ItemList
-                    items={visibleItems.map((item) => ({
-                      ...item,
-                      user: usersMarged
-                        ? usersMarged[item.userId]
-                        : { userId: item.userId },
-                    }))}
-                    onRemoveItem={this.onRemoveItem}
-                    styles={styles}
-                    widthArr={widthArr}
-                  />
-                ) : null}
+                <Row
+                  data={tableHead}
+                  style={styles.header}
+                  textStyle={styles.text}
+                  widthArr={widthArr}
+                />
               </Table>
-            </ScrollView>
-          </View>
-        </ScrollView>
+              <ScrollView style={styles.dataWrapper}>
+                <Table borderStyle={{ borderColor: "#C1C0B9" }}>
+                  {items ? (
+                    <ItemList
+                      navigation={this.props.navigation}
+                      items={visibleItems.map((item, index) => ({
+                        ...item,
+                        user: usersMarged
+                          ? usersMarged[item.userId]
+                          : { userId: item.userId },
+                        index: index,
+                      }))}
+                      onRemoveItem={this.onRemoveItem}
+                      styles={styles}
+                      widthArr={widthArr}
+                    />
+                  ) : null}
+                </Table>
+              </ScrollView>
+            </View>
+          </ScrollView>
+        </View>
       </View>
     );
   }
@@ -218,7 +243,16 @@ const tableHead = [
 const widthArr = [80, 80, 80, 100, 140, 80];
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: "#fff" },
+  container: {
+    flex: 1,
+    padding: 4,
+    flexDirection: "column",
+    backgroundColor: "#ffffff",
+  },
+  containerInner: {
+    flex: 1,
+    flexDirection: "column",
+  },
   header: { height: 50, backgroundColor: "#E7E6E1", padding: 5 },
   text: { textAlign: "left", fontWeight: "100" },
   dataWrapper: { marginTop: -1 },

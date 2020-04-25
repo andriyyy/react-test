@@ -245,7 +245,7 @@ const mapStateToProps = (state, ownProps) => ({
   getId: () => {
     return getId(ownProps);
   },
-  item: getItem(state, ownProps, getItems(state)),
+  item: getItem(state, ownProps.match.params.id, getItems(state)),
   attendeeFormatted: getAttendeeFormatted(state, getUsersKey(state)),
   attendeesIds: getAttendeesIds(state),
   isAttendeesErrored: getAttendeesHasErrored(state),

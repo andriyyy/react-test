@@ -92,11 +92,15 @@ function getAttendeesIsLoading(state) {
   }
 }
 
-function getItem(state, ownProps, items) {
+function getItem(state, id, items) {
   let elem = null;
   if (items) {
     items.forEach(function (element) {
-      if (ownProps.match.params.id === element.uid) {
+      console.log("0000000000000", id);
+      console.log("1111111111111", element.uid);
+
+      if (id === element.uid) {
+        console.log("3333333333", element.uid);
         elem = element;
       }
     });

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Avatar, IconButton, Colors } from "react-native-paper";
+import { Avatar, IconButton } from "react-native-paper";
 import { Row } from "react-native-table-component";
 import { View, Text } from "react-native";
 import moment from "moment";
@@ -26,12 +26,12 @@ class ItemItem extends Component {
     this.setState({ editTitle: event.target.value });
   };
 
-  onView = (key) => {
-    this.props.history.push(`detailed/${key}`);
+  onView = (key, navigation) => {
+    navigation.navigate("Detailed", { id: key });
   };
 
   render() {
-    const { item, onRemoveItem, styles, widthArr } = this.props;
+    const { item, onRemoveItem, styles, widthArr, navigation } = this.props;
     const createdAt = (createdAt) => {
       return <Text>{moment(createdAt).format("YYYY/MM/DD HH:mm:ss")}</Text>;
     };
@@ -48,16 +48,16 @@ class ItemItem extends Component {
         >
           <IconButton
             icon="delete"
-            color={Colors.red500}
+            color={"#5373ab"}
             size={20}
             onPress={() => onRemoveItem(uid)}
           />
 
           <IconButton
             icon="information-outline"
-            color={Colors.red500}
+            color={"#5373ab"}
             size={20}
-            onPress={() => this.onView(uid)}
+            onPress={() => this.onView(uid, navigation)}
           />
         </View>
       );
@@ -83,7 +83,7 @@ class ItemItem extends Component {
     rowData.push(addIcons(item.uid));
     return (
       <Row
-        key={item.id}
+        key={item.index}
         data={rowData}
         widthArr={widthArr}
         style={[styles.row, item.id % 2 && { backgroundColor: "#F7F6E7" }]}

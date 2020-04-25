@@ -4,8 +4,10 @@ import ItemItem from "./ItemItem";
 
 class ItemList extends Component {
   render() {
-    const { items, onRemoveItem } = this.props;
-    return items.map((item) => <ItemItem item={item} {...this.props} />);
+    const { items, index } = this.props;
+    return items.map((item, key) => (
+      <ItemItem key={key} item={item} {...this.props} />
+    ));
   }
 }
 

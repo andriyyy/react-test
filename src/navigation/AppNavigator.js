@@ -17,12 +17,6 @@ const useFetching = (someFetchActionCreator) => {
 };
 
 const AppNavigator = ({ dispatch }) => {
-  //const dispatch = useDispatch();
-  //useFetching(onAuthUserListener);
-  //useFetching(itemsFetchData);
-  // useFetching(usersFetchData);
-  console.log("jjjjjjjjjjjjj", dispatch);
-
   useEffect(() => {
     dispatch(itemsFetchData());
   }, []);

@@ -4,6 +4,8 @@ import Header from "./Header";
 import SignInScreen from "../components/SignIn";
 import SignUpScreen from "../components/SignUp";
 import HomePageScreen from "../components/Home";
+import DetailedPageScreen from "../components/Items/DetailedItem";
+import UserPageScreen from "../components/Items/User";
 
 const SignInStackNavigator = createStackNavigator();
 
@@ -20,6 +22,16 @@ export const SignInNavigator = () => {
         name="HomePage"
         component={HomePageScreen}
         options={{ headerTitle: "Home Page" }}
+      />
+      <SignInStackNavigator.Screen
+        name="Detailed"
+        component={DetailedPageScreen}
+        options={{ headerTitle: "Event detailed info" }}
+      />
+      <SignInStackNavigator.Screen
+        name="User"
+        component={UserPageScreen}
+        options={{ headerTitle: "User detailed info" }}
       />
       <SignInStackNavigator.Screen
         name="SignIn"

@@ -97,7 +97,7 @@ class SignInFormBase extends Component {
 
 const submit = (values, dispatch, props) => {
   dispatch(
-    signInFormBaseFetchData(values, () => {
+    signInFormBaseFetchData(values, (signInFormBaseFetchData) => {
       props.history.push(ROUTES.HOME);
     })
   );

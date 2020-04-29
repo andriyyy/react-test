@@ -175,11 +175,11 @@ const mapStateToProps = (state, ownProps) => ({
   isItemsEnrolmentsAllLoading: getItemsEnrolmentsAllIsLoading(state),
   isItemsIdsErrored: getItemsIdsHasErrored(state),
   isItemsIdsLoading: getItemsIdsIsLoading(state),
-  user: getUser(state, ownProps, getUsersKey(state)),
+  user: getUser(state, ownProps.match.params.id, getUsersKey(state)),
   sortedItems: getSortedItems(
     state,
     getItems(state),
-    getUser(state, ownProps, getUsersKey(state))
+    getUser(state, ownProps.match.params.id, getUsersKey(state))
   ),
 });
 

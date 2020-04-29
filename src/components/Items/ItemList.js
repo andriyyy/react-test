@@ -4,7 +4,7 @@ import ItemItem from "./ItemItem";
 
 class ItemList extends Component {
   render() {
-    const { items, index } = this.props;
+    const { items } = this.props;
     return items.map((item, key) => (
       <ItemItem key={key} item={item} {...this.props} />
     ));

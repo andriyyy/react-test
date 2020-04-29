@@ -143,6 +143,7 @@ class DetailedItem extends Component {
                 <View style={styles.chipOver}>
                   {attendeesIds.map((attenId) => (
                     <Chip
+                      key={attenId}
                       style={styles.chip}
                       icon="information"
                       onPress={() => this.onView(attenId, navigation)}
@@ -226,6 +227,7 @@ const styles = StyleSheet.create({
   chipOver: {
     flexDirection: "row",
     alignItems: "flex-start",
+    flexWrap: "wrap",
   },
   chip: { margin: 4 },
 });

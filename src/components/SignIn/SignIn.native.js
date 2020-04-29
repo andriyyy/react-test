@@ -9,6 +9,7 @@ import ErrorMessage from "../Items/AddItem/ErrorMessage";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { AsyncStorage } from "react-native";
 
 const validationSchema = yup.object().shape({
   email: yup
@@ -51,6 +52,18 @@ class SignIn extends Component {
         },
         () => {
           this.setSubmittingCallBack(actions);
+        },
+        (authUser) => {
+          if (authUser) {
+            AsyncStorage.setItem(
+              "userData",
+              JSON.stringify({
+                userId: authUser.uid,
+                userEmail: authUser.email,
+              })
+            );
+          }
+          console.log("yesssssssssss", authUser);
         }
       );
     };
@@ -187,12 +200,18 @@ export const screenOptions = (navData) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  doSignIn: (values, redirectToAppCallBack, setSubmittingCallBack) =>
+  doSignIn: (
+    values,
+    redirectToAppCallBack,
+    setSubmittingCallBack,
+    setUserToAsyncStorage
+  ) =>
     dispatch(
       signInFormBaseFetchData(
         values,
         redirectToAppCallBack,
-        setSubmittingCallBack
+        setSubmittingCallBack,
+        setUserToAsyncStorage
       )
     ),
 });

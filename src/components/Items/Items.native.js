@@ -4,21 +4,17 @@ import { StyleSheet, View, ScrollView, Text } from "react-native";
 import ItemList from "./ItemList";
 import SearchPanel from "../SearchPanel";
 import moment from "moment";
+import AddItem from "./AddItem";
 import {
   Button,
-  Title,
-  TextInput,
-  DataTable,
+  FAB,
   ActivityIndicator,
   Colors,
-  Avatar,
-  IconButton,
   Dialog,
   Portal,
   Paragraph,
 } from "react-native-paper";
-import { getAuthUserHasErrored } from "../../selectors/Selectors";
-import renderTextField from "../Items/AddItem/Field";
+
 import {
   getAuthUser,
   getItems,
@@ -37,15 +33,7 @@ import {
   updateItemsInState,
 } from "../../actions/firebase";
 
-import {
-  Table,
-  TableWrapper,
-  Row,
-  Rows,
-  Col,
-  Cols,
-  Cell,
-} from "react-native-table-component";
+import { Table, Row } from "react-native-table-component";
 
 class Items extends Component {
   constructor(props) {
@@ -63,6 +51,7 @@ class Items extends Component {
       user: [],
       open: false,
       removeId: "",
+      openAddItem: false,
     };
   }
 
@@ -76,7 +65,6 @@ class Items extends Component {
   };
 
   onRemoveItem = (uid) => {
-    console.log("ffffffffffffff", uid);
     this.setState({ removeId: uid });
     this.handleClickOpen();
   };
@@ -121,8 +109,15 @@ class Items extends Component {
     this.setState({ open: true });
   };
 
+  handleClickOpenAddTab = () => {
+    this.setState({ openAddItem: true });
+  };
   handleClose = () => {
     this.setState({ open: false });
+  };
+
+  handleCloseAddTab = () => {
+    this.setState({ openAddItem: false });
   };
 
   removeItem = () => {
@@ -151,8 +146,6 @@ class Items extends Component {
 
     const { items, usersMarged, navigation } = this.props;
 
-    console.log("items", items);
-
     const { term, sort } = this.state;
     const visibleItems = this.sorting(this.search(items, term), sort);
 
@@ -161,15 +154,19 @@ class Items extends Component {
         <Portal>
           <Dialog visible={this.state.open} onDismiss={this.handleClose}>
             <Dialog.Title>Are you sure?</Dialog.Title>
-            <Dialog.Content>
-              <Paragraph>This is simple dialog</Paragraph>
-            </Dialog.Content>
+
             <Dialog.Actions>
               <Button onPress={this.handleClose}>No</Button>
               <Button onPress={this.removeItem}>Yes</Button>
             </Dialog.Actions>
           </Dialog>
+
+          <AddItem
+            open={this.state.openAddItem}
+            handleCloseAddTab={this.handleCloseAddTab}
+          />
         </Portal>
+
         <View>
           <ScrollView horizontal={true}>
             <View>
@@ -206,6 +203,13 @@ class Items extends Component {
               </ScrollView>
             </View>
           </ScrollView>
+
+          <FAB
+            style={styles.fab}
+            small
+            icon="plus"
+            onPress={this.handleClickOpenAddTab}
+          />
         </View>
       </View>
     );
@@ -257,6 +261,13 @@ const styles = StyleSheet.create({
   text: { textAlign: "left", fontWeight: "100" },
   dataWrapper: { marginTop: -1 },
   row: { height: 65, backgroundColor: "#ffffff", padding: 5 },
+  fab: {
+    position: "absolute",
+    margin: 16,
+    left: 0,
+    bottom: 0,
+    backgroundColor: "#5373ab",
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Items);

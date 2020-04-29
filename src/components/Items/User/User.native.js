@@ -1,18 +1,16 @@
 import React, { Component } from "react";
 import {
   Colors,
-  Button,
   ActivityIndicator,
   Subheading,
   Surface,
   Chip,
 } from "react-native-paper";
-import { View, Text, Image, ScrollView, StyleSheet } from "react-native";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 import moment from "moment";
 
 import {
-  getId,
   getItems,
   getUsersKey,
   getItemsIds,
@@ -28,7 +26,7 @@ import { itemsOff } from "../../../actions/firebase";
 
 class User extends Component {
   componentDidMount() {
-    const id = this.props.getId();
+    const id = this.props.route.params.id;
     this.props.fetchItemsIds(id);
   }
 
@@ -36,8 +34,8 @@ class User extends Component {
     this.props.onItemsOff();
   }
 
-  onView = (id) => {
-    this.props.history.push(`/detailed/${id}`);
+  onView = (id, navigation) => {
+    navigation.navigate("Detailed", { id: id });
   };
 
   render() {
@@ -51,8 +49,10 @@ class User extends Component {
     if (this.props.isItemsIdsErrored === true) {
       return <Text>Can not load Items</Text>;
     }
-    const { uid, username, email } = this.props.user;
-    const { classes, itemsIds, sortedItems } = this.props;
+
+    const { itemsIds, sortedItems, navigation, route } = this.props;
+    const id = route.params.id;
+    const { uid, username, email } = this.props.user(id);
     return (
       <ScrollView>
         <Surface style={styles.surface}>
@@ -81,28 +81,33 @@ class User extends Component {
                 <View style={styles.chipOver}>
                   {itemsIds.map((itemId) => (
                     <Chip
+                      key={itemId}
+                      style={styles.chip}
                       icon="information"
-                      onPress={() => this.onView(itemId)}
+                      onPress={() => this.onView(itemId, navigation)}
                     >
-                      {sortedItems.itemsTemporary[itemId]}
+                      {sortedItems(id).itemsTemporary[itemId]}
                     </Chip>
                   ))}
                 </View>
               )}
             </View>
             <View>
-              <b>User created events:&nbsp;</b>
-              <div>
-                {sortedItems.itemsResult.map((item) => (
-                  <Link
-                    data-user-id={item.key}
-                    onClick={() => this.onView(item.key)}
+              <Text>
+                <Subheading>User created events:&nbsp;</Subheading>
+              </Text>
+              <View style={styles.chipOver}>
+                {sortedItems(id).itemsResult.map((item) => (
+                  <Chip
                     key={item.key}
+                    style={styles.chip}
+                    icon="information"
+                    onPress={() => this.onView(item.key, navigation)}
                   >
                     {item.value}
-                  </Link>
+                  </Chip>
                 ))}
-              </div>
+              </View>
             </View>
           </View>
         </Surface>
@@ -112,25 +117,43 @@ class User extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  getId: () => {
-    return getId(ownProps);
-  },
   itemsIds: getItemsIds(state),
   isItemsLoading: getItemsIsLoading(state),
   isItemsEnrolmentsAllLoading: getItemsEnrolmentsAllIsLoading(state),
   isItemsIdsErrored: getItemsIdsHasErrored(state),
   isItemsIdsLoading: getItemsIdsIsLoading(state),
-  user: getUser(state, ownProps, getUsersKey(state)),
-  sortedItems: getSortedItems(
-    state,
-    getItems(state),
-    getUser(state, ownProps, getUsersKey(state))
-  ),
+
+  user: (id) => {
+    return getUser(state, id, getUsersKey(state));
+  },
+
+  sortedItems: (id) => {
+    return getSortedItems(
+      state,
+      getItems(state),
+      getUser(state, id, getUsersKey(state))
+    );
+  },
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchItemsIds: (id) => dispatch(itemsIdsFetchData(id)),
   onItemsOff: () => dispatch(itemsOff()),
 });
+const styles = StyleSheet.create({
+  surface: {
+    padding: 15,
+    margin: 20,
+    alignItems: "center",
+    justifyContent: "flex-start",
+    elevation: 4,
+  },
 
+  chipOver: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    flexWrap: "wrap",
+  },
+  chip: { margin: 4 },
+});
 export default connect(mapStateToProps, mapDispatchToProps)(User);

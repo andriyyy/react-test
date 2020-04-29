@@ -28,8 +28,6 @@ function getId(ownProps) {
 
 function getItems(state) {
   if (state.itemState.items !== null) {
-    console.log("getItems", state.itemState.items_enrolments);
-
     return Object.keys(state.itemState.items || {}).map((key) => ({
       ...state.itemState.items[key],
       uid: key,
@@ -96,11 +94,7 @@ function getItem(state, id, items) {
   let elem = null;
   if (items) {
     items.forEach(function (element) {
-      console.log("0000000000000", id);
-      console.log("1111111111111", element.uid);
-
       if (id === element.uid) {
-        console.log("3333333333", element.uid);
         elem = element;
       }
     });
@@ -140,10 +134,10 @@ function getItemsIdsIsLoading(state) {
   return state.itemState.itemsIdsIsLoading;
 }
 
-function getUser(state, ownProps, users) {
+function getUser(state, id, users) {
   let elem = null;
   users.forEach(function (element) {
-    if (ownProps.match.params.id === element.uid) {
+    if (id === element.uid) {
       elem = element;
     }
   });

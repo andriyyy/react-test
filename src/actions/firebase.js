@@ -89,6 +89,7 @@ export function notReject(uid, iid, saveNotActiveToStateCallback) {
 
 export function updateItemsInState() {
   return (dispatch, getState, { firebase }) => {
+    console.log("yesssssssssssssssssss");
     firebase
       .items()
       .once("value")
@@ -108,4 +109,8 @@ export function updateItemsInState() {
       })
       .catch(() => dispatch(itemsHasErrored(true)));
   };
+}
+
+export function setDidTryAL() {
+  return { type: SET_DID_TRY_AL };
 }

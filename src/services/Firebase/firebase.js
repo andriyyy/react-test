@@ -2,6 +2,7 @@ import app from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
 import "firebase/storage";
+//import RNFetchBlob from "react-native-fetch-blob";
 import {
   REACT_APP_API_KEY,
   REACT_APP_AUTH_DOMAIN,
@@ -62,6 +63,7 @@ class Firebase {
       })
       .then((authUser) => {
         next(authUser);
+        return authUser;
       });
 
   doCreateUserWithEmailAndPassword = (email, password) =>
@@ -113,7 +115,98 @@ class Firebase {
       }
     });
 
+  uploadImage = (uri, saveItem, updateState, mime = "image/jpg") => {
+    console.log("uriiiiiii", uri);
+
+    return new Promise((resolve, reject) => {
+      const uploadUri =
+        Platform.OS === "ios" ? uri.replace("file://", "") : uri;
+
+      const xhr = new XMLHttpRequest();
+
+      xhr.onload = function () {
+        // return the blob
+        resolve(xhr.response);
+      };
+
+      xhr.onerror = function () {
+        // something went wrong
+        reject(new Error("uriToBlob failed"));
+      };
+
+      // this helps us get a blob
+      xhr.responseType = "blob";
+
+      xhr.open("GET", uploadUri, true);
+      console.log("iiiiiiiiiiiiiiiii");
+      return xhr.send(null);
+    }).then((blob) => {
+      console.log("getBlob!!");
+
+      var storageRef = app.storage().ref();
+
+      storageRef
+        .child(`/pictures/${new Date().getTime()}`)
+        .put(blob, {
+          contentType: mime,
+        })
+        .then((snapshot) => {
+          console.log("snapshot", snapshot);
+          blob.close();
+
+          snapshot.ref.getDownloadURL().then(function (downloadURL) {
+            console.log("downloadURL888", downloadURL);
+            saveItem(downloadURL);
+            console.log("ggggggggg111111111111111");
+            updateState();
+            console.log("ggggggggg22222222222222");
+          });
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  };
+
+  /*
+  uploadImage = (uri, saveItem, updateState, mime = "image/jpg") => {
+    return new Promise((resolve, reject) => {
+      const uploadUri =
+        Platform.OS === "ios" ? uri.replace("file://", "") : uri;
+      let uploadBlob = null;
+      const imageRef = app
+        .storage()
+        .ref("posts")
+        .child(`/pictures/${new Date().getTime()}`);
+
+      fs.readFile(uploadUri, "base64")
+        .then((data) => {
+          return Blob.build(data, { type: `${mime};BASE64` });
+        })
+        .then((blob) => {
+          uploadBlob = blob;
+          return imageRef.put(blob, { contentType: mime });
+        })
+        .then(() => {
+          uploadBlob.close();
+          return imageRef.getDownloadURL();
+        })
+        .then((downloadURL) => {
+          //resolve(downloadURL)
+
+          console.log("downloadURL", downloadURL);
+          //saveItem(downloadURL);
+          //updateState();
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  };
+*/
   onSaveItems = (picture, saveItem, updateState) => {
+    console.log("picture", picture);
+
     app
       .storage()
       .ref()
@@ -121,6 +214,7 @@ class Firebase {
       .put(picture)
       .then((snapshot) => {
         snapshot.ref.getDownloadURL().then(function (downloadURL) {
+          console.log("downloadURL", downloadURL);
           saveItem(downloadURL);
           updateState();
         });
@@ -128,7 +222,6 @@ class Firebase {
   };
 
   onRemoveItems = (iid, updateState) => {
-    console.log("iid_delete", iid);
     this.item(iid)
       .remove()
       .then(() => {
@@ -138,7 +231,6 @@ class Firebase {
             return snapshot.val();
           })
           .then((usersId) => {
-            console.log("usersId_delete", usersId);
             this.items_enrolments(iid).remove();
             if (usersId) {
               Object.keys(usersId).map((userId) => {

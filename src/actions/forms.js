@@ -1,5 +1,3 @@
-import * as ROUTES from "../constants/routes";
-
 export function signInFormBaseHasErrored(bool) {
   return {
     type: "AUTH_USER_HAS_ERRORED",
@@ -35,10 +33,17 @@ export function addOpenPopUp(bool) {
   };
 }
 
+export function authenticate() {
+  return {
+    type: "AUTHENTICATE",
+  };
+}
+
 export function signInFormBaseFetchData(
   values,
   redirectCallBack,
-  setSubmittingCallBack = () => {}
+  setSubmittingCallBack = () => {},
+  setUserToAsyncStorage = (authUser) => {}
 ) {
   return (dispatch, getState, { firebase }) => {
     firebase
@@ -47,8 +52,12 @@ export function signInFormBaseFetchData(
         values.password,
         (authUser) => {
           dispatch(signInFormBaseFetchDataSuccess(authUser));
+          dispatch(authenticate());
         }
       )
+      .then((authUser) => {
+        setUserToAsyncStorage(authUser);
+      })
       .then(() => {
         redirectCallBack();
       })
@@ -113,28 +122,66 @@ export function signUpFormBaseFetchData(
   };
 }
 
-export function addItemFetchData(values, props, updateItemsCallBack) {
-  return (dispatch, getState, { firebase }) => {
-    firebase.onSaveItems(
-      values.image,
-      (downloadURL) => {
-        const lastKey = firebase.items().push({
-          userId: props.authUser.uid,
-          title: values.title,
-          description: values.description,
-          pictureUrl: downloadURL,
-          attendee: JSON.stringify(values.user),
-          createdAt: firebase.serverValue.TIMESTAMP,
-        }).key;
-        values.user.map((item) => {
-          let updates = {
-            [`items_enrolments/${lastKey}/${item}`]: true,
-            [`users_enrolments/${item}/${lastKey}`]: true,
-          };
-          return firebase.update(updates);
-        });
-      },
-      updateItemsCallBack
-    );
-  };
+export function addItemFetchData(
+  values,
+  props,
+  updateItemsCallBack,
+  mobile = true
+) {
+  console.log("values", values);
+  console.log("props", props);
+  console.log("updateItemsCallBack", updateItemsCallBack);
+  console.log("props.authUser.uid", props.authUser.uid);
+
+  if (mobile) {
+    return (dispatch, getState, { firebase }) => {
+      firebase.uploadImage(
+        values.image,
+        (downloadURL) => {
+          console.log("hhhhhhh", downloadURL);
+          const lastKey = firebase.items().push({
+            userId: props.authUser.uid,
+            title: values.title,
+            description: values.description,
+            pictureUrl: downloadURL,
+            attendee: JSON.stringify(values.user),
+            createdAt: firebase.serverValue.TIMESTAMP,
+          }).key;
+          values.user.map((item) => {
+            let updates = {
+              [`items_enrolments/${lastKey}/${item}`]: true,
+              [`users_enrolments/${item}/${lastKey}`]: true,
+            };
+            return firebase.update(updates);
+          });
+        },
+        updateItemsCallBack
+      );
+    };
+  } else {
+    return (dispatch, getState, { firebase }) => {
+      firebase.onSaveItems(
+        values.image,
+        (downloadURL) => {
+          console.log("hhhhhhh", downloadURL);
+          const lastKey = firebase.items().push({
+            userId: props.authUser.uid,
+            title: values.title,
+            description: values.description,
+            pictureUrl: downloadURL,
+            attendee: JSON.stringify(values.user),
+            createdAt: firebase.serverValue.TIMESTAMP,
+          }).key;
+          values.user.map((item) => {
+            let updates = {
+              [`items_enrolments/${lastKey}/${item}`]: true,
+              [`users_enrolments/${item}/${lastKey}`]: true,
+            };
+            return firebase.update(updates);
+          });
+        },
+        updateItemsCallBack
+      );
+    };
+  }
 }

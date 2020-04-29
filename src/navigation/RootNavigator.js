@@ -19,15 +19,16 @@ export const SignInNavigator = () => {
       }}
     >
       <SignInStackNavigator.Screen
-        name="SignIn"
-        component={SignInScreen}
-        options={{ headerTitle: "Sign In" }}
-      />
-      <SignInStackNavigator.Screen
         name="HomePage"
         component={HomePageScreen}
         options={{ headerTitle: "Home Page" }}
       />
+      <SignInStackNavigator.Screen
+        name="SignIn"
+        component={SignInScreen}
+        options={{ headerTitle: "Sign In" }}
+      />
+
       <SignInStackNavigator.Screen
         name="Detailed"
         component={DetailedPageScreen}

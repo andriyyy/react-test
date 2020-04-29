@@ -151,16 +151,19 @@ class Firebase {
           contentType: mime,
         })
         .then((snapshot) => {
-          console.log("snapshot", snapshot);
           blob.close();
 
-          snapshot.ref.getDownloadURL().then(function (downloadURL) {
-            console.log("downloadURL888", downloadURL);
-            saveItem(downloadURL);
-            console.log("ggggggggg111111111111111");
-            updateState();
-            console.log("ggggggggg22222222222222");
-          });
+          snapshot.ref
+            .getDownloadURL()
+            .then(function (downloadURL) {
+              console.log("downloadURL888", downloadURL);
+              saveItem(downloadURL);
+            })
+            .then(() => {
+              console.log("ggggggggg111111111111111");
+              updateState();
+              console.log("ggggggggg22222222222222");
+            });
         })
         .catch((error) => {
           reject(error);

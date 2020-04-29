@@ -1,30 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {
-  getUsersKey,
-  getAuthUser,
-  getOpenPopUp,
-} from "../../../selectors/Selectors";
+import { getUsersKey, getAuthUser } from "../../../selectors/Selectors";
 import { updateItemsInState } from "../../../actions/firebase";
 import { addItemFetchData, addOpenPopUp } from "../../../actions/forms";
 
-import {
-  StyleSheet,
-  View,
-  ScrollView,
-  Text,
-  Image,
-  Picker,
-} from "react-native";
-import {
-  Button,
-  Dialog,
-  Title,
-  TextInput,
-  Modal,
-  Portal,
-  Provider,
-} from "react-native-paper";
+import { StyleSheet, View, ScrollView, Text, Image } from "react-native";
+import { Button, Dialog, TextInput, Portal } from "react-native-paper";
 import renderTextField from "./Field";
 import ErrorMessage from "./ErrorMessage";
 import { Formik } from "formik";
@@ -74,7 +55,9 @@ class AddItem extends Component {
         { authUser: authUser },
         updateItemsCallBack
       );
-      //this.setState({ image: null, user: "", selectedItems: [] });
+      values.title = "";
+      values.description = "";
+      this.setState({ image: null, user: "", selectedItems: [] });
     };
 
     ////////////////////////////////
@@ -189,6 +172,7 @@ class AddItem extends Component {
 
                     <View style={styles.select}>
                       <MultiSelect
+                        hideSubmitButton
                         hideTags
                         items={items}
                         uniqueKey="id"
@@ -222,7 +206,11 @@ class AddItem extends Component {
                     style={styles.button}
                     mode="outlined"
                     onPress={handleCloseAddTab}
-                    disabled={!isValid || isSubmitting}
+                    disabled={
+                      !isValid ||
+                      !this.state.image ||
+                      this.state.selectedItems.length === 0
+                    }
                     onPress={handleSubmit}
                   >
                     SEND
@@ -244,7 +232,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   textinput: {
-    borderRadius: null,
+    marginTop: 20,
   },
   select: {
     marginTop: 10,

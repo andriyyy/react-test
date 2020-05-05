@@ -57,7 +57,7 @@ class ItemItem extends Component {
     );
     return (
       <TableRow key={item.uid}>
-        <TableCell component="th" scope="row">
+        <TableCell component="td" scope="row">
           <Avatar alt={item.user.username} src={item.pictureUrl} />
         </TableCell>
         <TableCell align="left">

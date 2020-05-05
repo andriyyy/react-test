@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import { Switch } from "react-router";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import Navigation from "../Navigation";
 import SignUpPage from "../SignUp";
 import SignInPage from "../SignIn";
@@ -10,27 +9,36 @@ import DetailedItem from "../Items/DetailedItem";
 import User from "../Items/User";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import withAuthentication from "../Session/withAuthentication";
+import PrivateRoute from "../Session/PrivateRoute";
 
 const theme = createMuiTheme({
   typography: {
-    useNextVariants: true
-  }
+    useNextVariants: true,
+  },
 });
 
 class App extends Component {
   render() {
     return (
       <MuiThemeProvider theme={theme}>
-        <Router>
+        <BrowserRouter>
           <Navigation />
           <Switch>
+            <Route
+              exact
+              path={ROUTES.LANDING}
+              render={() => <Redirect to={ROUTES.HOME} />}
+            />
             <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
             <Route path={ROUTES.SIGN_IN} component={SignInPage} />
-            <Route path={ROUTES.HOME} component={HomePage} />
-            <Route path={ROUTES.DETAILED_ITEM} component={DetailedItem} />
-            <Route path={ROUTES.USER} component={User} />
+            <PrivateRoute path={ROUTES.HOME} component={HomePage} />
+            <PrivateRoute
+              path={ROUTES.DETAILED_ITEM}
+              component={DetailedItem}
+            />
+            <PrivateRoute path={ROUTES.USER} component={User} />
           </Switch>
-        </Router>
+        </BrowserRouter>
       </MuiThemeProvider>
     );
   }

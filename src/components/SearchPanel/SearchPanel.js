@@ -6,30 +6,30 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 
-const styles = theme => ({
+const styles = (theme) => ({
   formControl: {
     margin: theme.spacing.unit,
-    minWidth: 120
+    minWidth: 120,
   },
   selectEmpty: {
-    marginTop: theme.spacing.unit * 2
-  }
+    marginTop: theme.spacing.unit * 2,
+  },
 });
 
 class SearchPanel extends Component {
   state = {
     term: "",
     sort: "",
-    event: ""
+    event: "",
   };
 
-  onSearchChange = event => {
+  onSearchChange = (event) => {
     const term = event.target.value;
     this.setState({ term });
     this.props.onSearchChange(term);
   };
 
-  onSortChange = event => {
+  onSortChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
     const sort = event.target.value;
     this.setState({ sort });
@@ -48,11 +48,12 @@ class SearchPanel extends Component {
             onChange={this.onSortChange}
             inputProps={{
               name: "event",
-              id: "event"
+              id: "event",
             }}
           >
             <MenuItem value="1">All events</MenuItem>
             <MenuItem value="2">My events</MenuItem>
+            <MenuItem value="3">Assigned to me</MenuItem>
           </Select>
         </FormControl>
         <FormControl className={classes.formControl}>

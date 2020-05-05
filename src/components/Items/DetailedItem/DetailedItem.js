@@ -8,20 +8,39 @@ import {
   Paper,
   withStyles,
   ListItem,
-  Typography
+  Typography,
+  Button,
 } from "@material-ui/core";
-import { withAuthorization } from "../../Session";
 import IconButton from "@material-ui/core/IconButton";
 import KeyboardBackspace from "@material-ui/icons/KeyboardBackspace";
 import Link from "@material-ui/core/Link";
-import { getId, getItems, getUsersKey } from "../../../selectors/Selectors";
+import {
+  getId,
+  getAttendeesIds,
+  getAttendeesHasErrored,
+  getAttendeesIsLoading,
+  getItem,
+  getItems,
+  getUsersKey,
+  getAttendeeFormatted,
+  getAuthUser,
+} from "../../../selectors/Selectors";
+import { attendeesIdsFetchData } from "../../../actions/users";
+import {
+  itemsOff,
+  usersOff,
+  usersEnrolmentsListOff,
+  reject,
+  notReject,
+  updateItemsInState,
+} from "../../../actions/firebase";
 
-const styles = theme => ({
+const styles = (theme) => ({
   margin: {
-    margin: theme.spacing.unit * 2
+    margin: theme.spacing.unit * 2,
   },
   padding: {
-    padding: theme.spacing.unit
+    padding: theme.spacing.unit,
   },
   main: {
     width: "auto",
@@ -32,86 +51,103 @@ const styles = theme => ({
       minWidth: 120,
       maxWidth: 450,
       marginLeft: "auto",
-      marginRight: "auto"
-    }
+      marginRight: "auto",
+    },
   },
   paper: {
     marginTop: theme.spacing.unit * 8,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
-      .spacing.unit * 3}px`
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${
+      theme.spacing.unit * 3
+    }px`,
   },
   submit: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing.unit * 3,
   },
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 120,
-    maxWidth: 300
+    maxWidth: 300,
   },
   image: {
-    maxWidth: 250
-  }
+    maxWidth: 250,
+  },
+  button: {
+    marginRight: 8,
+  },
 });
 
 class DetailedItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      item: "",
-      open: false,
-      attendeesIds: [],
-      user:""
+      active: false,
     };
   }
-
   componentDidMount() {
-    this.setState({ open: false });
     const id = this.props.getId();
-    this.props.firebase.items_enrolments(id).once("value")
-    .then(snapshot => {
-      let attendeesIds = [];
-      Object.keys(snapshot.val()).map(userId => {
-       return attendeesIds.push(userId);
-      })
-      this.setState({ attendeesIds: attendeesIds });
-    })
-
-    this.props.items.forEach(
-      function(element) {
-        if (id === element.uid) {
-          this.setState({ item: element });
-        }
-      }.bind(this)
-    );
+    this.props.fetchAttendeesIds(id);
   }
 
-  onRedirect = event => {
+  componentWillUnmount() {
+    this.props.onItemsOff();
+    this.props.onUsersOff();
+    this.props.onUsersEnrolmentsListOff();
+  }
+
+  onRedirect = (event) => {
     event.preventDefault();
     this.props.history.push(`/home`);
   };
 
-  onView = id => {
+  onView = (id) => {
     this.props.history.push(`/user/${id}`);
   };
 
+  onReject = (uid, iid) => {
+    this.props.onReject(uid, iid, this.addActiveToState);
+  };
+
+  addActiveToState = () => {
+    this.setState({ active: true });
+    this.props.onDeleteAttendee();
+  };
+
+  onNotReject = (uid, iid) => {
+    this.props.onNotReject(uid, iid, this.addNotActiveToState);
+  };
+
+  addNotActiveToState = () => {
+    this.setState({ active: false });
+    this.props.onAddAttendee();
+  };
+
   render() {
+    if (this.props.isAttendeesLoading === true) {
+      return (
+        <div>
+          <p
+            style={{ display: "block", margin: "0 auto" }}
+            className="lds-dual-ring"
+          />
+        </div>
+      );
+    }
+    if (this.props.isAttendeesErrored === true) {
+      return <p>Can not load Attendees</p>;
+    }
     const {
       title,
       description,
       pictureUrl,
       createdAt,
-      userId
-    } = this.state.item;
+      userId,
+    } = this.props.item;
 
-    const attendeeF = [];
-    const { classes } = this.props;
-    this.props.users.forEach(function(entry) {
-      attendeeF[entry.uid] = entry.username;
-
-    });
+    const { classes, attendeesIds } = this.props;
+    const id = this.props.getId();
     return (
       <main className={classes.main}>
         <Paper className={classes.padding + " " + classes.paper}>
@@ -145,30 +181,57 @@ class DetailedItem extends Component {
                 <Moment format="YYYY/MM/DD HH:mm:ss">{createdAt}</Moment>
               </ListItem>
               <ListItem>
-                <b>Event created by:&nbsp; </b>{" "} 
-                    <Link
-                      data-user-id={userId}
-                      onClick={() => this.onView(userId)}
-                      key={userId}
-                    >
-                      {" "}{attendeeF[userId]}{" "}
-                    </Link> 
+                <b>Event created by:&nbsp; </b>{" "}
+                <Link
+                  data-user-id={userId}
+                  onClick={() => this.onView(userId)}
+                  key={userId}
+                >
+                  {" "}
+                  {this.props.attendeeFormatted[userId]}{" "}
+                </Link>
               </ListItem>
               <ListItem>
                 <b>Users assigned to event:&nbsp;</b>
               </ListItem>
-              {this.state.attendeesIds.length >0 && (
-                <div>
-                  {this.state.attendeesIds.map(attenId => (
-                    <Link
-                      data-user-id={attenId}
-                      onClick={() => this.onView(attenId)}
-                      key={attenId}
-                    >
-                      {" "}{attendeeF[attenId]}{" "}
-                    </Link>
-                  ))}
-                </div>
+              <ListItem>
+                {attendeesIds.length > 0 && (
+                  <div>
+                    {attendeesIds.map((attenId) => (
+                      <Link
+                        data-user-id={attenId}
+                        onClick={() => this.onView(attenId)}
+                        key={attenId}
+                      >
+                        {" "}
+                        {this.props.attendeeFormatted[attenId]}{" "}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </ListItem>
+              {attendeesIds.includes(this.props.authUser.uid) && (
+                <ListItem>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={() =>
+                      this.onNotReject(this.props.authUser.uid, id)
+                    }
+                    disabled={!this.state.active}
+                  >
+                    Accept
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => this.onReject(this.props.authUser.uid, id)}
+                    disabled={this.state.active}
+                  >
+                    Reject
+                  </Button>
+                </ListItem>
               )}
             </List>
           </div>
@@ -179,20 +242,33 @@ class DetailedItem extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  getId: ()=>{ return getId(ownProps)},
-  items: getItems(state),
-  users: getUsersKey(state)
+  getId: () => {
+    return getId(ownProps);
+  },
+  item: getItem(state, ownProps, getItems(state)),
+  attendeeFormatted: getAttendeeFormatted(state, getUsersKey(state)),
+  attendeesIds: getAttendeesIds(state),
+  isAttendeesErrored: getAttendeesHasErrored(state),
+  isAttendeesLoading: getAttendeesIsLoading(state),
+  authUser: getAuthUser(state),
 });
 
-const condition = authUser => authUser;
+const mapDispatchToProps = (dispatch) => ({
+  fetchAttendeesIds: (id) => dispatch(attendeesIdsFetchData(id)),
+  onItemsOff: () => dispatch(itemsOff()),
+  onUsersOff: () => dispatch(usersOff()),
+  onUsersEnrolmentsListOff: () => dispatch(usersEnrolmentsListOff()),
+  onReject: (uid, iid, saveActiveToStateCallback) =>
+    dispatch(reject(uid, iid, saveActiveToStateCallback)),
+  onNotReject: (uid, iid, saveNotActiveToStateCallback) =>
+    dispatch(notReject(uid, iid, saveNotActiveToStateCallback)),
+  onDeleteAttendee: () => dispatch(updateItemsInState()),
+  onAddAttendee: () => dispatch(updateItemsInState()),
+});
 
 export default withStyles(styles)(
   compose(
     withRouter,
-    connect(
-      mapStateToProps,
-      null
-    ),
-    withAuthorization(condition)
+    connect(mapStateToProps, mapDispatchToProps)
   )(DetailedItem)
 );

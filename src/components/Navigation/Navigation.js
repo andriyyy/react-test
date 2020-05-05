@@ -6,29 +6,29 @@ import SignOutButton from "../SignOut";
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
+import Chip from "@material-ui/core/Chip";
+
 import Typography from "@material-ui/core/Typography";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { connect } from "react-redux";
-import { compose } from "recompose";
 import { getAuthUser } from "../../selectors/Selectors";
 
-const styles = theme => ({
+const styles = (theme) => ({
   "@global": {
     body: {
-      backgroundColor: theme.palette.common.white
-    }
+      backgroundColor: theme.palette.common.white,
+    },
   },
   appBar: {
-    position: "relative"
+    position: "relative",
   },
   toolbarTitle: {
-    flex: 1
-  }
+    flex: 1,
+  },
 });
 
-
-const Navigation = props => {
-  const { classes, authUser} = props;
+const Navigation = (props) => {
+  const { classes, authUser } = props;
   return (
     <div>
       <CssBaseline />
@@ -43,7 +43,10 @@ const Navigation = props => {
             Event managment system
           </Typography>
           {authUser ? (
-            <SignOutButton />
+            <div>
+              <Chip label={authUser.username} variant="outlined" />
+              <SignOutButton />
+            </div>
           ) : (
             <div>
               <Button
@@ -65,14 +68,8 @@ const Navigation = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  authUser: getAuthUser(state)
+const mapStateToProps = (state) => ({
+  authUser: getAuthUser(state),
 });
 
-export default withStyles(styles)(
-  compose(
-    connect(
-      mapStateToProps,
-      null
-    )
-  )(Navigation));
+export default withStyles(styles)(connect(mapStateToProps, null)(Navigation));

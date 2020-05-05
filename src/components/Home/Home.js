@@ -1,45 +1,12 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { compose } from "recompose";
-
-import { withAuthorization } from "../Session";
-import { withFirebase } from "../../services/Firebase";
+import React from "react";
 import Items from "../Items";
-import { getUsers } from "../../selectors/Selectors";
 
-class HomePage extends Component {
-  componentDidMount() {
-    this.props.firebase.users().on("value", snapshot => {
-      this.props.onSetUsers(snapshot.val());
-    });
-  }
+const HomePage = () => {
+  return (
+    <div>
+      <Items />
+    </div>
+  );
+};
 
-  componentWillUnmount() {
-    this.props.firebase.users().off();
-  }
-
-  render() {
-    return (
-        <Items users={this.props.users} />
-    );
-  }
-}
-
-const mapStateToProps = state => ({
-  users: getUsers(state)
-});
-
-const mapDispatchToProps = dispatch => ({
-  onSetUsers: users => dispatch({ type: "USERS_SET", users })
-});
-
-const condition = authUser => authUser;
-
-export default compose(
-  withFirebase,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
-  withAuthorization(condition)
-)(HomePage);
+export default HomePage;

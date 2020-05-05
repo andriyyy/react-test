@@ -51,15 +51,19 @@ export function signInFormBaseFetchData(
         values.email,
         values.password,
         (authUser) => {
+          console.log("0");
           dispatch(signInFormBaseFetchDataSuccess(authUser));
-          dispatch(authenticate());
+          //dispatch(authenticate());
         }
       )
       .then((authUser) => {
+        console.log("1");
         setUserToAsyncStorage(authUser);
       })
       .then(() => {
+        console.log("2");
         redirectCallBack();
+        dispatch(authenticate());
       })
       .catch((error) => {
         setSubmittingCallBack();

@@ -30,7 +30,10 @@ class SearchPanel extends Component {
               <Picker
                 selectedValue={this.state.event}
                 style={styles.input}
-                onValueChange={(itemValue) => this.onSortChange(itemValue)}
+                onValueChange={(itemValue) => {
+                  this.onSortChange(itemValue);
+                  this.setState({ event: itemValue });
+                }}
               >
                 <Picker.Item label="All events" value="1" />
                 <Picker.Item label="My events" value="2" />

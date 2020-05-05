@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 import sessionReducer from "./session";
 import userReducer from "./user";
 import itemReducer from "./item";
-import authState from "./auth";
+import authReducer from "./auth";
 import { reducer as formReducer } from "redux-form";
 
 const rootReducer = combineReducers({
@@ -10,7 +10,7 @@ const rootReducer = combineReducers({
   userState: userReducer,
   itemState: itemReducer,
   form: formReducer,
-  authState: authState,
+  authState: authReducer,
 });
 
 export default rootReducer;

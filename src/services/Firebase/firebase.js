@@ -116,8 +116,6 @@ class Firebase {
     });
 
   uploadImage = (uri, saveItem, updateState, mime = "image/jpg") => {
-    console.log("uriiiiiii", uri);
-
     return new Promise((resolve, reject) => {
       const uploadUri =
         Platform.OS === "ios" ? uri.replace("file://", "") : uri;
@@ -138,7 +136,6 @@ class Firebase {
       xhr.responseType = "blob";
 
       xhr.open("GET", uploadUri, true);
-      console.log("iiiiiiiiiiiiiiiii");
       return xhr.send(null);
     }).then((blob) => {
       console.log("getBlob!!");
@@ -160,9 +157,7 @@ class Firebase {
               saveItem(downloadURL);
             })
             .then(() => {
-              console.log("ggggggggg111111111111111");
               updateState();
-              console.log("ggggggggg22222222222222");
             });
         })
         .catch((error) => {
@@ -171,42 +166,6 @@ class Firebase {
     });
   };
 
-  /*
-  uploadImage = (uri, saveItem, updateState, mime = "image/jpg") => {
-    return new Promise((resolve, reject) => {
-      const uploadUri =
-        Platform.OS === "ios" ? uri.replace("file://", "") : uri;
-      let uploadBlob = null;
-      const imageRef = app
-        .storage()
-        .ref("posts")
-        .child(`/pictures/${new Date().getTime()}`);
-
-      fs.readFile(uploadUri, "base64")
-        .then((data) => {
-          return Blob.build(data, { type: `${mime};BASE64` });
-        })
-        .then((blob) => {
-          uploadBlob = blob;
-          return imageRef.put(blob, { contentType: mime });
-        })
-        .then(() => {
-          uploadBlob.close();
-          return imageRef.getDownloadURL();
-        })
-        .then((downloadURL) => {
-          //resolve(downloadURL)
-
-          console.log("downloadURL", downloadURL);
-          //saveItem(downloadURL);
-          //updateState();
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  };
-*/
   onSaveItems = (picture, saveItem, updateState) => {
     console.log("picture", picture);
 

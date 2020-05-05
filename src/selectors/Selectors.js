@@ -118,6 +118,10 @@ function getAttendeeFormatted(state, users) {
 
 function getItemsIds(state) {
   let itemsIds = [];
+  console.log(
+    "uuuuuuuuuuu=======================================================>",
+    state.itemState.itemsIds
+  );
   if (state.itemState.itemsIds) {
     Object.keys(state.itemState.itemsIds).map((itemId) => {
       return itemsIds.push(itemId);

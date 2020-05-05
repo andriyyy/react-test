@@ -33,7 +33,9 @@ class SignIn extends Component {
   }
 
   redirectToAppCallBack(navigation) {
-    navigation.navigate("HomePage");
+    //this.props.authUserListener();
+    //this.props.fetchUsers();
+    // this.props.fetchItems();
   }
 
   setSubmittingCallBack(actions) {
@@ -55,13 +57,7 @@ class SignIn extends Component {
         },
         (authUser) => {
           if (authUser) {
-            AsyncStorage.setItem(
-              "userData",
-              JSON.stringify({
-                userId: authUser.uid,
-                userEmail: authUser.email,
-              })
-            );
+            AsyncStorage.setItem("userData", JSON.stringify(authUser));
           }
           console.log("yesssssssssss", authUser);
         }
@@ -214,6 +210,9 @@ const mapDispatchToProps = (dispatch) => ({
         setUserToAsyncStorage
       )
     ),
+  authUserListener: () => dispatch(onAuthUserListener()),
+  fetchUsers: () => dispatch(usersFetchData()),
+  fetchItems: () => dispatch(itemsFetchData()),
 });
 
 const mapStateToProps = (state, ownProps) => ({

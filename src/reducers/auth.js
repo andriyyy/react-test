@@ -1,5 +1,6 @@
 const INITIAL_STATE = {
   didTryAutoLogin: false,
+  token: false,
 };
 
 const applyDidTry = (state) => ({
@@ -8,19 +9,31 @@ const applyDidTry = (state) => ({
 });
 const applyLogOut = (state) => ({
   ...state,
-  didTryAutoLogin: true,
+  token: true,
+});
+
+const applyTest = (state) => ({
+  ...state,
+  test: true,
 });
 
 function authReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case "AUTHENTICATE": {
-      return applyDidTry(state);
+      console.log("AUTHENTICATE!!");
+      return Object.assign({}, state, {
+        didTryAutoLogin: false,
+        token: true,
+      });
     }
     case "SET_DID_TRY_AL": {
       return applyDidTry(state);
     }
     case "LOGOUT": {
-      return applyDidTry(INITIAL_STATE);
+      return Object.assign({}, state, {
+        didTryAutoLogin: false,
+        token: false,
+      });
     }
     default:
       return state;

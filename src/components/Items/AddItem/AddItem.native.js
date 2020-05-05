@@ -63,6 +63,7 @@ class AddItem extends Component {
     ////////////////////////////////
     let { image } = this.state;
     onSelectedItemsChange = (selectedItems) => {
+      console.log("selectedItems", selectedItems);
       this.setState({ selectedItems });
     };
 
@@ -172,7 +173,7 @@ class AddItem extends Component {
 
                     <View style={styles.select}>
                       <MultiSelect
-                        hideSubmitButton
+                        //hideSubmitButton
                         hideTags
                         items={items}
                         uniqueKey="id"

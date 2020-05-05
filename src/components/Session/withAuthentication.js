@@ -51,6 +51,7 @@ const withAuthentication = (Component) => {
     fetchItems: () => dispatch(itemsFetchData()),
   });
 
+
   const mapStateToProps = (state) => ({
     signUpSubmitted: getSignUpSubmitted(state),
     onGetRetriaved: getRetriaved(state),

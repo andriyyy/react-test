@@ -7,10 +7,11 @@ import HomePageScreen from "../components/Home";
 import DetailedPageScreen from "../components/Items/DetailedItem";
 import UserPageScreen from "../components/Items/User";
 
-const SignInStackNavigator = createStackNavigator();
+const   SignInStackNavigator = createStackNavigator();
 
 export const SignInNavigator = () => {
   return (
+
     <SignInStackNavigator.Navigator
       screenOptions={{
         header: ({ scene, previous, navigation }) => (
@@ -19,25 +20,9 @@ export const SignInNavigator = () => {
       }}
     >
       <SignInStackNavigator.Screen
-        name="HomePage"
-        component={HomePageScreen}
-        options={{ headerTitle: "Home Page" }}
-      />
-      <SignInStackNavigator.Screen
         name="SignIn"
         component={SignInScreen}
         options={{ headerTitle: "Sign In" }}
-      />
-
-      <SignInStackNavigator.Screen
-        name="Detailed"
-        component={DetailedPageScreen}
-        options={{ headerTitle: "Event detailed info" }}
-      />
-      <SignInStackNavigator.Screen
-        name="User"
-        component={UserPageScreen}
-        options={{ headerTitle: "User detailed info" }}
       />
 
       <SignInStackNavigator.Screen
@@ -45,6 +30,38 @@ export const SignInNavigator = () => {
         component={SignUpScreen}
         options={{ headerTitle: "Sign Up" }}
       />
+
+
     </SignInStackNavigator.Navigator>
+  );
+};
+
+const HomeStackNavigator = createStackNavigator();
+
+export const HomeNavigator = () => {
+  return (
+    <HomeStackNavigator.Navigator
+      screenOptions={{
+        header: ({ scene, previous, navigation }) => (
+          <Header scene={scene} previous={previous} navigation={navigation} />
+        ),
+      }}
+    >
+      <HomeStackNavigator.Screen
+        name="HomePage"
+        component={HomePageScreen}
+        options={{ headerTitle: "Home Page" }}
+      />
+      <HomeStackNavigator.Screen
+        name="Detailed"
+        component={DetailedPageScreen}
+        options={{ headerTitle: "Event detailed info" }}
+      />
+      <HomeStackNavigator.Screen
+        name="User"
+        component={UserPageScreen}
+        options={{ headerTitle: "User detailed info" }}
+      />
+    </HomeStackNavigator.Navigator>
   );
 };

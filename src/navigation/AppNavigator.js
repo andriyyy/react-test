@@ -6,43 +6,42 @@ import { onAuthUserListener } from "../actions/firebase";
 import { itemsFetchData } from "../actions/items";
 import { usersFetchData } from "../actions/users";
 
-import { SignInNavigator } from "./RootNavigator";
+import { SignInNavigator, HomeNavigator } from "./RootNavigator";
 import { useSelector, useDispatch } from "react-redux";
-
-const useFetching = (someFetchActionCreator) => {
-  //const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(someFetchActionCreator());
-  }, []);
-};
+import StartupScreen from "../components/Home/StartupScreen";
 
 const AppNavigator = ({ dispatch }) => {
   useEffect(() => {
-    dispatch(itemsFetchData());
+    //dispatch(itemsFetchData());
   }, []);
   useEffect(() => {
-    dispatch(usersFetchData());
+    //dispatch(usersFetchData());
   }, []);
   useEffect(() => {
-    dispatch(onAuthUserListener());
+    // dispatch(onAuthUserListener());
   }, []);
+
+  const isAuth = useSelector((state) => state.authState.token);
+  const didTryAutoLogin = useSelector(
+    (state) => state.authState.didTryAutoLogin
+  );
+
+  console.log(
+    "==isAuth===================================================>",
+    isAuth
+  );
+  console.log(
+    "==didTryAutoLogin==========================================>",
+    didTryAutoLogin
+  );
 
   return (
     <NavigationContainer>
-      <SignInNavigator />
+      {isAuth && <HomeNavigator />}
+      {!isAuth && didTryAutoLogin && <SignInNavigator />}
+      {!isAuth && !didTryAutoLogin && <StartupScreen />}
     </NavigationContainer>
   );
 };
-const mapStateToProps = (state) => ({
-  signUpSubmitted: getSignUpSubmitted(state),
-  onGetRetriaved: getRetriaved(state),
-  isItemsLoading: getItemsIsLoading(state),
-  isItemsEnrolmentsAllLoading: getItemsEnrolmentsAllIsLoading(state),
-});
-const mapDispatchToProps = (dispatch) => ({
-  authUserListener: () => dispatch(onAuthUserListener()),
-  fetchUsers: () => dispatch(usersFetchData()),
-  fetchItems: () => dispatch(itemsFetchData()),
-});
 
 export default connect()(AppNavigator);

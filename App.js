@@ -5,14 +5,11 @@ import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 import AppNavigator from "./src/navigation/AppNavigator";
 import ErrorBoundary from "./ErrorBoundary";
 
-import SignIn from "./src/components/SignIn";
-
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
   },
-  //  roundness: 2,
   colors: {
     ...DefaultTheme.colors,
     primary: "#5373ab",
@@ -31,4 +28,3 @@ export default function App() {
     </ErrorBoundary>
   );
 }
-//#5373ab

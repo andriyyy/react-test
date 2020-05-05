@@ -1,3 +1,4 @@
+import { AsyncStorage } from "react-native";
 export function onSetAuthUser(authUser) {
   return {
     type: "AUTH_USER_SET",
@@ -111,6 +112,17 @@ export function updateItemsInState() {
   };
 }
 
+export function authenticate() {
+  return {
+    type: "AUTHENTICATE",
+  };
+}
+
 export function setDidTryAL() {
-  return { type: SET_DID_TRY_AL };
+  return { type: "SET_DID_TRY_AL" };
+}
+
+export function logout() {
+  AsyncStorage.removeItem("userData");
+  return { type: "LOGOUT" };
 }

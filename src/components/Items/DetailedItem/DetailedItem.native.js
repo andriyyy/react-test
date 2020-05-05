@@ -154,14 +154,12 @@ class DetailedItem extends Component {
                 </View>
               )}
             </View>
-            {
-              /*attendeesIds.includes(this.props.authUser.uid) && (*/
+            {attendeesIds.includes(this.props.authUser.uid) && (
               <View style={styles.buttonOver}>
                 <Button
                   style={styles.button}
                   mode="contained"
-                  color="primary"
-                  // onClick={() => this.onNotReject(this.props.authUser.uid, id)}
+                  onPress={() => this.onNotReject(this.props.authUser.uid, id)}
                   disabled={!this.state.active}
                 >
                   Accept
@@ -169,15 +167,15 @@ class DetailedItem extends Component {
                 <Button
                   style={styles.button}
                   mode="contained"
-                  // color="secondary"
-                  //onClick={() => this.onReject(this.props.authUser.uid, id)}
+                  onPress={() => {
+                    this.onReject(this.props.authUser.uid, id);
+                  }}
                   disabled={this.state.active}
                 >
                   Reject
                 </Button>
               </View>
-              /* )*/
-            }
+            )}
           </View>
         </Surface>
       </ScrollView>

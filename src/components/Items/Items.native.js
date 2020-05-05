@@ -5,6 +5,10 @@ import ItemList from "./ItemList";
 import SearchPanel from "../SearchPanel";
 import moment from "moment";
 import AddItem from "./AddItem";
+import { onAuthUserListener } from "../../actions/firebase";
+import { itemsFetchData } from "../../actions/items";
+import { usersFetchData } from "../../actions/users";
+
 import {
   Button,
   FAB,
@@ -53,6 +57,11 @@ class Items extends Component {
       removeId: "",
       openAddItem: false,
     };
+  }
+  componentDidMount() {
+    this.props.onAuthUserListener();
+    this.props.itemsFetchData();
+    this.props.usersFetchData();
   }
 
   componentWillUnmount() {
@@ -203,14 +212,13 @@ class Items extends Component {
               </ScrollView>
             </View>
           </ScrollView>
-
-          <FAB
-            style={styles.fab}
-            small
-            icon="plus"
-            onPress={this.handleClickOpenAddTab}
-          />
         </View>
+        <FAB
+          style={styles.fab}
+          small
+          icon="plus"
+          onPress={this.handleClickOpenAddTab}
+        />
       </View>
     );
   }
@@ -229,6 +237,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  onAuthUserListener: () => dispatch(onAuthUserListener()),
+  itemsFetchData: () => dispatch(itemsFetchData()),
+  usersFetchData: () => dispatch(usersFetchData()),
+
   onItemsOff: () => dispatch(itemsOff()),
   onUsersOff: () => dispatch(usersOff()),
   onDeleteItem: () => dispatch(updateItemsInState()),

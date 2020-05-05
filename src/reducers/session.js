@@ -33,6 +33,7 @@ const applySessionRetrived = (state, action) => ({
 function sessionReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case "AUTH_USER_SET": {
+      
       return applySetAuthUser(state, action);
     }
     case "AUTH_USER_HAS_ERRORED": {

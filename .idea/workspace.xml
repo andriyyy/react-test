@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="91bf1d58-b2eb-4c22-a77a-50a86d523a95" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/actions/firebase.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/firebase.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/actions/forms.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/forms.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/actions/items.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/items.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/StartupScreen.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Items/AddItem/AddItem.native.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Items/AddItem/AddItem.native.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Items/DetailedItem/DetailedItem.native.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Items/DetailedItem/DetailedItem.native.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Items/Items.native.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Items/Items.native.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Items/User/User.native.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Items/User/User.native.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SearchPanel/SearchPanel.native.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SearchPanel/SearchPanel.native.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Session/withAuthentication.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Session/withAuthentication.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SignIn/SignIn.native.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SignIn/SignIn.native.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/navigation/AppNavigator.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/navigation/AppNavigator.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/navigation/Header.native.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/navigation/Header.native.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/navigation/RootNavigator.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/navigation/RootNavigator.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reducers/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/reducers/auth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reducers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/reducers/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reducers/session.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/reducers/session.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/selectors/Selectors.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/selectors/Selectors.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/Firebase/firebase.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/Firebase/firebase.js" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1acjGHZlwGdRp1D0Y5fYvekDhwP" />
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="91bf1d58-b2eb-4c22-a77a-50a86d523a95" name="Default Changelist" comment="" />
+      <created>1587041678630</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1587041678630</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

@@ -78,21 +78,20 @@ class User extends Component {
               <Text>
                 <Subheading>User assigned to events:&nbsp;</Subheading>
               </Text>
-              {itemsIds.length > 0 &&
-                (console.log("itemsIds", itemsIds) || (
-                  <View style={styles.chipOver}>
-                    {itemsIds.map((itemId) => (
-                      <Chip
-                        key={itemId}
-                        style={styles.chip}
-                        icon="information"
-                        onPress={() => this.onView(itemId, navigation)}
-                      >
-                        {sortedItems(id).itemsTemporary[itemId]}
-                      </Chip>
-                    ))}
-                  </View>
-                ))}
+              {itemsIds.length > 0 && (
+                <View style={styles.chipOver}>
+                  {itemsIds.map((itemId) => (
+                    <Chip
+                      key={itemId}
+                      style={styles.chip}
+                      icon="information"
+                      onPress={() => this.onView(itemId, navigation)}
+                    >
+                      {sortedItems(id).itemsTemporary[itemId]}
+                    </Chip>
+                  ))}
+                </View>
+              )}
             </View>
             <View>
               <Text>

@@ -51,17 +51,14 @@ export function signInFormBaseFetchData(
         values.email,
         values.password,
         (authUser) => {
-          console.log("0");
           dispatch(signInFormBaseFetchDataSuccess(authUser));
           //dispatch(authenticate());
         }
       )
       .then((authUser) => {
-        console.log("1");
         setUserToAsyncStorage(authUser);
       })
       .then(() => {
-        console.log("2");
         redirectCallBack();
         dispatch(authenticate());
       })
@@ -132,17 +129,11 @@ export function addItemFetchData(
   updateItemsCallBack,
   mobile = true
 ) {
-  console.log("values", values);
-  console.log("props", props);
-  console.log("updateItemsCallBack", updateItemsCallBack);
-  console.log("props.authUser.uid", props.authUser.uid);
-
   if (mobile) {
     return (dispatch, getState, { firebase }) => {
       firebase.uploadImage(
         values.image,
         (downloadURL) => {
-          console.log("hhhhhhh", downloadURL);
           const lastKey = firebase.items().push({
             userId: props.authUser.uid,
             title: values.title,
@@ -167,7 +158,6 @@ export function addItemFetchData(
       firebase.onSaveItems(
         values.image,
         (downloadURL) => {
-          console.log("hhhhhhh", downloadURL);
           const lastKey = firebase.items().push({
             userId: props.authUser.uid,
             title: values.title,

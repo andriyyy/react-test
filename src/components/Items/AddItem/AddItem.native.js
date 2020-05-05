@@ -60,10 +60,8 @@ class AddItem extends Component {
       this.setState({ image: null, user: "", selectedItems: [] });
     };
 
-    ////////////////////////////////
     let { image } = this.state;
     onSelectedItemsChange = (selectedItems) => {
-      console.log("selectedItems", selectedItems);
       this.setState({ selectedItems });
     };
 
@@ -84,8 +82,6 @@ class AddItem extends Component {
             isValid,
             touched,
             handleBlur,
-            isSubmitting,
-            setSubmitting,
           } = props;
 
           updateUser = (user) => {

@@ -59,7 +59,6 @@ class SignIn extends Component {
           if (authUser) {
             AsyncStorage.setItem("userData", JSON.stringify(authUser));
           }
-          console.log("yesssssssssss", authUser);
         }
       );
     };

@@ -75,9 +75,8 @@ export function itemsFetchData() {
             return snapshot.val();
           })
           .then((items_enrolments) => {
-            console.log("==============items================");
             dispatch(itemsFetchDataSuccess(items));
-            console.log("==============items_enrolments================");
+
             dispatch(itemsEnrolmentsFetchDataSuccess(items_enrolments));
           })
           .then(() => {

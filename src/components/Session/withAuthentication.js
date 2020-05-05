@@ -19,11 +19,6 @@ const withAuthentication = (Component) => {
     }
 
     render() {
-      console.log("this.props.isItemsLoading", this.props.isItemsLoading);
-      console.log(
-        "this.props.isItemsEnrolmentsAllLoading",
-        this.props.isItemsEnrolmentsAllLoading
-      );
       if (
         this.props.isItemsLoading === true ||
         this.props.isItemsEnrolmentsAllLoading === true
@@ -50,7 +45,6 @@ const withAuthentication = (Component) => {
     fetchUsers: () => dispatch(usersFetchData()),
     fetchItems: () => dispatch(itemsFetchData()),
   });
-
 
   const mapStateToProps = (state) => ({
     signUpSubmitted: getSignUpSubmitted(state),

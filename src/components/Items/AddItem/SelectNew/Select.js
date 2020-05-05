@@ -22,20 +22,19 @@ const renderSelectField = ({
   meta: { touched, error },
   children,
   ...custom
-}) =>
-  console.log("error", input) || (
-    <FormControl className={classes.formControl} error={touched && error}>
-      <InputLabel htmlFor="user">Users:</InputLabel>
+}) => (
+  <FormControl className={classes.formControl} error={touched && error}>
+    <InputLabel htmlFor="user">Users:</InputLabel>
 
-      <Select
-        multiple
-        {...input}
-        input={<Input type="text" name="user" id="user" />}
-      >
-        {children}
-      </Select>
-      {renderFromHelper({ touched, error })}
-    </FormControl>
-  );
+    <Select
+      multiple
+      {...input}
+      input={<Input type="text" name="user" id="user" />}
+    >
+      {children}
+    </Select>
+    {renderFromHelper({ touched, error })}
+  </FormControl>
+);
 
 export default renderSelectField;

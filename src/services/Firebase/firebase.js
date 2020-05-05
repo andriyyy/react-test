@@ -91,7 +91,6 @@ class Firebase {
 
   onAuthUserListener = (next, fallback) =>
     this.auth.onAuthStateChanged((authUser) => {
-      console.log("authUser", authUser);
       if (authUser) {
         this.user(authUser.uid)
           .once("value")
@@ -153,7 +152,6 @@ class Firebase {
           snapshot.ref
             .getDownloadURL()
             .then(function (downloadURL) {
-              console.log("downloadURL888", downloadURL);
               saveItem(downloadURL);
             })
             .then(() => {
@@ -167,8 +165,6 @@ class Firebase {
   };
 
   onSaveItems = (picture, saveItem, updateState) => {
-    console.log("picture", picture);
-
     app
       .storage()
       .ref()
@@ -176,7 +172,6 @@ class Firebase {
       .put(picture)
       .then((snapshot) => {
         snapshot.ref.getDownloadURL().then(function (downloadURL) {
-          console.log("downloadURL", downloadURL);
           saveItem(downloadURL);
           updateState();
         });

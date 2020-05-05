@@ -13,7 +13,6 @@ const StartupScreen = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("START_UP_SCREEN");
     const tryLogin = async () => {
       const userData = await AsyncStorage.getItem("userData");
       if (!userData) {

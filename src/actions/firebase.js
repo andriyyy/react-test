@@ -36,7 +36,6 @@ export function onAuthUserListener() {
     const signUpSubmitted = getState().itemState.signUpSubmitted;
     firebase.onAuthUserListener(
       (authUser) => {
-        console.log("autentification", authUser);
         if (signUpSubmitted === false) {
           dispatch(onSetAuthUser(authUser));
         }
@@ -44,7 +43,7 @@ export function onAuthUserListener() {
       },
       () => {
         dispatch(sessionRetrieved(false));
-        console.log("bad_autentification");
+
         dispatch(onSetAuthUser(null));
       }
     );
@@ -90,7 +89,6 @@ export function notReject(uid, iid, saveNotActiveToStateCallback) {
 
 export function updateItemsInState() {
   return (dispatch, getState, { firebase }) => {
-    console.log("yesssssssssssssssssss");
     firebase
       .items()
       .once("value")
